@@ -1,13 +1,10 @@
 package com.uit.mindmap.mapdrawer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 

@@ -1,31 +1,18 @@
-package com.uit.mindmap;
+package com.uit.mindmap.mapdrawer;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 
-import com.uit.mindmap.mapdrawer.FloatingMenu;
-import com.uit.mindmap.mapdrawer.MapView;
-import com.uit.mindmap.mapdrawer.Node;
-import com.uit.mindmap.mapdrawer.ZoomLayout;
+import com.uit.mindmap.R;
 
-import org.w3c.dom.NodeList;
-
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
+public class MapDrawerActivity extends AppCompatActivity {
     public ZoomLayout zoomLayout;
     public MapView mapView;
     public FloatingMenu menu;
-    public String mapName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
         mapView = findViewById(R.id.map_view);
         zoomLayout = findViewById(R.id.zoom);
         menu=findViewById(R.id.floating_menu);
+        //String mapName= getIntent().getExtras().getString("mapName");
+        mapView.loadMap(null);
         zoomLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
