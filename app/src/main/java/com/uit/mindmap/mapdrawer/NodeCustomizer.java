@@ -2,11 +2,15 @@ package com.uit.mindmap.mapdrawer;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-public class NodeCustomizer extends LinearLayout {
+import com.uit.mindmap.R;
+
+public class NodeCustomizer extends CoordinatorLayout {
     public NodeCustomizer(Context context) {
         super(context);
         init(null);
@@ -22,12 +26,8 @@ public class NodeCustomizer extends LinearLayout {
         init(attrs);
     }
 
-    public NodeCustomizer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(attrs);
-    }
-
     private void init(@Nullable AttributeSet attrs) {
+        inflate(getContext(), R.layout.node_customization_sheet,this);
 
     }
 }

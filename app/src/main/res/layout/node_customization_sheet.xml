@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="15dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    app:behavior_hideable="true"
-    app:behavior_peekHeight="0dp">
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="0dp"
+    android:background="@android:color/white"
+    android:layout_gravity="bottom"
+    android:id="@+id/bottom_sheet"
+    android:elevation="@dimen/large_text_size">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,9 +30,13 @@
         </TextView>
 
         <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="end">
+            android:gravity="end"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            >
 
             <com.google.android.material.button.MaterialButton
 
@@ -80,6 +88,7 @@
             android:textSize="@dimen/medium_text_size">
         </TextView>
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/text_color"
             android:layout_width="wrap_content"
             android:layout_height="35sp"
             android:background="@drawable/layout_bg"
@@ -103,6 +112,7 @@
 
         </TextView>
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/background_color"
             android:layout_width="wrap_content"
             android:layout_height="35sp"
             android:background="@drawable/layout_bg"
@@ -121,11 +131,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="1"
-            android:text="@string/connection_type"
+            android:text="@string/outline_color"
             android:textSize="@dimen/medium_text_size">
 
         </TextView>
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/outline_color"
             android:layout_width="wrap_content"
             android:layout_height="35sp"
             android:background="@drawable/layout_bg"
@@ -150,6 +161,7 @@
 
         </TextView>
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/connection_color"
             android:layout_width="wrap_content"
             android:layout_height="35sp"
             android:background="@drawable/layout_bg"

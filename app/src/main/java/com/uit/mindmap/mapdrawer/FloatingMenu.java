@@ -53,6 +53,7 @@ public class FloatingMenu extends FrameLayout {
             @Override
             public void onClick(View v) {
                 map.editText();
+
             }
         });
         delete.setOnClickListener(new OnClickListener() {

@@ -10,6 +10,7 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.uit.mindmap.R;
 import com.uit.mindmap.maploader.MapLoader;
 import com.uit.mindmap.maploader.NodeData;
@@ -144,6 +146,7 @@ public class MapView extends RelativeLayout {
             int node = addNode(i);
             nodes[node].setText("New node");
         }
+        editText();
     }
 
     public void removeChildNode(int id) {
@@ -192,7 +195,9 @@ public class MapView extends RelativeLayout {
         nodes[id].focus();
         nodes[id].bringToFront();
         View menu = ((MapDrawerActivity) getContext()).menu;
-        if (menu != null) menu.bringToFront();
+        BottomSheetBehavior bottomSheetBehavior= ((MapDrawerActivity) getContext()).bottomSheetBehavior;
+        if (menu != null) menu.setVisibility(VISIBLE);
+        if (bottomSheetBehavior!=null) bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
     public void drawLine(int parent_node, int child_node, Canvas canvas) {
