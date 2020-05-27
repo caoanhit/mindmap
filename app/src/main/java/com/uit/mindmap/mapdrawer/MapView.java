@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -32,6 +34,7 @@ public class MapView extends RelativeLayout {
     Paint paint;
     Path path;
     String mapName;
+    NodeCustomizer nodeCustomizer;
 
     public MapView(Context context) {
         super(context);
@@ -201,35 +204,52 @@ public class MapView extends RelativeLayout {
     }
 
     public void drawLine(int parent_node, int child_node, Canvas canvas) {
-        paint.setColor(Color.DKGRAY);
-        paint.setStrokeWidth(3);
+        paint.setColor(nodes[child_node].getConnectionColor());
+        paint.setStrokeWidth(4);
         int[] p = nodes[parent_node].pos;
         int[] c = nodes[child_node].pos;
         path.reset();
-        paint.setPathEffect(null);
         paint.setAntiAlias(true);
+        float[] intervals;
+        int style=nodes[child_node].getConnectionStyle();
+        switch (style){
+            case 0:
+                paint.setPathEffect(null);
+                break;
+            case 1:
+                intervals = new float[]{ 15, 15 };
+                paint.setPathEffect(new DashPathEffect(intervals,0));
+                break;
+            case 2:
+                intervals=  new float[]{ 15,15,5,15 };
+                paint.setPathEffect(new DashPathEffect(intervals,0));
+                break;
+        }
         path.moveTo(p[0], p[1]);
         path.cubicTo(2 * c[0] / 3 + p[0] / 3, p[1], 2 * p[0] / 3 + c[0] / 3, c[1], c[0], c[1]);
         canvas.drawPath(path, paint);
     }
 
-    public void applyTextSize(String text_size) {
+    public void applyTextSize(int text_size) {
         for (int i : selectedNodes) nodes[i].applyTextSize(text_size);
     }
 
-    public void applyTextColor(String color) {
+    public void applyTextColor(int color) {
         for (int i : selectedNodes) nodes[i].applyTextColor(color);
     }
 
-    public void applyBackgroundColor(String color) {
+    public void applyBackgroundColor(int color) {
         for (int i : selectedNodes) nodes[i].applyBackgroundColor(color);
     }
 
-    public void applyOutlineColor(String color) {
+    public void applyOutlineColor(int color) {
         for (int i : selectedNodes) nodes[i].applyOutlineColor(color);
     }
+    public void applyConnectionStyle(int style){
+        for (int i : selectedNodes) nodes[i].applyConnectionStyle(style);
+    }
 
-    public void applyConnectionColor(String color) {
+    public void applyConnectionColor(int color) {
         for (int i : selectedNodes) nodes[i].applyConnectionColor(color);
     }
 
@@ -284,6 +304,10 @@ public class MapView extends RelativeLayout {
             alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     mapName=etName.getText().toString();
+                    MapLoader loader=new MapLoader();
+                    if (loader.saveMap(getContext(), mapName ,getData()))
+                        Toast.makeText(getContext(), "Map saved to \""+mapName+"\"", Toast.LENGTH_SHORT).show();
+                    else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
                 }
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
@@ -293,10 +317,6 @@ public class MapView extends RelativeLayout {
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
-        MapLoader loader=new MapLoader();
-        if (loader.saveMap(getContext(), mapName ,getData()))
-            Toast.makeText(getContext(), "Map saved to \""+mapName+"\"", Toast.LENGTH_SHORT).show();
-        else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
     }
     public void setMapName(String mapName){
         this.mapName=mapName;
@@ -304,7 +324,13 @@ public class MapView extends RelativeLayout {
     public void loadMap(@Nullable String mapName){
         if(mapName==null) setMap(null);
         else {
-
         }
+    }
+    public void setNodeCustomizer(NodeCustomizer customizer){
+        nodeCustomizer=customizer;
+        customizer.setMapView(this);
+    }
+    public void setSheetData(){
+        nodeCustomizer.setData(nodes[selectedNodes.get(0)].getData());
     }
 }

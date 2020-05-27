@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:src="@drawable/ic_library_add_black_24dp"
-        android:tint="@android:color/secondary_text_light"
+        android:tint="@color/cardview_dark_background"
         android:padding="15dp">
 
     </ImageButton>
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:src="@drawable/ic_mode_edit_black_24dp"
-        android:tint="@android:color/secondary_text_light"
+        android:tint="@color/cardview_dark_background"
         android:padding="15dp">
     </ImageButton>
 
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:src="@drawable/ic_color_lens_black_24dp"
-        android:tint="@android:color/secondary_text_light"
+        android:tint="@color/cardview_dark_background"
         android:padding="15dp">
     </ImageButton>
 
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:src="@drawable/ic_delete_black_24dp"
-        android:tint="@android:color/secondary_text_light"
+        android:tint="@color/cardview_dark_background"
         android:padding="15dp">
     </ImageButton>
 

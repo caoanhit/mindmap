@@ -8,16 +8,15 @@
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     app:behavior_hideable="false"
     app:behavior_peekHeight="0dp"
-    android:background="@android:color/white"
+    android:background="@color/white"
     android:layout_gravity="bottom"
     android:id="@+id/bottom_sheet"
-    android:elevation="@dimen/large_text_size">
+    android:elevation="40dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_height"
-        android:orientation="horizontal"
-        android:layout_margin="5dp">
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
@@ -35,8 +34,7 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             app:singleSelection="true"
-            app:selectionRequired="true"
-            >
+            app:selectionRequired="true">
 
             <com.google.android.material.button.MaterialButton
 
@@ -46,7 +44,8 @@
                 android:text="@string/small"
                 android:textAllCaps="false"
                 android:textSize="@dimen/small_text_size"
-                app:cornerRadius="20dp">
+                app:cornerRadius="20dp"
+                app:strokeWidth="2dp">
 
             </com.google.android.material.button.MaterialButton>
 
@@ -57,7 +56,8 @@
                 android:text="@string/medium"
                 android:textAllCaps="false"
                 android:textSize="@dimen/medium_text_size"
-                app:cornerRadius="20dp">
+                app:cornerRadius="20dp"
+                app:strokeWidth="2dp">
 
             </com.google.android.material.button.MaterialButton>
 
@@ -68,7 +68,8 @@
                 android:text="@string/large"
                 android:textAllCaps="false"
                 android:textSize="@dimen/large_text_size"
-                app:cornerRadius="20dp">
+                app:cornerRadius="20dp"
+                app:strokeWidth="2dp">
 
             </com.google.android.material.button.MaterialButton>
         </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -77,7 +78,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_height"
-        android:layout_margin="5dp"
         android:orientation="horizontal">
         <TextView
             android:layout_width="0dp"
@@ -99,8 +99,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height"
-        android:layout_margin="5dp">
+        android:layout_height="@dimen/list_item_height">
 
         <TextView
             android:layout_width="0dp"
@@ -123,8 +122,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height"
-        android:layout_margin="5dp">
+        android:layout_height="@dimen/list_item_height">
 
         <TextView
             android:layout_width="0dp"
@@ -149,7 +147,69 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_height"
-        android:layout_margin="5dp">
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:text="@string/connection_style"
+            android:textSize="@dimen/medium_text_size">
+
+        </TextView>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/connection_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            >
+
+            <com.google.android.material.button.MaterialButton
+
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_straight_line"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/icon_padding"
+                app:strokeWidth="2dp">
+
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_dashed_line"
+                app:iconPadding="@dimen/icon_padding"
+                app:iconGravity="textStart"
+                app:strokeWidth="2dp">
+
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_dotted_dash_line"
+                app:iconPadding="@dimen/icon_padding"
+                app:iconGravity="textStart"
+                app:strokeWidth="2dp">
+
+            </com.google.android.material.button.MaterialButton>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height">
 
         <TextView
             android:layout_width="0dp"
@@ -170,5 +230,6 @@
             android:layout_gravity="end">
         </androidx.appcompat.widget.AppCompatButton>
     </LinearLayout>
+
 
 </LinearLayout>

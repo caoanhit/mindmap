@@ -9,9 +9,12 @@
     <string name="small">Small</string>
     <string name="medium">Medium</string>
     <string name="large">Large</string>
-    <string name="connection_color">Connection Color</string>
-    <string name="connection_type">Connection Type</string>
+    <string name="connection_color">Connection color</string>
+    <string name="connection_style">Connection style</string>
     <string name="delete_root_message">Root node can not be deleted.</string>
     <string name="edit_text">Edit text</string>
     <string name="map_name">Map name</string>
+    <string name="cancel">Cancel</string>
+    <string name="empty">Empty folder</string>
+    <string name="save">Save</string>
 </resources>

@@ -1,17 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/new_map"
+    <TextView
+        android:id="@+id/tv_empty"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/new_map">
-    </androidx.appcompat.widget.AppCompatButton>
-    <ListView
-        android:id="@+id/lv_map"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/empty"
+        app:layout_anchor="@+id/linearLayout2"
+        app:layout_anchorGravity="center">
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/new_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/new_map">
+        </androidx.appcompat.widget.AppCompatButton>
+
+        <ListView
+            android:id="@+id/lv_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

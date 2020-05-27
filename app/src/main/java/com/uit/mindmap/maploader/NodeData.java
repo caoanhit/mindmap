@@ -12,9 +12,10 @@ public class NodeData {
     public List<Integer> children;
     public int[] pos;
 
-    public String text_size;
-    public String text_color;
-    public String background_color;
-    public String outline_color;
-    public String connection_color;
+    public int text_size;
+    public int text_color;
+    public int background_color;
+    public int outline_color;
+    public int connection_style;
+    public int connection_color;
 }

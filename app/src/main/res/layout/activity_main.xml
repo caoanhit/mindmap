@@ -28,14 +28,11 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </com.uit.mindmap.mapdrawer.ZoomLayout>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.uit.mindmap.mapdrawer.NodeCustomizer
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include
-            layout="@layout/node_customization_sheet">
-        </include>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_height="match_parent"
+        android:id="@+id/node_customizer">
+    </com.uit.mindmap.mapdrawer.NodeCustomizer>
     <com.uit.mindmap.mapdrawer.FloatingMenu
         android:id="@+id/floating_menu"
         android:layout_width="wrap_content"
@@ -43,6 +40,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="70dp"
         android:background="@drawable/rounded_flat"
-        android:elevation="@dimen/large_text_size">
+        android:elevation="@dimen/elevation">
     </com.uit.mindmap.mapdrawer.FloatingMenu>
 </FrameLayout>

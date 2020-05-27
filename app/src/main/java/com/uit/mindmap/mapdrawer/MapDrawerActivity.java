@@ -1,9 +1,13 @@
 package com.uit.mindmap.mapdrawer;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
@@ -18,19 +22,26 @@ import com.uit.mindmap.R;
 public class MapDrawerActivity extends AppCompatActivity {
     private MapView mapView;
     private LinearLayout bottomSheet;
+    private NodeCustomizer nodeCustomizer;
     public FloatingMenu menu;
     public BottomSheetBehavior bottomSheetBehavior;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mapView = findViewById(R.id.map_view);
         final ZoomLayout zoomLayout = findViewById(R.id.zoom);
-        menu=findViewById(R.id.floating_menu);
+        menu = findViewById(R.id.floating_menu);
         //String mapName= getIntent().getExtras().getString("mapName");
         mapView.loadMap(null);
-        bottomSheet=findViewById(R.id.bottom_sheet);
-        bottomSheetBehavior=BottomSheetBehavior.from(bottomSheet);
+        bottomSheet = findViewById(R.id.bottom_sheet);
+        nodeCustomizer = (NodeCustomizer) findViewById(R.id.node_customizer);
+        mapView.setNodeCustomizer(nodeCustomizer);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         zoomLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,21 +59,38 @@ public class MapDrawerActivity extends AppCompatActivity {
             }
         });
         menu.assignMap(mapView);
-        ((ImageButton)menu.findViewById(R.id.customize)).setOnClickListener(new View.OnClickListener() {
+        ((ImageButton) menu.findViewById(R.id.customize)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                mapView.setSheetData();
             }
         });
         bottomSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus)
+                if (!hasFocus)
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
-
+        menu.bringToFront();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.mapdrawer_action_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id =item.getItemId();
+        switch (id) {
+            case R.id.save:
+                mapView.saveData();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="small_text_size">15sp</dimen>
-    <dimen name="medium_text_size">18sp</dimen>
-    <dimen name="large_text_size">21sp</dimen>
+    <dimen name="small_text_size">12sp</dimen>
+    <dimen name="medium_text_size">17sp</dimen>
+    <dimen name="large_text_size">22sp</dimen>
     <dimen name="list_item_height">50dp</dimen>
     <dimen name="thin_line">3dp</dimen>
     <dimen name="medium_line">5dp</dimen>
@@ -10,4 +10,7 @@
     <dimen name="outline_width">3dp</dimen>
     <dimen name="map_size">3000dp</dimen>
     <dimen name="margin_base">15dp</dimen>
+    <dimen name="icon_padding">0dp</dimen>
+    <dimen name="icon_size">30dp</dimen>
+    <dimen name="elevation">15dp</dimen>
 </resources>

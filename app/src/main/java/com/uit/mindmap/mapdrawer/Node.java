@@ -2,10 +2,13 @@ package com.uit.mindmap.mapdrawer;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,15 +31,17 @@ public class Node extends RelativeLayout {
     public int parent;
     TextView text_field;
     ViewGroup highlight;
+    ViewGroup outline;
     List<Integer> children;
     int[] pos;
 
     //region Styling
-    String text_size;
-    String text_color;
-    String background_color;
-    String outline_color;
-    public String connection_color;
+    int textSize=1;
+    int textColor=Color.DKGRAY ;
+    int backgroundColor=Color.WHITE;
+    int outlineColor=Color.GRAY;
+    int connectionStyle=0;
+    int connectionColor=Color.BLACK;
 
     //endregion
     private float dx = 0f;
@@ -69,6 +74,7 @@ public class Node extends RelativeLayout {
         pos=new int[2];
         inflate(getContext(), R.layout.node_view,this);
         highlight=findViewById(R.id.highlight);
+        outline= findViewById(R.id.outline);
         text_field = findViewById(R.id.text);
         LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.gravity= Gravity.CENTER;
@@ -118,6 +124,7 @@ public class Node extends RelativeLayout {
                 applyPosition();
             }
         });
+        applyData();
     }
     //endregion
     public void focus(){
@@ -132,31 +139,43 @@ public class Node extends RelativeLayout {
     public void setText(String text){
         text_field.setText(text);
     }
-    public void applyTextSize(String text_size){
-        this.text_size=text_size;
+    public void applyTextSize(int text_size){
+        this.textSize=text_size;
         switch (text_size){
-            case "small": text_field.setTextSize(R.dimen.small_text_size);
-            case "medium": text_field.setTextSize(R.dimen.medium_text_size);
-            case "large": text_field.setTextSize(R.dimen.large_text_size);
-            default: text_field.setTextSize(R.dimen.small_text_size);
+            case 0:
+                text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
+                break;
+            case 1:
+                text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,17);
+                break;
+            case 2:
+                text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+                break;
+            default:
+                this.textSize=1;
+                text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                break;
         }
     }
-    public void applyTextColor(String color){
-        this.text_color=color;
-        text_field.setTextColor(Color.parseColor(color));
+    public void applyTextColor(int color){
+        textColor=color;
+        text_field.setTextColor(color);
     }
-    public void applyBackgroundColor(String color){
-        background_color=color;
-        GradientDrawable drawable=(GradientDrawable) text_field.getBackground();
-        drawable.setColor(Color.parseColor(color));
+    public void applyBackgroundColor(int color){
+        backgroundColor=color;
+        text_field.setBackgroundTintList(ColorStateList.valueOf(color));
     }
-    public void applyOutlineColor(String color){
-        outline_color=color;
-        GradientDrawable drawable=(GradientDrawable) text_field.getBackground();
-        drawable.setStroke(R.dimen.thin_line,Color.parseColor(color));
+    public void applyConnectionStyle(int connection_style){
+
+        connectionStyle=connection_style;
+        Log.i("connection1",""+this.connectionStyle);
     }
-    public void applyConnectionColor(String color){
-        connection_color=color;
+    public void applyOutlineColor(int color){
+        outlineColor=color;
+        outline.setBackgroundTintList(ColorStateList.valueOf(color));
+    }
+    public void applyConnectionColor(int color){
+        connectionColor=color;
     }
 
 
@@ -166,11 +185,12 @@ public class Node extends RelativeLayout {
         data.parent=parent;
         data.children=children;
         data.pos=pos;
-        data.text_size=text_size;
-        data.text_color=text_color;
-        data.background_color=background_color;
-        data.outline_color=outline_color;
-        data.connection_color=connection_color;
+        data.text_size=textSize;
+        data.text_color=textColor;
+        data.background_color=backgroundColor;
+        data.outline_color=outlineColor;
+        data.connection_style=connectionStyle;
+        data.connection_color=connectionColor;
         return data;
     }
     public void setData(NodeData data){
@@ -178,18 +198,19 @@ public class Node extends RelativeLayout {
         parent=data.parent;
         children=data.children;
         pos=data.pos;
-        text_size=data.text_size;
-        text_color=data.text_color;
-        background_color=data.background_color;
-        outline_color=data.outline_color;
-        connection_color=data.connection_color;
+        textSize=data.text_size;
+        textColor=data.text_color;
+        backgroundColor=data.background_color;
+        outlineColor=data.outline_color;
+        connectionStyle=data.connection_style;
+        connectionColor=data.connection_color;
     }
     public void applyData(){
-        applyTextSize(text_size);
-        applyTextColor(text_color);
-        applyBackgroundColor(background_color);
-        applyOutlineColor(outline_color);
-        applyConnectionColor(connection_color);
+        applyTextSize(textSize);
+        applyTextColor(textColor);
+        applyBackgroundColor(backgroundColor);
+        applyOutlineColor(outlineColor);
+        applyConnectionColor(connectionColor);
     }
     public void setId(int id){
         this.id=id;
@@ -204,6 +225,12 @@ public class Node extends RelativeLayout {
         this.pos[1]=Math.min(Math.max(getHeight()/2,pos[1]),maxY);
         applyPosition();
     }
+
+    public int getConnectionStyle() {
+        return connectionStyle;
+    }
+    public int getConnectionColor(){ return connectionColor; }
+
     public void setPosition(int x, int y){
         int maxX=mapsize-getWidth()/2;
         int maxY=mapsize-getHeight()/2;

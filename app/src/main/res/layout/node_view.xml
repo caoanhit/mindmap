@@ -1,38 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bounding_box"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/bounding_box"
-    android:orientation="horizontal"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="horizontal">
+
     <LinearLayout
         android:id="@+id/highlight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/text"
+
+        <LinearLayout
+            android:id="@+id/outline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="3dp"
-            android:background="@drawable/layout_bg"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:focusedByDefault="false"
-            android:inputType="none"
-            android:maxWidth="500dp"
-            android:minWidth="40dp"
-            android:padding="10dp"
-            android:text="@string/root_node"
-            android:textSize="@dimen/medium_text_size">
+            android:layout_margin="3dp"
+            android:background="@drawable/layout_bg">
 
-        </TextView>
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="3dp"
+                android:background="@drawable/rounded_flat"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:focusedByDefault="false"
+                android:inputType="none"
+                android:maxWidth="500dp"
+                android:minWidth="40dp"
+                android:padding="10dp"
+                android:text="@string/root_node"
+                android:textSize="@dimen/medium_text_size">
+
+            </TextView>
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>
