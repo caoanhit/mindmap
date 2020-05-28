@@ -25,6 +25,7 @@ import com.uit.mindmap.R;
 import com.uit.mindmap.maploader.MapLoader;
 import com.uit.mindmap.maploader.NodeData;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,9 @@ public class MapView extends RelativeLayout {
     Path path;
     String mapName;
     NodeCustomizer nodeCustomizer;
+    boolean changed=false;
 
+    //region Constructor
     public MapView(Context context) {
         super(context);
 
@@ -62,19 +65,6 @@ public class MapView extends RelativeLayout {
         path = new Path();
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        for (int i = 0; i < 255; i++) {
-            if (nodes[i] != null) {
-                for (int a : nodes[i].children) {
-                    drawLine(i, a, canvas);
-                }
-            }
-        }
-    }
-
     public void setMap(@Nullable Node[] nodes) {
         if (nodes == null) {
             addNode(null);
@@ -88,7 +78,49 @@ public class MapView extends RelativeLayout {
         }
         selectNode(0);
     }
+    //endregion
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        for (int i = 0; i < 255; i++) {
+            if (nodes[i] != null) {
+                for (int a : nodes[i].children) {
+                    drawLine(i, a, canvas);
+                }
+            }
+        }
+    }
+
+    public void drawLine(int parent_node, int child_node, Canvas canvas) {
+        paint.setColor(nodes[child_node].getConnectionColor());
+        paint.setStrokeWidth(4);
+        int[] p = nodes[parent_node].pos;
+        int[] c = nodes[child_node].pos;
+        path.reset();
+        paint.setAntiAlias(true);
+        float[] intervals;
+        int style=nodes[child_node].getConnectionStyle();
+        switch (style){
+            case 0:
+                paint.setPathEffect(null);
+                break;
+            case 1:
+                intervals = new float[]{ 15, 15 };
+                paint.setPathEffect(new DashPathEffect(intervals,0));
+                break;
+            case 2:
+                intervals=  new float[]{ 15,15,5,15 };
+                paint.setPathEffect(new DashPathEffect(intervals,0));
+                break;
+        }
+        path.moveTo(p[0], p[1]);
+        path.cubicTo(2 * c[0] / 3 + p[0] / 3, p[1], 2 * p[0] / 3 + c[0] / 3, c[1], c[0], c[1]);
+        canvas.drawPath(path, paint);
+    }
+
+    //region Add
     public int addNode(@Nullable int[] pos) {
         Node node = new Node(getContext());
         addView(node);
@@ -150,8 +182,11 @@ public class MapView extends RelativeLayout {
             nodes[node].setText("New node");
         }
         editText();
+        changed=true;
     }
+    //endregion
 
+    //region Remove
     public void removeChildNode(int id) {
         for (int i : nodes[id].children) removeChildNode(i);
         removeView(nodes[id]);
@@ -178,8 +213,12 @@ public class MapView extends RelativeLayout {
             removeNode(i);
         }
         selectedNodes.clear();
+        changed=true;
     }
 
+    //endregion
+
+    //region Selection
     public void deselect(int id) {
         nodes[id].defocus();
         selectedNodes.remove((Integer) id);
@@ -191,7 +230,6 @@ public class MapView extends RelativeLayout {
         }
         selectedNodes.clear();
     }
-
     public void selectNode(int id) {
         deselectAll();
         selectedNodes.add(id);
@@ -202,57 +240,48 @@ public class MapView extends RelativeLayout {
         if (menu != null) menu.setVisibility(VISIBLE);
         if (bottomSheetBehavior!=null) bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
+    //endregion
 
-    public void drawLine(int parent_node, int child_node, Canvas canvas) {
-        paint.setColor(nodes[child_node].getConnectionColor());
-        paint.setStrokeWidth(4);
-        int[] p = nodes[parent_node].pos;
-        int[] c = nodes[child_node].pos;
-        path.reset();
-        paint.setAntiAlias(true);
-        float[] intervals;
-        int style=nodes[child_node].getConnectionStyle();
-        switch (style){
-            case 0:
-                paint.setPathEffect(null);
-                break;
-            case 1:
-                intervals = new float[]{ 15, 15 };
-                paint.setPathEffect(new DashPathEffect(intervals,0));
-                break;
-            case 2:
-                intervals=  new float[]{ 15,15,5,15 };
-                paint.setPathEffect(new DashPathEffect(intervals,0));
-                break;
-        }
-        path.moveTo(p[0], p[1]);
-        path.cubicTo(2 * c[0] / 3 + p[0] / 3, p[1], 2 * p[0] / 3 + c[0] / 3, c[1], c[0], c[1]);
-        canvas.drawPath(path, paint);
-    }
-
+    //region Customization
     public void applyTextSize(int text_size) {
         for (int i : selectedNodes) nodes[i].applyTextSize(text_size);
+        changed=true;
     }
 
     public void applyTextColor(int color) {
         for (int i : selectedNodes) nodes[i].applyTextColor(color);
+        changed=true;
     }
 
     public void applyBackgroundColor(int color) {
         for (int i : selectedNodes) nodes[i].applyBackgroundColor(color);
+        changed=true;
     }
 
     public void applyOutlineColor(int color) {
         for (int i : selectedNodes) nodes[i].applyOutlineColor(color);
+        changed=true;
     }
     public void applyConnectionStyle(int style){
         for (int i : selectedNodes) nodes[i].applyConnectionStyle(style);
+        changed=true;
     }
 
     public void applyConnectionColor(int color) {
         for (int i : selectedNodes) nodes[i].applyConnectionColor(color);
+        changed=true;
     }
 
+    public void setNodeCustomizer(NodeCustomizer customizer){
+        nodeCustomizer=customizer;
+        customizer.setMapView(this);
+    }
+    public void setSheetData(){
+        nodeCustomizer.setData(nodes[selectedNodes.get(0)].getData());
+    }
+    //endregion
+
+    //region Text
     public void editText() {
         LayoutInflater li = LayoutInflater.from(getContext());
         View customDialogView = li.inflate(R.layout.edit_text_dialog, null);
@@ -277,10 +306,11 @@ public class MapView extends RelativeLayout {
     }
 
     public void setText(String text) {
-        if (selectedNodes.size() == 1) {
-            nodes[selectedNodes.get(0)].setText(text);
-        }
+        for (int i:selectedNodes) nodes[i].setText(text);
     }
+    //endregion
+
+    //region Save/Load
     public NodeData[] getData(){
         NodeData[] data=new NodeData[255];
         for(int i=0; i<255; i++){
@@ -304,9 +334,33 @@ public class MapView extends RelativeLayout {
             alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     mapName=etName.getText().toString();
-                    MapLoader loader=new MapLoader();
-                    if (loader.saveMap(getContext(), mapName ,getData()))
-                        Toast.makeText(getContext(), "Map saved to \""+mapName+"\"", Toast.LENGTH_SHORT).show();
+                    final MapLoader loader=new MapLoader();
+                    if (loader.mapExist(mapName)){
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                        alertDialog.setMessage("Map already exist. Do you want to overwrite?");
+                        alertDialog.setIcon(R.mipmap.ic_launcher);
+                        alertDialog.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (loader.saveMap(getContext(), mapName ,getData())) {
+                                    Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
+                                    changed=false;
+                                }
+                                else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
+                                dialog.cancel();
+                            }
+                        });
+                        alertDialog.show();
+                        return;
+                    }
+                    if (loader.saveMap(getContext(), mapName ,getData())) {
+                        Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
+                        changed=false;
+                    }
                     else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
                 }
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -326,11 +380,5 @@ public class MapView extends RelativeLayout {
         else {
         }
     }
-    public void setNodeCustomizer(NodeCustomizer customizer){
-        nodeCustomizer=customizer;
-        customizer.setMapView(this);
-    }
-    public void setSheetData(){
-        nodeCustomizer.setData(nodes[selectedNodes.get(0)].getData());
-    }
+    //endregion
 }

@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +28,7 @@ public class MapDrawerActivity extends AppCompatActivity {
     private NodeCustomizer nodeCustomizer;
     public FloatingMenu menu;
     public BottomSheetBehavior bottomSheetBehavior;
+    private String mapName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,7 @@ public class MapDrawerActivity extends AppCompatActivity {
         mapView = findViewById(R.id.map_view);
         final ZoomLayout zoomLayout = findViewById(R.id.zoom);
         menu = findViewById(R.id.floating_menu);
-        //String mapName= getIntent().getExtras().getString("mapName");
+        //String mapName = getIntent().getExtras().getString("mapName");
         mapView.loadMap(null);
         bottomSheet = findViewById(R.id.bottom_sheet);
         nodeCustomizer = (NodeCustomizer) findViewById(R.id.node_customizer);
@@ -85,12 +89,34 @@ public class MapDrawerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id =item.getItemId();
+        int id = item.getItemId();
+        Log.i("Button",item.getItemId()+"");
         switch (id) {
+            case android.R.id.home:
+                if (mapView.changed) {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(MapDrawerActivity.this);
+                    alertDialog.setMessage("Some changes are not saved. Do you want to exit?");
+                    alertDialog.setIcon(R.mipmap.ic_launcher);
+                    alertDialog.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            finish();
+                        }
+                    });
+                    alertDialog.show();
+                    return true;
+                }
+                break;
             case R.id.save:
-                mapView.saveData();
-        }
+                                mapView.saveData();
+                break;
+                    }
 
-        return super.onOptionsItemSelected(item);
-    }
-}
+                    return super.onOptionsItemSelected(item);
+                }
+        }

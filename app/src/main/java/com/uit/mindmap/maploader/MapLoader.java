@@ -6,6 +6,7 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.uit.mindmap.mapdrawer.Node;
@@ -28,8 +29,11 @@ public class MapLoader {
     public boolean saveMap(Context context, String fileName, NodeData[] map){
         Gson gson=new Gson();
         String save=gson.toJson(map);
-        File f = new File(Environment.getExternalStorageDirectory().getPath()+"/Mindmap/saves"+fileName+".map");
-
+        File f;
+        if (isExternalStorageWritable()) {
+            f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");
+        }
+        else f= new File(Environment.getDataDirectory()+"/Mindmap/saves/"+fileName+".map");
         try {
             FileOutputStream fos = new FileOutputStream(f);
             if (save != null) {
@@ -44,8 +48,11 @@ public class MapLoader {
         }
     }
     public String[] getSavedMapsName(){
-
-        File f = new File(Environment.getExternalStorageDirectory().getPath()+"/Mindmap/saves");
+        File f;
+        if (isExternalStorageWritable()) {
+            f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves");
+        }
+        else f= new File(Environment.getDataDirectory()+"/Mindmap/saves");
         if (!f.exists()) {
             f.mkdirs();
         }
@@ -58,13 +65,30 @@ public class MapLoader {
         for(int i=0; i<files.length; i++)
         {
             File file = files[i];
-            /*It's assumed that all file in the path are in supported type*/
             String filePath = file.getPath();
-            if(filePath.endsWith(".map")) // Condition to check .jpg file extension
-                list.add(filePath);
+            if(filePath.endsWith(".map")) {
+                String filename=filePath.substring(filePath.lastIndexOf("/")+1);
+                filename=filename.substring(0,filename.length()-4);
+                list.add(filename);
+            }
         }
         String[] a=new String[list.size()];
         list.toArray(a);
         return a;
+    }
+    private  boolean isExternalStorageWritable(){
+        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+            return true;
+        }
+        return false;
+    }
+    public boolean mapExist(String fileName){
+        File f;
+        if (isExternalStorageWritable()) {
+            f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");
+        }
+        else f= new File(Environment.getDataDirectory()+"/Mindmap/saves/"+fileName+".map");
+        if (f.exists()) return true;
+        return false;
     }
 }
