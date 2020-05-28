@@ -40,8 +40,13 @@ public class MapDrawerActivity extends AppCompatActivity {
         mapView = findViewById(R.id.map_view);
         final ZoomLayout zoomLayout = findViewById(R.id.zoom);
         menu = findViewById(R.id.floating_menu);
-        //String mapName = getIntent().getExtras().getString("mapName");
-        mapView.loadMap(null);
+        Bundle extra=getIntent().getExtras();
+        mapName=null;
+        if (extra!=null) {
+            mapName = extra.getString("mapName");
+            Log.i("map",mapName);
+        }
+        mapView.loadMap(mapName);
         bottomSheet = findViewById(R.id.bottom_sheet);
         nodeCustomizer = (NodeCustomizer) findViewById(R.id.node_customizer);
         mapView.setNodeCustomizer(nodeCustomizer);

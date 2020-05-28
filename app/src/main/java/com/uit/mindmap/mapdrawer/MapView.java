@@ -72,7 +72,14 @@ public class MapView extends RelativeLayout {
             this.nodes = nodes;
             for (Node node : nodes) {
                 if (node != null) {
-
+                    addView(node);
+                    node.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Node n = (Node) v;
+                            selectNode(n.id);
+                        }
+                    });
                 }
             }
         }
@@ -371,13 +378,35 @@ public class MapView extends RelativeLayout {
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
+        else{
+            MapLoader loader=new MapLoader();
+            if (loader.saveMap(getContext(), mapName ,getData())) {
+                Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
+                changed=false;
+            }
+            else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
+        }
     }
     public void setMapName(String mapName){
         this.mapName=mapName;
     }
     public void loadMap(@Nullable String mapName){
+        this.mapName=mapName;
         if(mapName==null) setMap(null);
         else {
+            MapLoader loader=new MapLoader();
+            NodeData[] data= loader.loadMap(mapName);
+            if(data!=null) {
+                Node[] nodes = new Node[255];
+                for (int i = 0; i < 255; i++) {
+                    if (data[i] != null) {
+                        nodes[i] = new Node(getContext());
+                        nodes[i].setData(data[i]);
+                    }
+                }
+                setMap(nodes);
+            }
+            else Toast.makeText(getContext(), "Error: Cannot load map", Toast.LENGTH_SHORT).show();
         }
     }
     //endregion
