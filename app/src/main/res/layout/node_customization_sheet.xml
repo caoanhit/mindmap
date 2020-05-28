@@ -4,14 +4,15 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="15dp"
+    android:paddingVertical="5dp"
+    android:paddingHorizontal="15dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     app:behavior_hideable="false"
     app:behavior_peekHeight="0dp"
     android:background="@color/white"
     android:layout_gravity="bottom"
     android:id="@+id/bottom_sheet"
-    android:elevation="40dp">
+    android:elevation="25dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -90,15 +91,15 @@
             android:text="@string/text_color"
             android:textSize="@dimen/medium_text_size">
         </TextView>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/text_color"
             android:layout_width="wrap_content"
             android:layout_height="35sp"
+            android:layout_gravity="center_vertical|end"
             android:background="@drawable/layout_bg"
             android:backgroundTint="@android:color/black"
-            android:backgroundTintMode="multiply"
-            android:layout_gravity="end">
-        </androidx.appcompat.widget.AppCompatButton>
+            android:backgroundTintMode="multiply"></androidx.appcompat.widget.AppCompatButton>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -113,15 +114,15 @@
             android:textSize="@dimen/medium_text_size">
 
         </TextView>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/background_color"
             android:layout_width="wrap_content"
             android:layout_height="35sp"
+            android:layout_gravity="center_vertical|end"
             android:background="@drawable/layout_bg"
             android:backgroundTint="@android:color/white"
-            android:backgroundTintMode="multiply"
-            android:layout_gravity="end">
-        </androidx.appcompat.widget.AppCompatButton>
+            android:backgroundTintMode="multiply"></androidx.appcompat.widget.AppCompatButton>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -136,15 +137,15 @@
             android:textSize="@dimen/medium_text_size">
 
         </TextView>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/outline_color"
             android:layout_width="wrap_content"
             android:layout_height="35sp"
+            android:layout_gravity="center_vertical|end"
             android:background="@drawable/layout_bg"
             android:backgroundTint="@android:color/white"
-            android:backgroundTintMode="multiply"
-            android:layout_gravity="end">
-        </androidx.appcompat.widget.AppCompatButton>
+            android:backgroundTintMode="multiply"></androidx.appcompat.widget.AppCompatButton>
 
     </LinearLayout>
     <LinearLayout
@@ -226,15 +227,15 @@
             android:textSize="@dimen/medium_text_size">
 
         </TextView>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/connection_color"
             android:layout_width="wrap_content"
             android:layout_height="35sp"
+            android:layout_gravity="center_vertical|end"
             android:background="@drawable/layout_bg"
             android:backgroundTint="@android:color/white"
-            android:backgroundTintMode="multiply"
-            android:layout_gravity="end">
-        </androidx.appcompat.widget.AppCompatButton>
+            android:backgroundTintMode="multiply"></androidx.appcompat.widget.AppCompatButton>
     </LinearLayout>
 
 
