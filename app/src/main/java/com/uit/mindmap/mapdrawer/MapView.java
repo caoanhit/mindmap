@@ -327,56 +327,11 @@ public class MapView extends RelativeLayout {
         }
         return data;
     }
+
     public void saveData(){
         if (mapName==null)
         {
-            LayoutInflater li = LayoutInflater.from(getContext());
-            View customDialogView = li.inflate(R.layout.edit_text_dialog, null);
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-            alertDialogBuilder.setView(customDialogView);
-            final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
-            ((TextView)customDialogView.findViewById(R.id.tv_dialog)).setText(R.string.map_name);
-            etName.setText(nodes[selectedNodes.get(0)].getText());
-            etName.selectAll();
-            alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    mapName=etName.getText().toString();
-                    final MapLoader loader=new MapLoader();
-                    if (loader.mapExist(mapName)){
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-                        alertDialog.setMessage("Map already exist. Do you want to overwrite?");
-                        alertDialog.setIcon(R.mipmap.ic_launcher);
-                        alertDialog.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (loader.saveMap(getContext(), mapName ,getData())) {
-                                    Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
-                                    changed=false;
-                                }
-                                else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
-                                dialog.cancel();
-                            }
-                        });
-                        alertDialog.show();
-                        return;
-                    }
-                    if (loader.saveMap(getContext(), mapName ,getData())) {
-                        Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
-                        changed=false;
-                    }
-                    else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
-                }
-            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
-                }
-            });
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+            saveAs();
         }
         else{
             MapLoader loader=new MapLoader();
@@ -387,6 +342,57 @@ public class MapView extends RelativeLayout {
             else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void saveAs(){
+        LayoutInflater li = LayoutInflater.from(getContext());
+        View customDialogView = li.inflate(R.layout.edit_text_dialog, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setView(customDialogView);
+        final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
+        ((TextView)customDialogView.findViewById(R.id.tv_dialog)).setText(R.string.map_name);
+        etName.setText(nodes[selectedNodes.get(0)].getText());
+        etName.selectAll();
+        alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                mapName=etName.getText().toString();
+                final MapLoader loader=new MapLoader();
+                if (loader.mapExist(mapName)){
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                    alertDialog.setMessage("Map already exist. Do you want to overwrite?");
+                    alertDialog.setIcon(R.mipmap.ic_launcher);
+                    alertDialog.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (loader.saveMap(getContext(), mapName ,getData())) {
+                                Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
+                                changed=false;
+                            }
+                            else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
+                            dialog.cancel();
+                        }
+                    });
+                    alertDialog.show();
+                    return;
+                }
+                if (loader.saveMap(getContext(), mapName ,getData())) {
+                    Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
+                    changed=false;
+                }
+                else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
     public void setMapName(String mapName){
         this.mapName=mapName;
     }

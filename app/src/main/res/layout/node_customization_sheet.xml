@@ -39,6 +39,7 @@
             <com.google.android.material.button.MaterialButton
 
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/text_small"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/small"
@@ -51,6 +52,7 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/text_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/medium"
@@ -63,6 +65,7 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/text_large"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/large"
@@ -171,6 +174,7 @@
             <com.google.android.material.button.MaterialButton
 
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/connection_style_straight"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:cornerRadius="20dp"
@@ -183,6 +187,7 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/connection_style_dashed"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:cornerRadius="20dp"
@@ -195,6 +200,7 @@
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/connection_style_dotted_dash"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 app:cornerRadius="20dp"

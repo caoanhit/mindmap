@@ -40,11 +40,11 @@ public class MapDrawerActivity extends AppCompatActivity {
         mapView = findViewById(R.id.map_view);
         final ZoomLayout zoomLayout = findViewById(R.id.zoom);
         menu = findViewById(R.id.floating_menu);
-        Bundle extra=getIntent().getExtras();
-        mapName=null;
-        if (extra!=null) {
+        Bundle extra = getIntent().getExtras();
+        mapName = null;
+        if (extra != null) {
             mapName = extra.getString("mapName");
-            Log.i("map",mapName);
+            Log.i("map", mapName);
         }
         mapView.loadMap(mapName);
         bottomSheet = findViewById(R.id.bottom_sheet);
@@ -95,7 +95,7 @@ public class MapDrawerActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        Log.i("Button",item.getItemId()+"");
+        Log.i("Button", item.getItemId() + "");
         switch (id) {
             case android.R.id.home:
                 if (mapView.changed) {
@@ -118,10 +118,11 @@ public class MapDrawerActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.save:
-                                mapView.saveData();
+                mapView.saveData();
                 break;
-                    }
-
-                    return super.onOptionsItemSelected(item);
-                }
+            case R.id.save_as:
+                mapView.saveAs();
         }
+        return super.onOptionsItemSelected(item);
+    }
+}

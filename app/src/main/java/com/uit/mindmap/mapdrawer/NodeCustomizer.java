@@ -137,7 +137,11 @@ public class NodeCustomizer extends CoordinatorLayout {
             @Override
             public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
                 if (isChecked) {
-                    mapView.applyTextSize(checkedId-1);
+                    switch (checkedId){
+                        case R.id.text_small: mapView.applyTextSize(0); break;
+                        case R.id.text_medium: mapView.applyTextSize(1); break;
+                        case R.id.text_large: mapView.applyTextSize(2); break;
+                    }
                 }
             }
         });
@@ -145,7 +149,11 @@ public class NodeCustomizer extends CoordinatorLayout {
             @Override
             public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
                 if (isChecked) {
-                    mapView.applyConnectionStyle(checkedId-4);
+                    switch (checkedId){
+                        case R.id.connection_style_straight: mapView.applyConnectionStyle(0); break;
+                        case R.id.connection_style_dashed: mapView.applyConnectionStyle(1); break;
+                        case R.id.connection_style_dotted_dash: mapView.applyConnectionStyle(2); break;
+                    }
                 }
             }
         });
@@ -153,8 +161,16 @@ public class NodeCustomizer extends CoordinatorLayout {
 
     public void setData(NodeData data) {
         this.data = data;
-        textSize.check(data.text_size+1);
-        connectionStyle.check(data.connection_style+4);
+        switch (data.text_size){
+            case 0: textSize.check(R.id.text_small); break;
+            case 1: textSize.check(R.id.text_medium); break;
+            case 2: textSize.check(R.id.text_large); break;
+        }
+        switch (data.connection_style){
+            case 0: connectionStyle.check(R.id.connection_style_straight); break;
+            case 1: connectionStyle.check(R.id.connection_style_dashed); break;
+            case 2: connectionStyle.check(R.id.connection_style_dotted_dash); break;
+        }
         textColor.setBackgroundTintList(ColorStateList.valueOf(data.text_color));
         backgroundColor.setBackgroundTintList(ColorStateList.valueOf(data.background_color));
         outlineColor.setBackgroundTintList(ColorStateList.valueOf(data.outline_color));

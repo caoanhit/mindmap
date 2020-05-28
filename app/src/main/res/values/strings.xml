@@ -17,6 +17,7 @@
     <string name="cancel">Cancel</string>
     <string name="empty">Empty folder</string>
     <string name="save">Save</string>
+    <string name="save_as">Save as</string>
     <string name="search">Search</string>
     <string name="login">Login</string>
     <string name="preferences">Preferences</string>
