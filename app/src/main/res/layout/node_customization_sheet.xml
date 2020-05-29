@@ -45,10 +45,10 @@
                 android:layout_height="match_parent"
                 android:text="@string/small"
                 android:textAllCaps="false"
-                android:textSize="@dimen/medium_text_size"
+                android:textSize="@dimen/small_text_size"
                 app:cornerRadius="20dp"
                 app:strokeWidth="2dp"
-                android:padding="0dp"
+                android:padding="-4dp"
                 android:width="@dimen/icon_size">
 
             </com.google.android.material.button.MaterialButton>
