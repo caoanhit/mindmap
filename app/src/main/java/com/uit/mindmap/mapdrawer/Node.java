@@ -36,6 +36,7 @@ public class Node extends RelativeLayout {
     int[] pos;
 
     //region Styling
+    String text="Root node";
     int textSize=1;
     int textColor=Color.DKGRAY ;
     int backgroundColor=Color.WHITE;
@@ -124,7 +125,6 @@ public class Node extends RelativeLayout {
                 applyPosition();
             }
         });
-        applyData();
     }
     //endregion
     public void focus(){
@@ -137,6 +137,7 @@ public class Node extends RelativeLayout {
         return text_field.getText().toString();
     }
     public void setText(String text){
+        this.text=text;
         text_field.setText(text);
     }
     public void applyTextSize(int text_size){
@@ -146,14 +147,14 @@ public class Node extends RelativeLayout {
                 text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
                 break;
             case 1:
-                text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,17);
+                text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
                 break;
             case 2:
-                text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+                text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
                 break;
             default:
                 this.textSize=1;
-                text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+                text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                 break;
         }
     }
@@ -181,6 +182,7 @@ public class Node extends RelativeLayout {
 
     public NodeData getData(){
         NodeData data=new NodeData();
+        data.text=text;
         data.id=id;
         data.parent=parent;
         data.children=children;
@@ -194,6 +196,7 @@ public class Node extends RelativeLayout {
         return data;
     }
     public void setData(NodeData data){
+        text=data.text;
         id=data.id;
         parent=data.parent;
         children=data.children;
@@ -206,6 +209,7 @@ public class Node extends RelativeLayout {
         connectionColor=data.connection_color;
     }
     public void applyData(){
+        setText(text);
         applyTextSize(textSize);
         applyTextColor(textColor);
         applyBackgroundColor(backgroundColor);
@@ -262,4 +266,5 @@ public class Node extends RelativeLayout {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
     }
+
 }

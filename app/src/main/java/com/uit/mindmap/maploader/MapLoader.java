@@ -1,7 +1,9 @@
 package com.uit.mindmap.maploader;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -28,7 +30,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapLoader {
+    Context context;
+    public MapLoader(Context context){
+        this.context=context;
+    }
     public NodeData[] loadMap(String fileName){
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         NodeData[] map = new NodeData[255];
         File fl = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");
         try {
@@ -49,7 +57,7 @@ public class MapLoader {
             Log.i("load","File not found");
             return null;
         } catch (IOException ioException) {
-            Log.i("load","Ioexception");
+            Log.i("load",ioException.getMessage());
             return null;
         } catch (Exception e) {
             Log.i("error",e.getMessage());
@@ -58,7 +66,9 @@ public class MapLoader {
         return map;
     }
 
-    public boolean saveMap(Context context, String fileName, NodeData[] map) {
+    public boolean saveMap(String fileName, NodeData[] map) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         Gson gson = new Gson();
         String save = gson.toJson(map);
         File f;
@@ -73,13 +83,17 @@ public class MapLoader {
             fos.close();
             return true;
         } catch (FileNotFoundException fileNotFound) {
+            Log.i("save","File not found");
             return false;
         } catch (IOException ioException) {
+            Log.i("save",ioException.getMessage());
             return false;
         }
     }
 
     public String[] getSavedMapsName() {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         File f;
         if (isExternalStorageWritable()) {
             f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves");
@@ -114,6 +128,8 @@ public class MapLoader {
     }
 
     public boolean mapExist(String fileName) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         File f;
         if (isExternalStorageWritable()) {
             f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");

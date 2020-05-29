@@ -3,10 +3,14 @@ package com.uit.mindmap.mapdrawer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -37,6 +41,8 @@ public class MapDrawerActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         mapView = findViewById(R.id.map_view);
         final ZoomLayout zoomLayout = findViewById(R.id.zoom);
         menu = findViewById(R.id.floating_menu);
@@ -92,6 +98,8 @@ public class MapDrawerActivity extends AppCompatActivity {
         return true;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -124,5 +132,27 @@ public class MapDrawerActivity extends AppCompatActivity {
                 mapView.saveAs();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mapView.changed) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(MapDrawerActivity.this);
+            alertDialog.setMessage("Some changes are not saved. Do you want to exit?");
+            alertDialog.setIcon(R.mipmap.ic_launcher);
+            alertDialog.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    finish();
+                }
+            });
+            alertDialog.show();
+        }
+        else finish();
     }
 }

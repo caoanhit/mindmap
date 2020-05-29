@@ -45,9 +45,11 @@
                 android:layout_height="match_parent"
                 android:text="@string/small"
                 android:textAllCaps="false"
-                android:textSize="@dimen/small_text_size"
+                android:textSize="@dimen/medium_text_size"
                 app:cornerRadius="20dp"
-                app:strokeWidth="2dp">
+                app:strokeWidth="2dp"
+                android:padding="0dp"
+                android:width="@dimen/icon_size">
 
             </com.google.android.material.button.MaterialButton>
 
@@ -60,7 +62,9 @@
                 android:textAllCaps="false"
                 android:textSize="@dimen/medium_text_size"
                 app:cornerRadius="20dp"
-                app:strokeWidth="2dp">
+                app:strokeWidth="2dp"
+                android:padding="0dp"
+                android:width="@dimen/icon_size">
 
             </com.google.android.material.button.MaterialButton>
 
@@ -73,7 +77,9 @@
                 android:textAllCaps="false"
                 android:textSize="@dimen/large_text_size"
                 app:cornerRadius="20dp"
-                app:strokeWidth="2dp">
+                app:strokeWidth="2dp"
+                android:padding="0dp"
+                android:width="@dimen/icon_size">
 
             </com.google.android.material.button.MaterialButton>
         </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -99,7 +105,8 @@
             android:layout_gravity="center_vertical|end"
             android:background="@drawable/layout_bg"
             android:backgroundTint="@android:color/black"
-            android:backgroundTintMode="multiply"></androidx.appcompat.widget.AppCompatButton>
+            android:backgroundTintMode="multiply">
+        </androidx.appcompat.widget.AppCompatButton>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -182,7 +189,9 @@
                 app:icon="@drawable/ic_straight_line"
                 app:iconGravity="textStart"
                 app:iconPadding="@dimen/icon_padding"
-                app:strokeWidth="2dp">
+                app:strokeWidth="2dp"
+                android:padding="0dp"
+                android:width="@dimen/icon_size">
 
             </com.google.android.material.button.MaterialButton>
 
@@ -195,7 +204,9 @@
                 app:icon="@drawable/ic_dashed_line"
                 app:iconPadding="@dimen/icon_padding"
                 app:iconGravity="textStart"
-                app:strokeWidth="2dp">
+                app:strokeWidth="2dp"
+                android:padding="0dp"
+                android:width="@dimen/icon_size">
 
             </com.google.android.material.button.MaterialButton>
 
@@ -208,7 +219,9 @@
                 app:icon="@drawable/ic_dotted_dash_line"
                 app:iconPadding="@dimen/icon_padding"
                 app:iconGravity="textStart"
-                app:strokeWidth="2dp">
+                app:strokeWidth="2dp"
+                android:padding="0dp"
+                android:width="@dimen/icon_size">
 
             </com.google.android.material.button.MaterialButton>
         </com.google.android.material.button.MaterialButtonToggleGroup>

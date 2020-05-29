@@ -18,6 +18,9 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.uit.mindmap.R;
 import com.uit.mindmap.maploader.NodeData;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class NodeCustomizer extends CoordinatorLayout {
@@ -25,6 +28,7 @@ public class NodeCustomizer extends CoordinatorLayout {
     private MapView mapView;
     private MaterialButtonToggleGroup textSize,connectionStyle;
     private AppCompatButton textColor, backgroundColor,outlineColor, connectionColor;
+    int[] colorList;
     public NodeCustomizer(Context context) {
         super(context);
         init(null);
@@ -49,6 +53,12 @@ public class NodeCustomizer extends CoordinatorLayout {
         connectionColor=(AppCompatButton)findViewById(R.id.connection_color);
         connectionStyle=(MaterialButtonToggleGroup)findViewById((R.id.connection_style));
 
+        String colors[] = getResources().getStringArray(R.array.colors);
+        colorList=new int[colors.length];
+        for (int i = 0; i < colors.length; i++) {
+            colorList[i]=Color.parseColor(colors[i]);
+        }
+
         textColor.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +75,9 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(5)
+                        .setColumns(8)
+                        .setColors(colorList)
+                        .setColorButtonSize(30, 30)
                         .show();
                 colorPicker.getNegativeButton().setText(R.string.cancel);
             }
@@ -86,7 +98,9 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(5)
+                        .setColumns(8)
+                        .setColors(colorList)
+                        .setColorButtonSize(30, 30)
                         .show();
                 colorPicker.getNegativeButton().setText(R.string.cancel);
             }
@@ -107,7 +121,9 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(5)
+                        .setColumns(8)
+                        .setColors(colorList)
+                        .setColorButtonSize(30, 30)
                         .show();
                 colorPicker.getNegativeButton().setText(R.string.cancel);
             }
@@ -128,7 +144,9 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(5)
+                        .setColumns(8)
+                        .setColors(colorList)
+                        .setColorButtonSize(30, 30)
                         .show();
                 colorPicker.getNegativeButton().setText(R.string.cancel);
             }

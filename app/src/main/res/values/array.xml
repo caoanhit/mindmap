@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="colors">
+        <item>#FFFFFF</item>
+        <item>#FF9999</item>
+        <item>#FFCC99</item>
+        <item>#FFFF99</item>
+        <item>#99FF99</item>
+        <item>#99FFFF</item>
+        <item>#9999FF</item>
+        <item>#FF99FF</item>
+
+        <item>#CCCCCC</item>
+        <item>#FF6666</item>
+        <item>#FF9966</item>
+        <item>#FFFF66</item>
+        <item>#66FF66</item>
+        <item>#66FFFF</item>
+        <item>#6666FF</item>
+        <item>#FF66FF</item>
+
+        <item>#999999</item>
+        <item>#FF0000</item>
+        <item>#FF3300</item>
+        <item>#FFFF00</item>
+        <item>#00FF00</item>
+        <item>#00FFFF</item>
+        <item>#0000FF</item>
+        <item>#FF00FF</item>
+
+        <item>#666666</item>
+        <item>#CC0000</item>
+        <item>#CC3300</item>
+        <item>#CCCC00</item>
+        <item>#00CC00</item>
+        <item>#00CCCC</item>
+        <item>#0000CC</item>
+        <item>#CC00CC</item>
+
+        <item>#333333</item>
+        <item>#990000</item>
+        <item>#993300</item>
+        <item>#999900</item>
+        <item>#009900</item>
+        <item>#009999</item>
+        <item>#000099</item>
+        <item>#990099</item>
+
+        <item>#000000</item>
+        <item>#660000</item>
+        <item>#663300</item>
+        <item>#666600</item>
+        <item>#006600</item>
+        <item>#006666</item>
+        <item>#000066</item>
+        <item>#660066</item>
+
+
+
+    </string-array>
+</resources>

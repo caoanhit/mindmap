@@ -80,6 +80,7 @@ public class MapView extends RelativeLayout {
                             selectNode(n.id);
                         }
                     });
+                    node.applyData();
                 }
             }
         }
@@ -334,8 +335,8 @@ public class MapView extends RelativeLayout {
             saveAs();
         }
         else{
-            MapLoader loader=new MapLoader();
-            if (loader.saveMap(getContext(), mapName ,getData())) {
+            MapLoader loader=new MapLoader(getContext());
+            if (loader.saveMap(mapName ,getData())) {
                 Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
                 changed=false;
             }
@@ -355,7 +356,7 @@ public class MapView extends RelativeLayout {
         alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 mapName=etName.getText().toString();
-                final MapLoader loader=new MapLoader();
+                final MapLoader loader=new MapLoader(getContext());
                 if (loader.mapExist(mapName)){
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                     alertDialog.setMessage("Map already exist. Do you want to overwrite?");
@@ -367,7 +368,7 @@ public class MapView extends RelativeLayout {
                     });
                     alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            if (loader.saveMap(getContext(), mapName ,getData())) {
+                            if (loader.saveMap(mapName ,getData())) {
                                 Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
                                 changed=false;
                             }
@@ -378,7 +379,7 @@ public class MapView extends RelativeLayout {
                     alertDialog.show();
                     return;
                 }
-                if (loader.saveMap(getContext(), mapName ,getData())) {
+                if (loader.saveMap(mapName ,getData())) {
                     Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
                     changed=false;
                 }
@@ -400,7 +401,7 @@ public class MapView extends RelativeLayout {
         this.mapName=mapName;
         if(mapName==null) setMap(null);
         else {
-            MapLoader loader=new MapLoader();
+            MapLoader loader=new MapLoader(getContext());
             NodeData[] data= loader.loadMap(mapName);
             if(data!=null) {
                 Node[] nodes = new Node[255];

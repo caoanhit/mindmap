@@ -3,14 +3,14 @@
     <string name="new_map">New map</string>
     <string name="root_node">Root node</string>
     <string name="text_size">Text size</string>
-    <string name="background_color">Background color</string>
+    <string name="background_color">Fill color</string>
     <string name="text_color">Text color</string>
     <string name="outline_color">Outline color</string>
     <string name="small">Small</string>
     <string name="medium">Medium</string>
     <string name="large">Large</string>
-    <string name="connection_color">Connection color</string>
-    <string name="connection_style">Connection style</string>
+    <string name="connection_color">Line color</string>
+    <string name="connection_style">Line style</string>
     <string name="delete_root_message">Root node can not be deleted.</string>
     <string name="edit_text">Edit text</string>
     <string name="map_name">Map name</string>

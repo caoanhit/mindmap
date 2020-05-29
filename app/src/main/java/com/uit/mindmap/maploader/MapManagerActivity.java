@@ -32,10 +32,8 @@ public class MapManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map_manager);
 
         if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED);
-        else  ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        if (ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED);
-        else  ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-
+        else  ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        loadMapNames();
         Button bttNewMap= (Button)findViewById(R.id.new_map);
         bttNewMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,9 +42,33 @@ public class MapManagerActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        MapLoader loader=new MapLoader();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mapmanager_action_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.refresh:
+                loadMapNames();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode==1){
+            if (grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
+                loadMapNames();
+        }
+    }
+    private  void loadMapNames(){
+        MapLoader loader=new MapLoader(this);
         final String[] names=loader.getSavedMapsName();
-        if(names.length>0) {
+        if(names!=null && names.length>0) {
             findViewById(R.id.tv_empty).setVisibility(View.INVISIBLE);
             lvMap = (ListView) findViewById(R.id.lv_map);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
@@ -62,23 +84,5 @@ public class MapManagerActivity extends AppCompatActivity {
             });
         }
         else findViewById(R.id.tv_empty).setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.mapmanager_action_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.refresh:
-                MapLoader loader=new MapLoader();
-                final String[] names=loader.getSavedMapsName();
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,names);
-                lvMap.setAdapter(adapter);
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

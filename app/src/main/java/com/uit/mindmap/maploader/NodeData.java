@@ -12,6 +12,7 @@ public class NodeData {
     public List<Integer> children;
     public int[] pos;
 
+    public String text;
     public int text_size;
     public int text_color;
     public int background_color;
