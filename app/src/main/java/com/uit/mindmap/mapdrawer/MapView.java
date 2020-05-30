@@ -26,10 +26,46 @@ import com.uit.mindmap.maploader.MapLoader;
 import com.uit.mindmap.maploader.NodeData;
 
 import java.io.File;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
+import java.util.Stack;
 
 public class MapView extends RelativeLayout {
+    private static final int maxNodeAmount = 255;
+    private static final int undoAmount = 20;
+
+    private class Command{
+        ChangeType type;
+        Object data;
+        public Command(ChangeType type, Object data){
+            this.type=type;
+            this.data=data;
+        }
+    }
+
+    //region Listeners
+    public interface onUndoListener {
+        public void onUndo(boolean undoAvailable);
+    }
+    private onUndoListener undoListener;
+
+    public void setUndoListener(onUndoListener undoListener) {
+        this.undoListener = undoListener;
+    }
+
+    public interface onChangeListener{
+        public void onChange(boolean redoAvailable);
+    }
+    private onChangeListener changeListener;
+
+    public void setChangeListener(onChangeListener changeListener) {
+        this.changeListener = changeListener;
+    }
+    //endregion
+
+    public enum ChangeType{ADD,DELETE, MOVE,TEXT,}
     Node[] nodes;
     List<Integer> selectedNodes;
     Paint paint;
@@ -37,6 +73,8 @@ public class MapView extends RelativeLayout {
     String mapName;
     NodeCustomizer nodeCustomizer;
     boolean changed=false;
+    Deque<Command> undoHistory;
+    Deque<Command> redoHistory;
 
     //region Constructor
     public MapView(Context context) {
@@ -59,10 +97,13 @@ public class MapView extends RelativeLayout {
 
     public void init(@Nullable AttributeSet set) {
         selectedNodes = new ArrayList<>();
-        nodes = new Node[255];
+        nodes = new Node[maxNodeAmount];
         paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
+        paint.setAntiAlias(true);
         path = new Path();
+        undoHistory=new ArrayDeque<>();
+        redoHistory=new ArrayDeque<>();
     }
 
     public void setMap(@Nullable Node[] nodes) {
@@ -73,11 +114,12 @@ public class MapView extends RelativeLayout {
             for (Node node : nodes) {
                 if (node != null) {
                     addView(node);
+                    node.setMap(this);
                     node.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Node n = (Node) v;
-                            selectNode(n.id);
+                            selectNode(n.data.id);
                         }
                     });
                     node.applyData();
@@ -88,28 +130,107 @@ public class MapView extends RelativeLayout {
     }
     //endregion
 
+    //region Undo/Redo
+    public boolean undo(){
+        if(!undoHistory.isEmpty()){
+            Command command=(undoHistory.pollLast());
+            switch (command.type){
+                case ADD: removeNode();
+            }
+            redoHistory.push(command);
+            return true;
+        }
+        else return false;
+    }
+    public void unDelete(List<Integer> nodes){
+
+
+    }
+    public boolean redo(){
+        if (!redoHistory.isEmpty()) {
+            Command command=redoHistory.pollLast();
+
+            undoHistory.push(command);
+            changeListener.onChange(redoHistory.isEmpty());
+            return true;
+        }
+
+        else return false;
+    }
+
+    private void addCommand(ChangeType type, Object data){
+        Command command= new Command(type, data);
+        undoHistory.push(command);
+        redoHistory.clear();
+        if (changeListener!=null)
+            changeListener.onChange(false);
+        if (undoHistory.size()>undoAmount) removeUndo();
+
+    }
+
+    private void clearRedo(){
+        for(int i=0; i<redoHistory.size();i++)
+        {
+            Command c= redoHistory.poll();
+            if(c.type==ChangeType.ADD){
+                List<Integer> nodes= (List<Integer>)c.data;
+                for(int j:nodes) deleteNode(j);
+            }
+        }
+    }
+    private void removeUndo(){
+        Command c= undoHistory.pollFirst();
+        if (c.type==ChangeType.DELETE){
+            List<Integer> nodes= (List<Integer>)c.data;
+            for(int j:nodes) deleteNode(j);
+        }
+    }
+    private void deleteNode(int i){
+        nodes[i]=null;
+    }
+    private void reAdd(List<Integer> nodes){
+        for (int i:nodes){
+            this.nodes[i].deleted=false;
+            addView(this.nodes[i]);
+        }
+    }
+    public void setChanged(){
+        changed=true;
+        clearRedo();
+        if (changeListener!=null)
+            changeListener.onChange(false);
+    }
+    //endregion
+
+    //region Draw
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        for (int i = 0; i < 255; i++) {
-            if (nodes[i] != null) {
-                for (int a : nodes[i].children) {
+        for (int i = 0; i < maxNodeAmount; i++) {
+            if (nodes[i] != null&&!nodes[i].deleted) {
+                for (int a : nodes[i].data.children) {
                     drawLine(i, a, canvas);
                 }
             }
         }
     }
+    private void drawLineOld(int parent_node, int child_node, Canvas canvas) {
+        paint.setColor(nodes[child_node].data.lineColor);
+        paint.setStrokeWidth(getContext().getResources().getDimensionPixelSize(R.dimen.thin_line));
+        int[] p = nodes[child_node].data.pos;
+        int[] c = nodes[parent_node].data.pos;
+        int[] s=new int[2];
+        getLocationOnScreen(s);
 
-    public void drawLine(int parent_node, int child_node, Canvas canvas) {
-        paint.setColor(nodes[child_node].getConnectionColor());
-        paint.setStrokeWidth(4);
-        int[] p = nodes[parent_node].pos;
-        int[] c = nodes[child_node].pos;
+        p[0]-=s[0];
+        p[1]-=s[1];
+        c[0]-=s[0];
+        c[1]-=s[1];
         path.reset();
         paint.setAntiAlias(true);
         float[] intervals;
-        int style=nodes[child_node].getConnectionStyle();
+        int style=nodes[child_node].data.lineStyle;
         switch (style){
             case 0:
                 paint.setPathEffect(null);
@@ -128,6 +249,70 @@ public class MapView extends RelativeLayout {
         canvas.drawPath(path, paint);
     }
 
+    private void drawLine(int parent_node, int child_node, Canvas canvas) {
+        paint.setColor(nodes[child_node].data.lineColor);
+        paint.setStrokeWidth(getContext().getResources().getDimensionPixelSize(R.dimen.thin_line));
+        float[] intervals;
+        int style=nodes[child_node].data.lineStyle;
+        switch (style){
+            case 0:
+                paint.setPathEffect(null);
+                break;
+            case 1:
+                intervals = new float[]{ 15, 15 };
+                paint.setPathEffect(new DashPathEffect(intervals,0));
+                break;
+            case 2:
+                intervals=  new float[]{ 15,15,5,15 };
+                paint.setPathEffect(new DashPathEffect(intervals,0));
+                break;
+        }
+        drawCurve(parent_node,child_node,canvas);
+    }
+    private void drawCurve(int parent_node, int child_node, Canvas canvas){
+        path.reset();
+        int[] p = nodes[parent_node].anchor(nodes[child_node].data.pos);
+        int[] c = nodes[child_node].anchor(nodes[parent_node].data.pos);
+        int[] s=new int[2];
+        getLocationOnScreen(s);
+        float scale=((MapDrawerActivity)getContext()).zoomLayout.scale;
+        p[0]/=scale;
+        p[1]/=scale;
+        c[0]/=scale;
+        c[1]/=scale;
+        p[0]-=(int)(s[0]/scale);
+        p[1]-=(int)(s[1]/scale);
+        c[0]-=(int)(s[0]/scale);
+        c[1]-=(int)(s[1]/scale);
+        path.moveTo(p[0], p[1]);
+        path.cubicTo(p[0]*c[3]+ (c[0] / 2 +p[0] / 2)*c[2]
+                , p[1]*p[2]+p[3]*(c[1]/2+p[1]/2)
+                , c[0]*p[3]+ (p[0] / 2 +c[0] / 2)*p[2]
+                , c[1]*c[2]+c[3]*(p[1]/2+c[1]/2), c[0], c[1]);
+        canvas.drawPath(path, paint);
+    }
+    private void drawStraightLine(int parent_node, int child_node, Canvas canvas){
+        paint.setAntiAlias(true);
+        int[] p = nodes[parent_node].anchor(nodes[child_node].data.pos);
+        int[] c = nodes[child_node].anchor(nodes[parent_node].data.pos);
+        int[] s=new int[2];
+        getLocationOnScreen(s);
+        float scale=((MapDrawerActivity)getContext()).zoomLayout.scale;
+        p[0]/=scale;
+        p[1]/=scale;
+        c[0]/=scale;
+        c[1]/=scale;
+        p[0]-=(int)(s[0]/scale);
+        p[1]-=(int)(s[1]/scale);
+        c[0]-=(int)(s[0]/scale);
+        c[1]-=(int)(s[1]/scale);
+        canvas.drawLine(p[0],p[1],c[0],c[1],paint);
+    }
+    private void drawTriangle (int parent_node, int child_node,int side,  Canvas canvas){
+
+    }
+    //endregion
+
     //region Add
     public int addNode(@Nullable int[] pos) {
         Node node = new Node(getContext());
@@ -137,7 +322,11 @@ public class MapView extends RelativeLayout {
             i++;
         }
         nodes[i] = node;
-        node.id = i;
+        node.setFillColor(getContext().getResources().getColor(R.color.colorPrimary));
+        node.setTextColor(Color.WHITE);
+        node.setOutlineColor(getContext().getResources().getColor(R.color.colorPrimary));
+        node.data.id = i;
+        node.setMap(this);
         selectNode(i);
         if (pos != null) {
             node.setPosition(pos);
@@ -147,11 +336,12 @@ public class MapView extends RelativeLayout {
             pos[1] += (int) getResources().getDimension(R.dimen.map_size) / 2;
             node.setPosition(pos);
         }
+        node.applyData();
         node.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Node n = (Node) v;
-                selectNode(n.id);
+                selectNode(n.data.id);
             }
         });
         return i;
@@ -160,25 +350,27 @@ public class MapView extends RelativeLayout {
     public int addNode(int parent) {
         Node node = new Node(getContext());
         addView(node);
-        node.parent = parent;
+        node.data.parent = parent;
         int i = 0;
         while (nodes[i] != null && i < 254) {
             i++;
         }
-        node.id = i;
+        node.data.id = i;
         nodes[i] = node;
         selectNode(i);
+        node.setMap(this);
         nodes[parent].addChild(i);
         int[] pos = new int[2];
-        pos[0] = nodes[parent].pos[0];
-        pos[1] = nodes[parent].pos[1];
+        pos[0] = nodes[parent].data.pos[0];
+        pos[1] = nodes[parent].data.pos[1];
         pos[0] += 50 + nodes[parent].getWidth();
         node.setPosition(pos);
+        node.applyData();
         node.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Node n = (Node) v;
-                selectNode(n.id);
+                selectNode(n.data.id);
             }
         });
         return i;
@@ -196,17 +388,17 @@ public class MapView extends RelativeLayout {
 
     //region Remove
     public void removeChildNode(int id) {
-        for (int i : nodes[id].children) removeChildNode(i);
+        for (int i : nodes[id].data.children) removeChildNode(i);
         removeView(nodes[id]);
-        nodes[id] = null;
+        nodes[id].deleted=true;
     }
 
     public void removeNode(int id) {
         if (id != 0) {
-            for (int i : nodes[id].children) removeChildNode(i);
-            nodes[nodes[id].parent].removeChildren(id);
+            for (int i : nodes[id].data.children) removeChildNode(i);
+            nodes[nodes[id].data.parent].removeChildren(id);
             removeView(nodes[id]);
-            nodes[id] = null;
+            nodes[id].deleted=true;
         } else Toast.makeText(getContext(), "Cannot delete root node", Toast.LENGTH_SHORT).show();
     }
 
@@ -227,16 +419,24 @@ public class MapView extends RelativeLayout {
     //endregion
 
     //region Selection
-    public void deselect(int id) {
+    public void deselectNode(int id) {
         nodes[id].defocus();
         selectedNodes.remove((Integer) id);
     }
-
     public void deselectAll() {
         for (int id : selectedNodes) {
             nodes[id].defocus();
         }
         selectedNodes.clear();
+    }
+    public void selectMultiple(int id){
+        selectedNodes.add(id);
+        nodes[id].focus();
+        nodes[id].bringToFront();
+        View menu = ((MapDrawerActivity) getContext()).menu;
+        BottomSheetBehavior bottomSheetBehavior= ((MapDrawerActivity) getContext()).bottomSheetBehavior;
+        if (menu != null) menu.setVisibility(VISIBLE);
+        if (bottomSheetBehavior!=null) bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
     public void selectNode(int id) {
         deselectAll();
@@ -248,35 +448,40 @@ public class MapView extends RelativeLayout {
         if (menu != null) menu.setVisibility(VISIBLE);
         if (bottomSheetBehavior!=null) bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
+    public void toggleSelect(int id){
+        int index=selectedNodes.indexOf(id);
+        if (index>-1) deselectNode(selectedNodes.get(index));
+        else selectMultiple(id);
+    }
     //endregion
 
     //region Customization
-    public void applyTextSize(int text_size) {
-        for (int i : selectedNodes) nodes[i].applyTextSize(text_size);
+    public void setTextSize(int text_size) {
+        for (int i : selectedNodes) nodes[i].setTextSize(text_size);
         changed=true;
     }
 
-    public void applyTextColor(int color) {
-        for (int i : selectedNodes) nodes[i].applyTextColor(color);
+    public void setTextColor(int color) {
+        for (int i : selectedNodes) nodes[i].setTextColor(color);
         changed=true;
     }
 
-    public void applyBackgroundColor(int color) {
-        for (int i : selectedNodes) nodes[i].applyBackgroundColor(color);
+    public void setFillColor(int color) {
+        for (int i : selectedNodes) nodes[i].setFillColor(color);
         changed=true;
     }
 
-    public void applyOutlineColor(int color) {
-        for (int i : selectedNodes) nodes[i].applyOutlineColor(color);
+    public void setOutlineColor(int color) {
+        for (int i : selectedNodes) nodes[i].setOutlineColor(color);
         changed=true;
     }
-    public void applyConnectionStyle(int style){
-        for (int i : selectedNodes) nodes[i].applyConnectionStyle(style);
+    public void setLineStyle(int style){
+        for (int i : selectedNodes) nodes[i].setLineStyle(style);
         changed=true;
     }
 
-    public void applyConnectionColor(int color) {
-        for (int i : selectedNodes) nodes[i].applyConnectionColor(color);
+    public void setConnectionColor(int color) {
+        for (int i : selectedNodes) nodes[i].setLineColor(color);
         changed=true;
     }
 
@@ -285,7 +490,7 @@ public class MapView extends RelativeLayout {
         customizer.setMapView(this);
     }
     public void setSheetData(){
-        nodeCustomizer.setData(nodes[selectedNodes.get(0)].getData());
+        nodeCustomizer.setData(nodes[selectedNodes.get(0)].data);
     }
     //endregion
 
@@ -316,14 +521,19 @@ public class MapView extends RelativeLayout {
     public void setText(String text) {
         for (int i:selectedNodes) nodes[i].setText(text);
     }
+    public void moveNode(int x, int y){
+        for(int i:selectedNodes){
+            nodes[i].movePosition(x,y);
+        }
+    }
     //endregion
 
     //region Save/Load
     public NodeData[] getData(){
-        NodeData[] data=new NodeData[255];
-        for(int i=0; i<255; i++){
+        NodeData[] data=new NodeData[maxNodeAmount];
+        for(int i=0; i<maxNodeAmount; i++){
             if(nodes[i]!=null){
-                data[i]=nodes[i].getData();
+                data[i]=nodes[i].data;
             }
         }
         return data;
@@ -369,10 +579,8 @@ public class MapView extends RelativeLayout {
                     alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if (loader.saveMap(mapName ,getData())) {
-                                Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
                                 changed=false;
                             }
-                            else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
                             dialog.cancel();
                         }
                     });
@@ -380,10 +588,8 @@ public class MapView extends RelativeLayout {
                     return;
                 }
                 if (loader.saveMap(mapName ,getData())) {
-                    Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
                     changed=false;
                 }
-                else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -404,8 +610,8 @@ public class MapView extends RelativeLayout {
             MapLoader loader=new MapLoader(getContext());
             NodeData[] data= loader.loadMap(mapName);
             if(data!=null) {
-                Node[] nodes = new Node[255];
-                for (int i = 0; i < 255; i++) {
+                Node[] nodes = new Node[maxNodeAmount];
+                for (int i = 0; i < maxNodeAmount; i++) {
                     if (data[i] != null) {
                         nodes[i] = new Node(getContext());
                         nodes[i].setData(data[i]);
@@ -413,8 +619,70 @@ public class MapView extends RelativeLayout {
                 }
                 setMap(nodes);
             }
-            else Toast.makeText(getContext(), "Error: Cannot load map", Toast.LENGTH_SHORT).show();
         }
+    }
+    //endregion
+
+    //regionDimensions
+    private int[] getMapCenter(){
+        int[] a=new int[2];
+        int maxX= nodes[0].data.pos[0];
+        int maxY= nodes[0].data.pos[1];
+        int minX=nodes[0].data.pos[0];
+        int minY=nodes[0].data.pos[1];
+        for(Node node:nodes){
+            if(node!=null){
+                if(node.data.pos[0]>maxX) maxX=node.data.pos[0];
+                if(node.data.pos[1]>maxX) maxY=node.data.pos[1];
+                if(node.data.pos[0]<minX) minX=node.data.pos[0];
+                if(node.data.pos[1]<minX) minX=node.data.pos[1];
+            }
+        }
+        a[0]=(maxX+minX)/2;
+        a[1]=(maxY+minY)/2;
+        return a;
+    }
+    private int getMapWidth(){
+        int max= nodes[0].data.pos[0];
+        int min=nodes[0].data.pos[0];
+        for(Node node:nodes){
+            if(node!=null){
+                if(node.data.pos[0]>max) max=node.data.pos[0];
+                if(node.data.pos[0]<min) min=node.data.pos[0];
+            }
+        }
+        return (max+min)/2;
+    }
+    private int getMapHeight(){
+        int max= nodes[0].data.pos[1];
+        int min=nodes[0].data.pos[1];
+        for(Node node:nodes){
+            if(node!=null){
+                if(node.data.pos[1]>max) max=node.data.pos[1];
+                if(node.data.pos[1]<min) min=node.data.pos[1];
+            }
+        }
+        return (max+min)/2;
+    }
+    private int[] getMapDimensions() {
+        int[] a=new int[4];
+        int maxX= nodes[0].data.pos[0];
+        int maxY= nodes[0].data.pos[1];
+        int minX=nodes[0].data.pos[0];
+        int minY=nodes[0].data.pos[1];
+        for(Node node:nodes){
+            if(node!=null){
+                if(node.data.pos[0]>maxX) maxX=node.data.pos[0];
+                if(node.data.pos[1]>maxX) maxY=node.data.pos[1];
+                if(node.data.pos[0]<minX) minX=node.data.pos[0];
+                if(node.data.pos[1]<minX) minX=node.data.pos[1];
+            }
+        }
+        a[0]=minX;
+        a[1]=minY;
+        a[2]=maxX;
+        a[3]=maxY;
+        return a;
     }
     //endregion
 }

@@ -9,8 +9,8 @@
     <string name="small">Small</string>
     <string name="medium">Medium</string>
     <string name="large">Large</string>
-    <string name="connection_color">Line color</string>
-    <string name="connection_style">Line style</string>
+    <string name="line_color">Line color</string>
+    <string name="line_style">Line style</string>
     <string name="delete_root_message">Root node can not be deleted.</string>
     <string name="edit_text">Edit text</string>
     <string name="map_name">Map name</string>
@@ -24,4 +24,9 @@
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="refresh">Refresh</string>
+    <string name="arrow">Arrow</string>
+    <string name="multiple_select_messages">Select multiple nodes</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+
 </resources>

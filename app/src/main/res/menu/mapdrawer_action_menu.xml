@@ -2,14 +2,34 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/undo"
+        android:title="@string/undo"
+        android:icon="@drawable/ic_undo_black_24dp"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/redo"
+        android:title="@string/redo"
+        android:icon="@drawable/ic_redo_black_24dp"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/multiple_select"
+        android:icon="@drawable/ic_library_add_check_24px"
+        android:title="Multiple select"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/rectangle_select"
+        android:icon="@drawable/ic_highlight_alt_24px"
+        android:title="Rectangle select"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/save"
-        android:title="@string/save"
         android:icon="@drawable/ic_save_black_24dp"
-        app:showAsAction="always">
-    </item>
+        android:title="@string/save"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/save_as"
-        android:title="@string/save_as">
-    </item>
+        android:title="@string/save_as"/>
 
 </menu>

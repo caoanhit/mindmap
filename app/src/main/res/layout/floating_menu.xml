@@ -9,40 +9,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
+        android:padding="15dp"
         android:src="@drawable/ic_library_add_black_24dp"
-        android:tint="@color/cardview_dark_background"
-        android:padding="15dp">
-
-    </ImageButton>
+        android:tint="@color/cardview_dark_background"/>
 
     <ImageButton
         android:id="@+id/edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
+        android:padding="15dp"
         android:src="@drawable/ic_mode_edit_black_24dp"
-        android:tint="@color/cardview_dark_background"
-        android:padding="15dp">
-    </ImageButton>
+        android:tint="@color/cardview_dark_background"/>
 
     <ImageButton
         android:id="@+id/customize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
+        android:padding="15dp"
         android:src="@drawable/ic_color_lens_black_24dp"
-        android:tint="@color/cardview_dark_background"
-        android:padding="15dp">
-    </ImageButton>
+        android:tint="@color/cardview_dark_background"/>
+
 
     <ImageButton
         android:id="@+id/delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"
+        android:padding="15dp"
         android:src="@drawable/ic_delete_black_24dp"
-        android:tint="@color/cardview_dark_background"
-        android:padding="15dp">
-    </ImageButton>
+        android:tint="@color/cardview_dark_background"/>
 
 </LinearLayout>

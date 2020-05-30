@@ -4,22 +4,15 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.uit.mindmap.R;
 import com.uit.mindmap.maploader.NodeData;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
 
@@ -51,7 +44,7 @@ public class NodeCustomizer extends CoordinatorLayout {
         backgroundColor=(AppCompatButton)findViewById(R.id.background_color);
         outlineColor=(AppCompatButton)findViewById(R.id.outline_color);
         connectionColor=(AppCompatButton)findViewById(R.id.connection_color);
-        connectionStyle=(MaterialButtonToggleGroup)findViewById((R.id.connection_style));
+        connectionStyle=(MaterialButtonToggleGroup)findViewById((R.id.line_style));
 
         String colors[] = getResources().getStringArray(R.array.colors);
         colorList=new int[colors.length];
@@ -67,7 +60,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     @Override
                     public void setOnFastChooseColorListener(int position, int color) {
                         textColor.setBackgroundTintList(ColorStateList.valueOf(color));
-                        mapView.applyTextColor(color);
+                        mapView.setTextColor(color);
                     }
                     @Override
                     public void onCancel(){
@@ -75,7 +68,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(8)
+                        .setColumns(9)
                         .setColors(colorList)
                         .setColorButtonSize(30, 30)
                         .show();
@@ -90,7 +83,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     @Override
                     public void setOnFastChooseColorListener(int position, int color) {
                         backgroundColor.setBackgroundTintList(ColorStateList.valueOf(color));
-                        mapView.applyBackgroundColor(color);
+                        mapView.setFillColor(color);
                     }
                     @Override
                     public void onCancel(){
@@ -98,7 +91,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(8)
+                        .setColumns(9)
                         .setColors(colorList)
                         .setColorButtonSize(30, 30)
                         .show();
@@ -113,7 +106,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     @Override
                     public void setOnFastChooseColorListener(int position, int color) {
                         outlineColor.setBackgroundTintList(ColorStateList.valueOf(color));
-                        mapView.applyOutlineColor(color);
+                        mapView.setOutlineColor(color);
                     }
                     @Override
                     public void onCancel(){
@@ -121,7 +114,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(8)
+                        .setColumns(9)
                         .setColors(colorList)
                         .setColorButtonSize(30, 30)
                         .show();
@@ -136,7 +129,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     @Override
                     public void setOnFastChooseColorListener(int position, int color) {
                         connectionColor.setBackgroundTintList(ColorStateList.valueOf(color));
-                        mapView.applyConnectionColor(color);
+                        mapView.setConnectionColor(color);
                     }
                     @Override
                     public void onCancel(){
@@ -144,7 +137,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(8)
+                        .setColumns(9)
                         .setColors(colorList)
                         .setColorButtonSize(30, 30)
                         .show();
@@ -156,9 +149,9 @@ public class NodeCustomizer extends CoordinatorLayout {
             public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
                 if (isChecked) {
                     switch (checkedId){
-                        case R.id.text_small: mapView.applyTextSize(0); break;
-                        case R.id.text_medium: mapView.applyTextSize(1); break;
-                        case R.id.text_large: mapView.applyTextSize(2); break;
+                        case R.id.text_small: mapView.setTextSize(0); break;
+                        case R.id.text_medium: mapView.setTextSize(1); break;
+                        case R.id.text_large: mapView.setTextSize(2); break;
                     }
                 }
             }
@@ -168,9 +161,9 @@ public class NodeCustomizer extends CoordinatorLayout {
             public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
                 if (isChecked) {
                     switch (checkedId){
-                        case R.id.connection_style_straight: mapView.applyConnectionStyle(0); break;
-                        case R.id.connection_style_dashed: mapView.applyConnectionStyle(1); break;
-                        case R.id.connection_style_dotted_dash: mapView.applyConnectionStyle(2); break;
+                        case R.id.line_style_straight: mapView.setLineStyle(0); break;
+                        case R.id.line_style_dashed: mapView.setLineStyle(1); break;
+                        case R.id.connection_style_dotted_dash: mapView.setLineStyle(2); break;
                     }
                 }
             }
@@ -179,20 +172,20 @@ public class NodeCustomizer extends CoordinatorLayout {
 
     public void setData(NodeData data) {
         this.data = data;
-        switch (data.text_size){
+        switch (data.textSize){
             case 0: textSize.check(R.id.text_small); break;
             case 1: textSize.check(R.id.text_medium); break;
             case 2: textSize.check(R.id.text_large); break;
         }
-        switch (data.connection_style){
-            case 0: connectionStyle.check(R.id.connection_style_straight); break;
-            case 1: connectionStyle.check(R.id.connection_style_dashed); break;
+        switch (data.lineStyle){
+            case 0: connectionStyle.check(R.id.line_style_straight); break;
+            case 1: connectionStyle.check(R.id.line_style_dashed); break;
             case 2: connectionStyle.check(R.id.connection_style_dotted_dash); break;
         }
-        textColor.setBackgroundTintList(ColorStateList.valueOf(data.text_color));
-        backgroundColor.setBackgroundTintList(ColorStateList.valueOf(data.background_color));
-        outlineColor.setBackgroundTintList(ColorStateList.valueOf(data.outline_color));
-        connectionColor.setBackgroundTintList(ColorStateList.valueOf(data.connection_color));
+        textColor.setBackgroundTintList(ColorStateList.valueOf(data.textColor));
+        backgroundColor.setBackgroundTintList(ColorStateList.valueOf(data.fillColor));
+        outlineColor.setBackgroundTintList(ColorStateList.valueOf(data.outlineColor));
+        connectionColor.setBackgroundTintList(ColorStateList.valueOf(data.lineColor));
     }
 
     public void setMapView(MapView mapView) {

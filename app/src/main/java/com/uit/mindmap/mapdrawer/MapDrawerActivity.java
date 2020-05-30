@@ -2,7 +2,6 @@ package com.uit.mindmap.mapdrawer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -12,17 +11,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.uit.mindmap.R;
 
@@ -33,6 +30,10 @@ public class MapDrawerActivity extends AppCompatActivity {
     public FloatingMenu menu;
     public BottomSheetBehavior bottomSheetBehavior;
     private String mapName;
+    public ZoomLayout zoomLayout;
+
+    private boolean undoAvailable;
+    private boolean redoAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class MapDrawerActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         mapView = findViewById(R.id.map_view);
-        final ZoomLayout zoomLayout = findViewById(R.id.zoom);
+        zoomLayout = findViewById(R.id.zoom);
         menu = findViewById(R.id.floating_menu);
         Bundle extra = getIntent().getExtras();
         mapName = null;
@@ -88,7 +89,7 @@ public class MapDrawerActivity extends AppCompatActivity {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
-        menu.bringToFront();
+
     }
 
     @Override
@@ -121,6 +122,7 @@ public class MapDrawerActivity extends AppCompatActivity {
                             finish();
                         }
                     });
+
                     alertDialog.show();
                     return true;
                 }
@@ -155,4 +157,50 @@ public class MapDrawerActivity extends AppCompatActivity {
         }
         else finish();
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem btnUndo = menu.findItem(R.id.undo);
+        MenuItem btnRedo = menu.findItem(R.id.redo);
+        if (undoAvailable){
+
+            btnUndo.getIcon().setAlpha(255);
+            btnUndo.setEnabled(true);
+        }
+        else {
+            btnUndo.getIcon().setAlpha(130);
+            btnUndo.setEnabled(false);
+        }
+        if (redoAvailable){
+
+            btnRedo.getIcon().setAlpha(255);
+            btnRedo.setEnabled(true);
+        }
+        else {
+            btnRedo.getIcon().setAlpha(130);
+            btnRedo.setEnabled(false);
+        }
+        return true;
+    }
+
+    private void enableUndo(){
+        undoAvailable=true;
+        invalidateOptionsMenu();
+    }
+
+    private void enableRedo(){
+        redoAvailable=true;
+        invalidateOptionsMenu();
+    }
+
+    private void disableUndo(){
+        undoAvailable=false;
+        invalidateOptionsMenu();
+    }
+    private void disableRedo(){
+        redoAvailable=false;
+        invalidateOptionsMenu();
+    }
+
 }

@@ -3,16 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/search"
-        android:title="@string/save"
         android:icon="@drawable/ic_search_black_24dp"
-        app:showAsAction="always">
-    </item>
+        android:title="@string/save"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/refresh"
-        android:title="@string/refresh">
-    </item>
+        android:title="@string/refresh"/>
     <item
         android:id="@+id/preferences"
-        android:title="@string/preferences">
-    </item>
+        android:title="@string/preferences"/>
 </menu>

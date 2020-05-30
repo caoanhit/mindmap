@@ -5,14 +5,17 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.uit.mindmap.R;
 
 import java.util.List;
 
-public class FloatingMenu extends FrameLayout {
+public class FloatingMenu extends CoordinatorLayout {
     List<Integer> targets;
     private ImageButton newNode, edit, customize,delete;
     private MapView map;
@@ -29,11 +32,6 @@ public class FloatingMenu extends FrameLayout {
 
     public FloatingMenu(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs);
-    }
-
-    public FloatingMenu(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init(attrs);
     }
 

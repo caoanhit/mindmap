@@ -27,24 +27,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Node extends RelativeLayout {
-    public int id;
-    public int parent;
+    public boolean deleted;
+    public NodeData data;
+
     TextView text_field;
     ViewGroup highlight;
     ViewGroup outline;
-    List<Integer> children;
-    int[] pos;
+    MapView map;
 
-    //region Styling
-    String text="Root node";
-    int textSize=1;
-    int textColor=Color.DKGRAY ;
-    int backgroundColor=Color.WHITE;
-    int outlineColor=Color.GRAY;
-    int connectionStyle=0;
-    int connectionColor=Color.BLACK;
-
-    //endregion
     private float dx = 0f;
     private float dy = 0f;
     private float prevDx = 0f;
@@ -71,8 +61,9 @@ public class Node extends RelativeLayout {
     }
     @SuppressLint("ClickableViewAccessibility")
     public  void init(@Nullable AttributeSet set){
-        children=new ArrayList<>();
-        pos=new int[2];
+        data=new NodeData();
+        data.children=new ArrayList<>();
+        data.pos=new int[2];
         inflate(getContext(), R.layout.node_view,this);
         highlight=findViewById(R.id.highlight);
         outline= findViewById(R.id.outline);
@@ -87,12 +78,14 @@ public class Node extends RelativeLayout {
                         Node.this.bringToFront();
                         prevDx = event.getX();
                         prevDy = event.getY();
+                        map.selectNode(data.id);
                         break;
                     case MotionEvent.ACTION_MOVE:
                         text_field.clearFocus();
                         dx = event.getX() - prevDx;
                         dy = event.getY() - prevDy;
-                        movePosition((int)dx,(int)dy);
+                        map.setChanged();
+                        map.moveNode((int)dx,(int)dy);
                         break;
                     case MotionEvent.ACTION_POINTER_DOWN:
                         prevDx = event.getX();
@@ -130,18 +123,23 @@ public class Node extends RelativeLayout {
     public void focus(){
         highlight.setBackgroundResource(R.drawable.rounded_bounding_box);
     }
+
     public void defocus(){
         highlight.setBackground(null);
     }
+
     public String getText(){
         return text_field.getText().toString();
     }
     public void setText(String text){
-        this.text=text;
+        data.text=text;
         text_field.setText(text);
     }
-    public void applyTextSize(int text_size){
-        this.textSize=text_size;
+    public void setId(int id){
+        data.id=id;
+    }
+    public void setTextSize(int text_size){
+        data.textSize=text_size;
         switch (text_size){
             case 0:
                 text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
@@ -153,118 +151,115 @@ public class Node extends RelativeLayout {
                 text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
                 break;
             default:
-                this.textSize=1;
+                data.textSize=1;
                 text_field.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                 break;
         }
     }
-    public void applyTextColor(int color){
-        textColor=color;
+    public void setTextColor(int color){
+        data.textColor=color;
         text_field.setTextColor(color);
     }
-    public void applyBackgroundColor(int color){
-        backgroundColor=color;
+    public void setFillColor(int color){
+        data.fillColor=color;
         text_field.setBackgroundTintList(ColorStateList.valueOf(color));
     }
-    public void applyConnectionStyle(int connection_style){
-
-        connectionStyle=connection_style;
-        Log.i("connection1",""+this.connectionStyle);
+    public void applyLineStyle(int connection_style){
+        data.lineStyle=connection_style;
     }
-    public void applyOutlineColor(int color){
-        outlineColor=color;
+    public void setOutlineColor(int color){
+        data.outlineColor=color;
         outline.setBackgroundTintList(ColorStateList.valueOf(color));
     }
-    public void applyConnectionColor(int color){
-        connectionColor=color;
+    public void setLineColor(int color){
+        data.lineColor=color;
+    }
+    public void setLineStyle(int style){
+        data.lineStyle=style;
     }
 
-
-    public NodeData getData(){
-        NodeData data=new NodeData();
-        data.text=text;
-        data.id=id;
-        data.parent=parent;
-        data.children=children;
-        data.pos=pos;
-        data.text_size=textSize;
-        data.text_color=textColor;
-        data.background_color=backgroundColor;
-        data.outline_color=outlineColor;
-        data.connection_style=connectionStyle;
-        data.connection_color=connectionColor;
-        return data;
+    public void applyData(){
+        setText(data.text);
+        setTextSize(data.textSize);
+        setTextColor(data.textColor);
+        setFillColor(data.fillColor);
+        setOutlineColor(data.outlineColor);
+        setLineColor(data.lineColor);
+        setLineStyle(data.lineStyle);
     }
     public void setData(NodeData data){
-        text=data.text;
-        id=data.id;
-        parent=data.parent;
-        children=data.children;
-        pos=data.pos;
-        textSize=data.text_size;
-        textColor=data.text_color;
-        backgroundColor=data.background_color;
-        outlineColor=data.outline_color;
-        connectionStyle=data.connection_style;
-        connectionColor=data.connection_color;
-    }
-    public void applyData(){
-        setText(text);
-        applyTextSize(textSize);
-        applyTextColor(textColor);
-        applyBackgroundColor(backgroundColor);
-        applyOutlineColor(outlineColor);
-        applyConnectionColor(connectionColor);
-    }
-    public void setId(int id){
-        this.id=id;
-    }
-    public int[] getPosition(){
-        return pos;
+        this.data=data;
     }
     public void setPosition(int[] pos ){
         int maxX=mapsize-getWidth()/2;
         int maxY=mapsize-getHeight()/2;
-        this.pos[0]=Math.min(Math.max(getWidth()/2,pos[0]),maxX);
-        this.pos[1]=Math.min(Math.max(getHeight()/2,pos[1]),maxY);
+        data.pos[0]=Math.min(Math.max(getWidth()/2,pos[0]),maxX);
+        data.pos[1]=Math.min(Math.max(getHeight()/2,pos[1]),maxY);
         applyPosition();
     }
 
-    public int getConnectionStyle() {
-        return connectionStyle;
-    }
-    public int getConnectionColor(){ return connectionColor; }
-
-    public void setPosition(int x, int y){
-        int maxX=mapsize-getWidth()/2;
-        int maxY=mapsize-getHeight()/2;
-        pos[0]=Math.min(Math.max(getWidth()/2,x),maxX);
-        pos[1]=Math.min(Math.max(getHeight()/2,y),maxY);
-        applyPosition();
-    }
     public void applyPosition(){
         int left,top;
-        left=pos[0]-getWidth()/2;
-        top=pos[1]-getHeight()/2;
+        left=data.pos[0]-getWidth()/2;
+        top=data.pos[1]-getHeight()/2;
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
         lp.setMargins(left, top, 0, 0);
         setLayoutParams(lp);
     }
     public void movePosition(int x,int y){
-        setPosition(pos[0]+x,pos[1]+y);
+        setPosition(new int[]{data.pos[0]+x,data.pos[1]+y});
     }
     public void removeChildren(int id){
-        int i= children.indexOf(id);
-        if (i!=-1) children.remove(i);
+        int i= data.children.indexOf(id);
+        if (i!=-1) data.children.remove(i);
     }
     public void addChild(int id){
-        if(children==null) children=new ArrayList<>();
-        children.add(id);
+        data.children.add(id);
     }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    public int[] anchor(int[] otherPos){
+        int[] a=new  int[4];
+        int[] a1=new int[2];
+        text_field.getLocationOnScreen(a1);
+        float scale=((MapDrawerActivity)getContext()).zoomLayout.scale;
+        int distanceX=otherPos[0]-data.pos[0];
+        int distanceY=otherPos[1]-data.pos[1];
+        a[0]=a1[0];
+        a[1]=a1[1];
+        int x;
+        if(distanceX==0) x=2;
+        else x=Math.abs(distanceY/distanceX);
+        if (x<1){
+            if (distanceX<0)
+            {
+                a[1]+=text_field.getHeight()/2*scale;
+                a[2]=1;
+            }
+            else{
+                a[0]+=text_field.getWidth()*scale;
+                a[1]+=text_field.getHeight()/2*scale;
+                a[2]=1;
+            }
+        }
+        else{
+            if(distanceY<0){
+                a[0]+=text_field.getWidth()/2*scale;
+                a[3]=1;
+            }
+            else {
+                a[0]+=text_field.getWidth()/2*scale;
+                a[1]+=text_field.getHeight()*scale;
+                a[3]=1;
+            }
+        }
+        return  a;
     }
-
+    public void setMap(MapView map){
+        this.map=map;
+    }
+    public void softDelete(){
+        deleted=true;
+    }
+    public void unDelete(){
+        deleted=false;
+    }
 }

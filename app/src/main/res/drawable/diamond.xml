@@ -11,6 +11,7 @@
                     android:width="200dp"
                     android:height="200dp" />
                 <solid android:color="@android:color/white" />
+                <corners android:radius="10dp"/>
             </shape>
         </rotate>
     </item>
