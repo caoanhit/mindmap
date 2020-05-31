@@ -68,7 +68,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(9)
+                        .setColumns(7)
                         .setColors(colorList)
                         .setColorButtonSize(30, 30)
                         .show();
@@ -91,7 +91,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(9)
+                        .setColumns(7)
                         .setColors(colorList)
                         .setColorButtonSize(30, 30)
                         .show();
@@ -114,7 +114,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(9)
+                        .setColumns(7)
                         .setColors(colorList)
                         .setColorButtonSize(30, 30)
                         .show();
@@ -137,7 +137,7 @@ public class NodeCustomizer extends CoordinatorLayout {
                     }
                 })
                         .disableDefaultButtons(true)
-                        .setColumns(9)
+                        .setColumns(7)
                         .setColors(colorList)
                         .setColorButtonSize(30, 30)
                         .show();

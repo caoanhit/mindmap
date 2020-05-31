@@ -2,75 +2,77 @@
 <resources>
     <string-array name="colors">
         <item>#FFFFFF</item>
-        <item>#E57373</item>
-        <item>#FFB74D</item>
-        <item>#FFF176</item>
-        <item>#AED581</item>
-        <item>#4DB6AC</item>
-        <item>#4FC3F7</item>
-        <item>#7986CB</item>
-        <item>#BA68C8</item>
-
         <item>#CCCCCC</item>
-        <item>#EF5350</item>
-        <item>#FFA726</item>
-        <item>#FFEE58</item>
-        <item>#9CCC65</item>
-        <item>#26A69A</item>
-        <item>#29B6F6</item>
-        <item>#5C6BC0</item>
-        <item>#AB47BC</item>
-
         <item>#999999</item>
-        <item>#F44336</item>
-        <item>#FF9800</item>
-        <item>#FFEB3B</item>
-        <item>#8BC34A</item>
-        <item>#009688</item>
-        <item>#03A9F4</item>
-        <item>#3F51B5</item>
-        <item>#9C27B0</item>
-
         <item>#666666</item>
-        <item>#E53935</item>
-        <item>#FB8C00</item>
-        <item>#FDD835</item>
-        <item>#7CB342</item>
-        <item>#00897B</item>
-        <item>#039BE5</item>
-        <item>#3949AB</item>
+        <item>#444444</item>
+        <item>#222222</item>
+        <item>#000000</item>
+
+        <item>#BA68C8</item>
+        <item>#AB47BC</item>
+        <item>#9C27B0</item>
         <item>#8E24AA</item>
-
-        <item>#333333</item>
-        <item>#D32F2F</item>
-        <item>#F57C00</item>
-        <item>#FBC02D</item>
-        <item>#689F38</item>
-        <item>#00796B</item>
-        <item>#0288D1</item>
-        <item>#303F9F</item>
         <item>#7B1FA2</item>
-
-        <item>#000000</item>
-        <item>#C62828</item>
-        <item>#EF6C00</item>
-        <item>#F9A825</item>
-        <item>#558B2F</item>
-        <item>#00695C</item>
-        <item>#0277BD</item>
-        <item>#283593</item>
         <item>#6A1B9A</item>
-
-        <item>#000000</item>
-        <item>#B71C1C</item>
-        <item>#E65100</item>
-        <item>#F57F17</item>
-        <item>#33691E</item>
-        <item>#004D40</item>
-        <item>#01579B</item>
-        <item>#1A237E</item>
         <item>#4A148C</item>
 
+
+        <item>#7986CB</item>
+        <item>#5C6BC0</item>
+        <item>#3F51B5</item>
+        <item>#3949AB</item>
+        <item>#303F9F</item>
+        <item>#283593</item>
+        <item>#1A237E</item>
+
+        <item>#64B5F6</item>
+        <item>#42A5F5</item>
+        <item>#2196F3</item>
+        <item>#1E88E5</item>
+        <item>#1976D2</item>
+        <item>#1565C0</item>
+        <item>#0D47A1</item>
+
+        <item>#4DD0E1</item>
+        <item>#26C6DA</item>
+        <item>#00BCD4</item>
+        <item>#00ACC1</item>
+        <item>#0097A7</item>
+        <item>#00838F</item>
+        <item>#006064</item>
+
+        <item>#81C784</item>
+        <item>#66BB6A</item>
+        <item>#4CAF50</item>
+        <item>#43A047</item>
+        <item>#388E3C</item>
+        <item>#2E7D32</item>
+        <item>#1B5E20</item>
+
+        <item>#FFF176</item>
+        <item>#FFEE58</item>
+        <item>#FFEB3B</item>
+        <item>#FDD835</item>
+        <item>#FBC02D</item>
+        <item>#F9A825</item>
+        <item>#F57F17</item>
+
+        <item>#FFB74D</item>
+        <item>#FFA726</item>
+        <item>#FF9800</item>
+        <item>#FB8C00</item>
+        <item>#F57C00</item>
+        <item>#EF6C00</item>
+        <item>#E65100</item>
+
+        <item>#E57373</item>
+        <item>#EF5350</item>
+        <item>#F44336</item>
+        <item>#E53935</item>
+        <item>#D32F2F</item>
+        <item>#C62828</item>
+        <item>#B71C1C</item>
 
 
     </string-array>
