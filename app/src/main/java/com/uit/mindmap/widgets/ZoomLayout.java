@@ -1,4 +1,4 @@
-package com.uit.mindmap.mapdrawer;
+package com.uit.mindmap.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -2,6 +2,6 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#283593</color>
-    <color name="colorAccent">#3D5AFE</color>
+    <color name="colorAccent">#1976D2</color>
     <color name="canvas">#DADADA</color>
 </resources>

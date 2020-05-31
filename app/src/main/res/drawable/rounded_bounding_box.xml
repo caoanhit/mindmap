@@ -4,7 +4,7 @@
         android:dashGap="10dp"
         android:dashWidth="10dp"
         android:width="@dimen/outline_width"
-        android:color="#1976D2" />
+        android:color="@color/colorAccent" />
     <corners android:radius="10dp" />
     <padding
         android:bottom="0dp"

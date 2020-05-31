@@ -187,7 +187,6 @@ public class NodeCustomizer extends CoordinatorLayout {
         outlineColor.setBackgroundTintList(ColorStateList.valueOf(data.outlineColor));
         connectionColor.setBackgroundTintList(ColorStateList.valueOf(data.lineColor));
     }
-
     public void setMapView(MapView mapView) {
         this.mapView = mapView;
     }

@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +21,8 @@ import android.widget.LinearLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.uit.mindmap.R;
+import com.uit.mindmap.widgets.FloatingMenu;
+import com.uit.mindmap.widgets.ZoomLayout;
 
 public class MapDrawerActivity extends AppCompatActivity {
     private MapView mapView;

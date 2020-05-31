@@ -1,4 +1,4 @@
-package com.uit.mindmap.mapdrawer;
+package com.uit.mindmap.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.uit.mindmap.R;
+import com.uit.mindmap.mapdrawer.MapView;
 
 import java.util.List;
 

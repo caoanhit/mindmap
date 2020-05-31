@@ -1,4 +1,4 @@
-package com.uit.mindmap.mapdrawer;
+package com.uit.mindmap.widgets;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 public class RectangleMarker extends RelativeLayout {
+    public
 
     float[] startPoint,endPoint;
     Paint paint;

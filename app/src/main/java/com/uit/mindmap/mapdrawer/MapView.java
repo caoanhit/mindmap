@@ -490,6 +490,7 @@ public class MapView extends RelativeLayout {
         customizer.setMapView(this);
     }
     public void setSheetData(){
+        if(!selectedNodes.isEmpty())
         nodeCustomizer.setData(nodes[selectedNodes.get(0)].data);
     }
     //endregion

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.uit.mindmap.mapdrawer.ZoomLayout
+        <com.uit.mindmap.widgets.ZoomLayout
             android:id="@+id/zoom"
             android:layout_width="@dimen/map_size"
             android:layout_height="@dimen/map_size"
@@ -30,14 +30,14 @@
                     android:layout_height="match_parent"
                     android:background="@color/canvas" />
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
-        </com.uit.mindmap.mapdrawer.ZoomLayout>
+        </com.uit.mindmap.widgets.ZoomLayout>
 
-        <com.uit.mindmap.mapdrawer.FloatingMenu
+        <com.uit.mindmap.widgets.FloatingMenu
             android:id="@+id/floating_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="15dp"
             android:background="@drawable/rounded_flat"
             android:elevation="@dimen/elevation" />
     </FrameLayout>
