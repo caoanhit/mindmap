@@ -96,8 +96,15 @@ public class MapLoader {
         if (isExternalStorageWritable()) {
             f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves");
         } else f = new File(Environment.getDataDirectory() + "/Mindmap/saves");
+        File t;
+        if (isExternalStorageWritable()) {
+            t = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/thumbnail");
+        } else t = new File(Environment.getDataDirectory() + "/Mindmap/thumbnail");
         if (!f.exists()) {
             f.mkdirs();
+        }
+        if (!t.exists()){
+            t.mkdir();
         }
         List<String> list;
         File files[] = f.listFiles();
@@ -132,6 +139,7 @@ public class MapLoader {
         if (isExternalStorageWritable()) {
             f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");
         } else f = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + fileName + ".map");
+
         if (f.exists()) return true;
         return false;
     }
@@ -155,9 +163,11 @@ public class MapLoader {
             f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/thumbnail/" + fileName + ".png");
         } else f = new File(Environment.getDataDirectory() + "/Mindmap/thumbnail/" + fileName + ".png");
         try (FileOutputStream out = new FileOutputStream(f)) {
+
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
         } catch (IOException e) {
             e.printStackTrace();
+            Log.i("thumbnail",e.getMessage());
         }
     }
 

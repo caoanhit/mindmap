@@ -3,6 +3,7 @@ package com.uit.mindmap.mapdrawer;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -533,7 +534,7 @@ public class MapView extends RelativeLayout {
     public NodeData[] getData(){
         NodeData[] data=new NodeData[maxNodeAmount];
         for(int i=0; i<maxNodeAmount; i++){
-            if(nodes[i]!=null){
+            if(nodes[i]!=null&&!nodes[i].deleted){
                 data[i]=nodes[i].data;
             }
         }
@@ -549,6 +550,7 @@ public class MapView extends RelativeLayout {
             MapLoader loader=new MapLoader(getContext());
             if (loader.saveMap(mapName ,getData())) {
                 Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
+                loader.saveThumbnail(mapName,getThumbnail());
                 changed=false;
             }
             else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
@@ -580,6 +582,7 @@ public class MapView extends RelativeLayout {
                     alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if (loader.saveMap(mapName ,getData())) {
+                                loader.saveThumbnail(mapName,getThumbnail());
                                 changed=false;
                             }
                             dialog.cancel();
@@ -589,6 +592,7 @@ public class MapView extends RelativeLayout {
                     return;
                 }
                 if (loader.saveMap(mapName ,getData())) {
+                    loader.saveThumbnail(mapName,getThumbnail());
                     changed=false;
                 }
             }
@@ -632,7 +636,7 @@ public class MapView extends RelativeLayout {
         int minX=nodes[0].data.pos[0];
         int minY=nodes[0].data.pos[1];
         for(Node node:nodes){
-            if(node!=null){
+            if(node!=null&&!node.deleted){
                 if(node.data.pos[0]>maxX) maxX=node.data.pos[0];
                 if(node.data.pos[1]>maxX) maxY=node.data.pos[1];
                 if(node.data.pos[0]<minX) minX=node.data.pos[0];
@@ -647,7 +651,7 @@ public class MapView extends RelativeLayout {
         int max= nodes[0].data.pos[0];
         int min=nodes[0].data.pos[0];
         for(Node node:nodes){
-            if(node!=null){
+            if(node!=null&&!node.deleted){
                 if(node.data.pos[0]>max) max=node.data.pos[0];
                 if(node.data.pos[0]<min) min=node.data.pos[0];
             }
@@ -658,7 +662,7 @@ public class MapView extends RelativeLayout {
         int max= nodes[0].data.pos[1];
         int min=nodes[0].data.pos[1];
         for(Node node:nodes){
-            if(node!=null){
+            if(node!=null&&!node.deleted){
                 if(node.data.pos[1]>max) max=node.data.pos[1];
                 if(node.data.pos[1]<min) min=node.data.pos[1];
             }
@@ -672,18 +676,33 @@ public class MapView extends RelativeLayout {
         int minX=nodes[0].data.pos[0];
         int minY=nodes[0].data.pos[1];
         for(Node node:nodes){
-            if(node!=null){
+            if(node!=null&&!node.deleted){
                 if(node.data.pos[0]>maxX) maxX=node.data.pos[0];
                 if(node.data.pos[1]>maxX) maxY=node.data.pos[1];
                 if(node.data.pos[0]<minX) minX=node.data.pos[0];
                 if(node.data.pos[1]<minX) minX=node.data.pos[1];
             }
         }
-        a[0]=minX;
-        a[1]=minY;
-        a[2]=maxX;
-        a[3]=maxY;
+        a[0]=minX-200;
+        a[1]=minY-200;
+        a[2]=maxX+200;
+        a[3]=maxY+200;
         return a;
+    }
+    public Bitmap getThumbnail(){
+        int[] d= getMapDimensions();
+        int[] a=getMapCenter();
+        Bitmap b = Bitmap.createBitmap(getWidth(),getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        this.layout(getLeft(),getTop(),getRight(),getBottom());
+        Log.i("Left",""+d[0]);
+        Log.i("Top",""+d[1]);
+        Log.i("Right",""+d[2]);
+        Log.i("Bottom",""+d[3]);
+        this.draw(c);
+        int width=Math.max((d[3]-d[1])*160/120,d[2]-d[0]);
+        int height=Math.max((d[2]-d[0])*120/160,d[3]-d[1]);
+        return Bitmap.createScaledBitmap(Bitmap.createBitmap(b,a[0]-width/2,a[1]-height/2,width,height),160,120,true);
     }
     //endregion
 }

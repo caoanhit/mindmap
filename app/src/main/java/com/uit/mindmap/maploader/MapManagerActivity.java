@@ -71,7 +71,7 @@ public class MapManagerActivity extends AppCompatActivity {
         if(names!=null && names.length>0) {
             findViewById(R.id.tv_empty).setVisibility(View.INVISIBLE);
             lvMap = (ListView) findViewById(R.id.lv_map);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
+            MapListAdapter adapter = new MapListAdapter(this, names);
 
             lvMap.setAdapter(adapter);
             lvMap.setOnItemClickListener(new AdapterView.OnItemClickListener() {
