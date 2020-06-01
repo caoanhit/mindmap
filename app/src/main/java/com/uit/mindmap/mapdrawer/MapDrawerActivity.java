@@ -6,18 +6,24 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.uit.mindmap.R;
@@ -43,10 +49,45 @@ public class MapDrawerActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        mapView = findViewById(R.id.map_view);
+
+        final TextView zoomPercentage = findViewById(R.id.zoom_percentage);
+
+        final CountDownTimer timer=new CountDownTimer(500,500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+                zoomPercentage.clearAnimation();
+                zoomPercentage.animate()
+                        .alpha(0f)
+                        .setDuration(500)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                zoomPercentage.setVisibility(View.GONE);
+                            }
+                        });
+            }
+        };
+
         zoomLayout = findViewById(R.id.zoom);
+        zoomPercentage.setVisibility(View.GONE);
+        zoomLayout.setOnScaleListener(new ZoomLayout.onScaleListener() {
+            @Override
+            public void onScale(float scale) {
+                zoomPercentage.setAlpha(0.5f);
+                zoomPercentage.setVisibility(View.VISIBLE);
+                zoomPercentage.setText((int) (scale * 100) + "%");
+                timer.start();
+            }
+        });
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        mapView = findViewById(R.id.map_view);
         menu = findViewById(R.id.floating_menu);
         Bundle extra = getIntent().getExtras();
         mapName = null;
@@ -74,6 +115,7 @@ public class MapDrawerActivity extends AppCompatActivity {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
             }
+
         });
         menu.assignMap(mapView);
         ((ImageButton) menu.findViewById(R.id.customize)).setOnClickListener(new View.OnClickListener() {
@@ -99,7 +141,6 @@ public class MapDrawerActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.mapdrawer_action_menu, menu);
         return true;
     }
-
 
 
     @Override
@@ -155,8 +196,7 @@ public class MapDrawerActivity extends AppCompatActivity {
                 }
             });
             alertDialog.show();
-        }
-        else finish();
+        } else finish();
     }
 
     @Override
@@ -164,44 +204,47 @@ public class MapDrawerActivity extends AppCompatActivity {
         super.onPrepareOptionsMenu(menu);
         MenuItem btnUndo = menu.findItem(R.id.undo);
         MenuItem btnRedo = menu.findItem(R.id.redo);
-        if (undoAvailable){
+        if (undoAvailable) {
 
             btnUndo.getIcon().setAlpha(255);
             btnUndo.setEnabled(true);
-        }
-        else {
+        } else {
             btnUndo.getIcon().setAlpha(130);
             btnUndo.setEnabled(false);
         }
-        if (redoAvailable){
+        if (redoAvailable) {
 
             btnRedo.getIcon().setAlpha(255);
             btnRedo.setEnabled(true);
-        }
-        else {
+        } else {
             btnRedo.getIcon().setAlpha(130);
             btnRedo.setEnabled(false);
         }
         return true;
     }
 
-    private void enableUndo(){
-        undoAvailable=true;
+    private void enableUndo() {
+        undoAvailable = true;
         invalidateOptionsMenu();
     }
 
-    private void enableRedo(){
-        redoAvailable=true;
+    private void enableRedo() {
+        redoAvailable = true;
         invalidateOptionsMenu();
     }
 
-    private void disableUndo(){
-        undoAvailable=false;
+    private void disableUndo() {
+        undoAvailable = false;
         invalidateOptionsMenu();
     }
-    private void disableRedo(){
-        redoAvailable=false;
+
+    private void disableRedo() {
+        redoAvailable = false;
         invalidateOptionsMenu();
+    }
+
+    private void fadeOut(View v) {
+
     }
 
 }

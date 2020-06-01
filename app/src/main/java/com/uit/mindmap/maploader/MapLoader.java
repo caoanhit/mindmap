@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Environment;
 import android.util.Log;
@@ -160,7 +161,7 @@ public class MapLoader {
         }
     }
 
-    public Bitmap loadBitmapFromMap(View v) {
+    public Bitmap getBitmapFromMap(View v) {
         Bitmap b = Bitmap.createBitmap(v.getLayoutParams().width, v.getLayoutParams().height, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
         v.layout(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
@@ -181,5 +182,17 @@ public class MapLoader {
         }
         return false;
     }
-
+    public Bitmap loadThumbnail(String fileName){
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        File f;
+        if (isExternalStorageWritable()) {
+            f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/thumbnail/" + fileName + ".png");
+        } else f = new File(Environment.getDataDirectory() + "/Mindmap/thumbnail/" + fileName + ".png");
+        if(f.exists()){
+            Bitmap b= BitmapFactory.decodeFile(f.getAbsolutePath());
+            return b;
+        }
+        return null;
+    }
 }

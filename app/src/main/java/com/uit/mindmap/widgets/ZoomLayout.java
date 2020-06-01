@@ -21,9 +21,18 @@ public class ZoomLayout extends CoordinatorLayout implements ScaleGestureDetecto
         ZOOM
     }
 
+    public interface onScaleListener{
+        public void onScale(float scale);
+    }
+    private onScaleListener onScaleListener;
+    public void setOnScaleListener(onScaleListener onScaleListener){
+        this.onScaleListener=onScaleListener;
+    }
+
+
     private static final String TAG = "ZoomLayout";
     private static final float MIN_ZOOM = 0.3f;
-    private static final float MAX_ZOOM = 5.0f;
+    private static final float MAX_ZOOM = 3.0f;
 
     private Mode mode = Mode.NONE;
     public float scale = 1.0f;
@@ -123,6 +132,8 @@ public class ZoomLayout extends CoordinatorLayout implements ScaleGestureDetecto
             scale *= scaleFactor;
             scale = Math.max(MIN_ZOOM, Math.min(scale, MAX_ZOOM));
             lastScaleFactor = scaleFactor;
+            if(onScaleListener!=null)
+                onScaleListener.onScale(scale);
         } else {
             lastScaleFactor = 0;
         }

@@ -9,6 +9,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/zoom_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:text="100%"
+            android:textSize="@dimen/large_text_size"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_flat"
+            android:backgroundTint="@android:color/black"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp"
+            android:alpha="0.5"
+            android:layout_marginTop="15dp"
+            android:elevation="15dp"/>
+
         <com.uit.mindmap.widgets.ZoomLayout
             android:id="@+id/zoom"
             android:layout_width="@dimen/map_size"
