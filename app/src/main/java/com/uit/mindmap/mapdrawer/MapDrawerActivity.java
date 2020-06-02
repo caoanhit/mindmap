@@ -106,7 +106,6 @@ public class MapDrawerActivity extends AppCompatActivity {
                 if (zoomLayout.holdTime < 200) {
                     mapView.deselectAll();
                     zoomLayout.requestFocus();
-                    menu.setVisibility((View.GONE));
                     View view = getCurrentFocus();
                     if (view != null) {
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -116,6 +115,27 @@ public class MapDrawerActivity extends AppCompatActivity {
                 }
             }
 
+        });
+        mapView.setOnChangeListener(new MapView.onChangeListener() {
+            @Override
+            public void onChange(boolean undoAvailable, boolean redoAvailable) {
+                if (undoAvailable){
+                    Log.i("button", "enable undo");
+                    enableUndo();
+                }
+                else {
+                    Log.i("button", "disable undo");
+                    disableUndo();
+                }
+                if (redoAvailable){
+                    Log.i("button", "enable redo");
+                    enableRedo();
+                }
+                else {
+                    Log.i("button", "disable redo");
+                    disableRedo();
+                }
+            }
         });
         menu.assignMap(mapView);
         ((ImageButton) menu.findViewById(R.id.customize)).setOnClickListener(new View.OnClickListener() {
@@ -174,6 +194,13 @@ public class MapDrawerActivity extends AppCompatActivity {
                 break;
             case R.id.save_as:
                 mapView.saveAs();
+                break;
+            case R.id.undo:
+                mapView.undo();
+                break;
+            case R.id.redo:
+                mapView.redo();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -241,10 +268,6 @@ public class MapDrawerActivity extends AppCompatActivity {
     private void disableRedo() {
         redoAvailable = false;
         invalidateOptionsMenu();
-    }
-
-    private void fadeOut(View v) {
-
     }
 
 }

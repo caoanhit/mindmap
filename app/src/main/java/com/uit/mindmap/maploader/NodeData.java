@@ -34,7 +34,9 @@ public class NodeData {
         parent=data.parent;
         children=new ArrayList<>();
         for(Integer i:data.children) this.children.add(i);
-        pos=data.pos;
+        pos=new int[2];
+        pos[0]=data.pos[0];
+        pos[1]=data.pos[1];
         text=data.text;
         textSize=data.textSize;
         textColor=data.textColor;

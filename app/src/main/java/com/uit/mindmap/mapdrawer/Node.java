@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Node extends RelativeLayout {
-    public boolean deleted;
     public NodeData data;
 
     TextView text_field;
@@ -41,6 +40,8 @@ public class Node extends RelativeLayout {
     private float prevDy = 0f;
 
     private int mapsize;
+    boolean moved;
+    public boolean deleted;
     //region Constructor
     public Node(Context context) {
         super(context);
@@ -81,10 +82,13 @@ public class Node extends RelativeLayout {
                         map.selectNode(data.id);
                         break;
                     case MotionEvent.ACTION_MOVE:
+                        if (!moved){
+                            moved=true;
+                            map.addCommand();
+                        }
                         text_field.clearFocus();
                         dx = event.getX() - prevDx;
                         dy = event.getY() - prevDy;
-                        map.setChanged();
                         map.moveNode((int)dx,(int)dy);
                         break;
                     case MotionEvent.ACTION_POINTER_DOWN:
@@ -94,6 +98,8 @@ public class Node extends RelativeLayout {
                     case MotionEvent.ACTION_POINTER_UP:
                         break;
                     case MotionEvent.ACTION_UP:
+                        moved=false;
+                        break;
                 }
                 return false;
             }
@@ -179,6 +185,7 @@ public class Node extends RelativeLayout {
     }
 
     public void applyData(){
+        applyPosition();
         setText(data.text);
         setTextSize(data.textSize);
         setTextColor(data.textColor);
@@ -189,6 +196,7 @@ public class Node extends RelativeLayout {
     }
     public void setData(NodeData data){
         this.data=data;
+        applyData();
     }
     public void setPosition(int[] pos ){
         int maxX=mapsize-getWidth()/2;
@@ -255,11 +263,5 @@ public class Node extends RelativeLayout {
     }
     public void setMap(MapView map){
         this.map=map;
-    }
-    public void softDelete(){
-        deleted=true;
-    }
-    public void unDelete(){
-        deleted=false;
     }
 }
