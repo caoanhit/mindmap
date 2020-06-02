@@ -579,7 +579,10 @@ public class MapView extends RelativeLayout {
         NodeData[] data = new NodeData[maxNodeAmount];
         for (int i = 0; i < maxNodeAmount; i++) {
             if (nodes[i] != null && !nodes[i].deleted) {
-                data[i] = nodes[i].data;
+                data[i] = new NodeData(nodes[i].data);
+                for(int a:nodes[i].data.children){
+                    if (nodes[a]==null || nodes[a].deleted) data[i].children.remove(data[i].children.indexOf(a));
+                }
             }
         }
         return data;
@@ -680,7 +683,7 @@ public class MapView extends RelativeLayout {
         int minX = nodes[0].data.pos[0];
         int minY = nodes[0].data.pos[1];
         for (Node node : nodes) {
-            if (node != null) {
+            if (node != null && !node.deleted) {
                 if (node.data.pos[0] > maxX) maxX = node.data.pos[0];
                 if (node.data.pos[1] > maxY) maxY = node.data.pos[1];
                 if (node.data.pos[0] < minX) minX = node.data.pos[0];
@@ -696,7 +699,7 @@ public class MapView extends RelativeLayout {
         int max = nodes[0].data.pos[0];
         int min = nodes[0].data.pos[0];
         for (Node node : nodes) {
-            if (node != null) {
+            if (node != null && !node.deleted) {
                 if (node.data.pos[0] > max) max = node.data.pos[0];
                 if (node.data.pos[0] < min) min = node.data.pos[0];
             }
@@ -708,7 +711,7 @@ public class MapView extends RelativeLayout {
         int max = nodes[0].data.pos[1];
         int min = nodes[0].data.pos[1];
         for (Node node : nodes) {
-            if (node != null) {
+            if (node != null && !node.deleted) {
                 if (node.data.pos[1] > max) max = node.data.pos[1];
                 if (node.data.pos[1] < min) min = node.data.pos[1];
             }
@@ -723,7 +726,7 @@ public class MapView extends RelativeLayout {
         int minX = nodes[0].data.pos[0];
         int minY = nodes[0].data.pos[1];
         for (Node node : nodes) {
-            if (node != null) {
+            if (node != null && !node.deleted) {
                 if (node.data.pos[0] > maxX) maxX = node.data.pos[0];
                 if (node.data.pos[1] > maxY) maxY = node.data.pos[1];
                 if (node.data.pos[0] < minX) minX = node.data.pos[0];
