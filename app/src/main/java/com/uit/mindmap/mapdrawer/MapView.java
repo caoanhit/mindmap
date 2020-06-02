@@ -162,6 +162,14 @@ public class MapView extends RelativeLayout {
             }
         }
     }
+    public void releaseUndo(State state){
+        for (int i = 0; i < state.ids.size(); i++) {
+            if (state.data[i] != null && nodes[state.ids.get(0)].deleted) {
+                nodes[nodes[state.ids.get(i)].data.parent].removeChildren(nodes[state.ids.get(i)].data.id);
+                nodes[state.ids.get(i)] = null;
+            }
+        }
+    }
 
     public void releaseState(State state) {
         for (int i = 0; i < state.ids.size(); i++) {
@@ -205,7 +213,7 @@ public class MapView extends RelativeLayout {
         setChanged();
         if (undoHistory.size() > undoAmount) {
             State state= undoHistory.pollFirst();
-            releaseState(state);
+            releaseUndo(state);
         }
 
     }
@@ -215,7 +223,10 @@ public class MapView extends RelativeLayout {
         Log.i("command addnode", selectedNodes.size() + "");
         clearRedo();
         setChanged();
-        if (undoHistory.size() > undoAmount) undoHistory.pollFirst();
+        if (undoHistory.size() > undoAmount) {
+            State state= undoHistory.pollFirst();
+            releaseUndo(state);
+        }
     }
 
     private void clearRedo(){
@@ -609,7 +620,7 @@ public class MapView extends RelativeLayout {
         alertDialogBuilder.setView(customDialogView);
         final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
         ((TextView) customDialogView.findViewById(R.id.tv_dialog)).setText(R.string.map_name);
-        etName.setText(nodes[selectedNodes.get(0)].getText());
+        etName.setText("New map");
         etName.selectAll();
         alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
