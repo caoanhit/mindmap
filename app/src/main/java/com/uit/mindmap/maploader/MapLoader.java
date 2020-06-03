@@ -6,30 +6,25 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.uit.mindmap.mapdrawer.Node;
 
 import org.json.JSONArray;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +59,18 @@ public class MapLoader {
         }
         return map;
     }
+    public String mapDate(String fileName){
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        File f;
+        if (isExternalStorageWritable()) {
+            f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");
+        } else f = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + fileName + ".map");
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.MEDIUM);
 
+        if (f.exists()) return dateFormat.format(f.lastModified());
+        return "";
+    }
     public boolean saveMap(String fileName, NodeData[] map) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);

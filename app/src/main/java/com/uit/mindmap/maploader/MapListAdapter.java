@@ -42,9 +42,11 @@ public class MapListAdapter extends BaseAdapter {
         View vi = convertView;
         if (vi == null)
             vi = inflater.inflate(R.layout.item_list, null);
-        TextView text = vi.findViewById(R.id.map_name);
-        text.setText(data[position]);
+        TextView mapName = vi.findViewById(R.id.map_name);
+        TextView date= vi.findViewById(R.id.map_date);
+        mapName.setText(data[position]);
         MapLoader loader=new MapLoader(context);
+        date.setText(loader.mapDate(data[position]));
         ImageView thumbnail=vi.findViewById(R.id.map_thumbnail);
         thumbnail.setImageBitmap(loader.loadThumbnail(data[position]));
         return vi;

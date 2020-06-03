@@ -50,7 +50,7 @@ public class MapView extends RelativeLayout {
                 if (state.data[i] == null) {
                     data[i] = new NodeData(nodes[ids.get(i)].data);
                 } else {
-                    if (nodes[state.ids.get(i)] == null) {
+                    if (nodes[state.ids.get(i)].deleted) {
 
                     } else data[i] = new NodeData(nodes[state.ids.get(i)].data);
                 }
@@ -154,6 +154,7 @@ public class MapView extends RelativeLayout {
                 if (nodes[state.ids.get(i)].deleted) {
                     Log.i("undo", "Load node " + state.ids.get(i));
                     loadNode(state.data[i]);
+                    invalidate();
                 } else {
                     nodes[state.ids.get(i)].setData(new NodeData(state.data[i]));
                     nodes[state.ids.get(i)].applyData();
@@ -217,7 +218,22 @@ public class MapView extends RelativeLayout {
         }
 
     }
+    public void addCommandRemoveNode(){
+        NodeData[] data=new NodeData[selectedNodes.size()];
+        for(int i=0; i<selectedNodes.size();i++)
+        {
+            data[i]=new NodeData(nodes[selectedNodes.get(i)].data);
+        }
+        undoHistory.add(new State(new ArrayList<Integer>(selectedNodes),data));
+        Log.i("command", "" + undoHistory.size());
+        redoHistory.clear();
+        setChanged();
+        if (undoHistory.size() > undoAmount) {
+            State state= undoHistory.pollFirst();
+            releaseUndo(state);
+        }
 
+    }
     public void addCommandAddNode() {
         undoHistory.add(new State(new ArrayList<Integer>(selectedNodes), new NodeData[selectedNodes.size()]));
         Log.i("command addnode", selectedNodes.size() + "");
@@ -429,26 +445,38 @@ public class MapView extends RelativeLayout {
     //endregion
 
     //region Remove
-    public void removeChildNode(int id) {
-        for (int i : nodes[id].data.children) removeChildNode(i);
+    public ArrayList<Integer> removeChildNode(int id) {
+        ArrayList<Integer> a=new ArrayList<>();
+        a.add((Integer) id);
+        for (int i : nodes[id].data.children) a.addAll(removeChildNode(i));
         removeView(nodes[id]);
         nodes[id].deleted=true;
+        return a;
     }
 
-    public void removeNode(int id) {
+    public ArrayList<Integer> removeNode(int id) {
+        ArrayList<Integer> a=new ArrayList<>();
+        a.add((Integer)id);
         Log.i("remove", "" + id);
         if (id != 0) {
-            for (int i : nodes[id].data.children) removeChildNode(i);
+            for (int i : nodes[id].data.children) a.addAll(removeChildNode(i));
             removeView(nodes[id]);
             nodes[id].deleted = true;
         } else Toast.makeText(getContext(), "Cannot delete root node", Toast.LENGTH_SHORT).show();
+        return a;
     }
 
     public void removeNode() {
-        if (selectedNodes.size() != 1 || selectedNodes.get(0) != 0)
-            addCommand();
+        ArrayList<Integer> a= new ArrayList<>();
         for (int i : selectedNodes) {
-            removeNode(i);
+            a.addAll(removeNode(i));
+        }
+        selectedNodes=a;
+        Log.i("selected", a.size()+"");
+        if (selectedNodes.size() != 1 || selectedNodes.get(0) != 0)
+        {
+            addCommandRemoveNode();
+            Log.i("Undo delete", a.size()+"");
         }
         selectedNodes.clear();
     }
