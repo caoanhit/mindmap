@@ -170,9 +170,6 @@ public class Node extends RelativeLayout {
         data.fillColor=color;
         text_field.setBackgroundTintList(ColorStateList.valueOf(color));
     }
-    public void applyLineStyle(int connection_style){
-        data.lineStyle=connection_style;
-    }
     public void setOutlineColor(int color){
         data.outlineColor=color;
         outline.setBackgroundTintList(ColorStateList.valueOf(color));
@@ -233,28 +230,30 @@ public class Node extends RelativeLayout {
         int distanceY=otherPos[1]-data.pos[1];
         a[0]=a1[0];
         a[1]=a1[1];
-        int x;
+        float x;
         if(distanceX==0) x=2;
         else x=Math.abs(distanceY/distanceX);
         if (x<1){
             if (distanceX<0)
             {
-                a[1]+=text_field.getHeight()/2*scale;
+                a[1]+=text_field.getHeight()*Math.max(Math.min(distanceY/500f+0.5f,1f),0f)*scale;
                 a[2]=1;
             }
             else{
                 a[0]+=text_field.getWidth()*scale;
-                a[1]+=text_field.getHeight()/2*scale;
+                a[1]+=text_field.getHeight()*Math.max(Math.min(distanceY/500f+0.5f,1f),0f)*scale;
                 a[2]=1;
             }
         }
         else{
+
             if(distanceY<0){
-                a[0]+=text_field.getWidth()/2*scale;
+
+                a[0]+=text_field.getWidth()*Math.max(Math.min(distanceX/500f+0.5f,1f),0f)*scale;
                 a[3]=1;
             }
             else {
-                a[0]+=text_field.getWidth()/2*scale;
+                a[0]+=text_field.getWidth()*Math.max(Math.min(distanceX/500f+0.5f,1f),0f)*scale;
                 a[1]+=text_field.getHeight()*scale;
                 a[3]=1;
             }
