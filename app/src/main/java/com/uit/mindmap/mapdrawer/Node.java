@@ -180,6 +180,10 @@ public class Node extends RelativeLayout {
     public void setLineStyle(int style){
         data.lineStyle=style;
     }
+    public void setArrow(int arrow) {
+        Log.i("arrow",arrow+"");
+        data.arrow=arrow;
+    }
 
     public void applyData(){
         applyPosition();

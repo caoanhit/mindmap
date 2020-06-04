@@ -317,7 +317,8 @@ public class MapView extends RelativeLayout {
         c[0] -= (int) (s[0] / scale);
         c[1] -= (int) (s[1] / scale);
 
-        drawArrow(p,canvas);
+        if(nodes[child_node].data.arrow==1||nodes[child_node].data.arrow==3) drawArrow(p,canvas);
+        if(nodes[child_node].data.arrow==2||nodes[child_node].data.arrow==3) drawArrow(c,canvas);
 
         paint.setStyle(Paint.Style.STROKE);
         applyLineEffect(parent_node,child_node);
@@ -606,6 +607,10 @@ public class MapView extends RelativeLayout {
         addCommand();
         Log.i("command", "Line color");
         for (int i : selectedNodes) nodes[i].setLineColor(color);
+    }
+    public void setArrow(int arrow){
+        addCommand();
+        for (int i : selectedNodes) nodes[i].setArrow(arrow);
     }
 
     public void setNodeCustomizer(NodeCustomizer customizer) {

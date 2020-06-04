@@ -38,6 +38,7 @@ public class MapDrawerActivity extends AppCompatActivity {
     public BottomSheetBehavior bottomSheetBehavior;
     private String mapName;
     public ZoomLayout zoomLayout;
+    private TextView zoomPercentage;
 
     private boolean undoAvailable;
     private boolean redoAvailable;
@@ -47,10 +48,9 @@ public class MapDrawerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        findViewByIds();
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        final TextView zoomPercentage = findViewById(R.id.zoom_percentage);
 
         final CountDownTimer timer=new CountDownTimer(500,500) {
             @Override
@@ -74,7 +74,6 @@ public class MapDrawerActivity extends AppCompatActivity {
             }
         };
 
-        zoomLayout = findViewById(R.id.zoom);
         zoomPercentage.setVisibility(View.GONE);
         zoomLayout.setOnScaleListener(new ZoomLayout.onScaleListener() {
             @Override
@@ -87,8 +86,7 @@ public class MapDrawerActivity extends AppCompatActivity {
         });
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        mapView = findViewById(R.id.map_view);
-        menu = findViewById(R.id.floating_menu);
+
         Bundle extra = getIntent().getExtras();
         mapName = null;
         if (extra != null) {
@@ -96,8 +94,6 @@ public class MapDrawerActivity extends AppCompatActivity {
             Log.i("map", mapName);
         }
         mapView.loadMap(mapName);
-        bottomSheet = findViewById(R.id.bottom_sheet);
-        nodeCustomizer = (NodeCustomizer) findViewById(R.id.node_customizer);
         mapView.setNodeCustomizer(nodeCustomizer);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         zoomLayout.setOnClickListener(new View.OnClickListener() {
@@ -152,7 +148,15 @@ public class MapDrawerActivity extends AppCompatActivity {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
+    }
 
+    private void findViewByIds(){
+        zoomLayout = findViewById(R.id.zoom);
+        mapView = findViewById(R.id.map_view);
+        menu = findViewById(R.id.floating_menu);
+        zoomPercentage = findViewById(R.id.zoom_percentage);
+        bottomSheet = findViewById(R.id.bottom_sheet);
+        nodeCustomizer = (NodeCustomizer) findViewById(R.id.node_customizer);
     }
 
     @Override

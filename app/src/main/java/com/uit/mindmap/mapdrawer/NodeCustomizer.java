@@ -19,7 +19,7 @@ import petrov.kristiyan.colorpicker.ColorPicker;
 public class NodeCustomizer extends CoordinatorLayout {
     private NodeData data;
     private MapView mapView;
-    private MaterialButtonToggleGroup textSize, connectionStyle;
+    private MaterialButtonToggleGroup textSize, connectionStyle, arrow;
     private AppCompatButton textColor, backgroundColor, outlineColor, connectionColor;
     int[] colorList;
     boolean evenDisabled = false;
@@ -41,12 +41,13 @@ public class NodeCustomizer extends CoordinatorLayout {
 
     private void init(@Nullable AttributeSet attrs) {
         inflate(getContext(), R.layout.node_customization_sheet, this);
-        textSize = (MaterialButtonToggleGroup) findViewById(R.id.text_size);
-        textColor = (AppCompatButton) findViewById(R.id.text_color);
-        backgroundColor = (AppCompatButton) findViewById(R.id.background_color);
-        outlineColor = (AppCompatButton) findViewById(R.id.outline_color);
-        connectionColor = (AppCompatButton) findViewById(R.id.connection_color);
-        connectionStyle = (MaterialButtonToggleGroup) findViewById((R.id.line_style));
+        textSize = findViewById(R.id.text_size);
+        textColor = findViewById(R.id.text_color);
+        backgroundColor = findViewById(R.id.background_color);
+        outlineColor = findViewById(R.id.outline_color);
+        connectionColor = findViewById(R.id.connection_color);
+        connectionStyle = findViewById((R.id.line_style));
+        arrow= findViewById(R.id.arrow);
 
         String colors[] = getResources().getStringArray(R.array.colors);
         colorList = new int[colors.length];
@@ -186,6 +187,23 @@ public class NodeCustomizer extends CoordinatorLayout {
                 }
             }
         });
+        arrow.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
+            @Override
+            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                if(!evenDisabled) {
+                    switch (checkedId) {
+                        case R.id.arrow_back:
+                            if (isChecked) mapView.setArrow(data.arrow + 1);
+                            else mapView.setArrow(data.arrow - 1);
+                            break;
+                        case R.id.arrow_forward:
+                            if (isChecked) mapView.setArrow(data.arrow + 2);
+                            else mapView.setArrow(data.arrow - 2);
+                            break;
+                    }
+                }
+            }
+        });
     }
 
     public void setData(NodeData data) {
@@ -217,6 +235,25 @@ public class NodeCustomizer extends CoordinatorLayout {
         backgroundColor.setBackgroundTintList(ColorStateList.valueOf(data.fillColor));
         outlineColor.setBackgroundTintList(ColorStateList.valueOf(data.outlineColor));
         connectionColor.setBackgroundTintList(ColorStateList.valueOf(data.lineColor));
+        switch (data.arrow){
+            case 0:
+                arrow.uncheck(R.id.arrow_back);
+                arrow.uncheck(R.id.arrow_forward);
+                break;
+            case 1:
+                arrow.check(R.id.arrow_back);
+                arrow.uncheck(R.id.arrow_forward);
+                break;
+            case 2:
+                arrow.uncheck(R.id.arrow_back);
+                arrow.check(R.id.arrow_forward);
+                break;
+            case 3:
+                arrow.check(R.id.arrow_back);
+                arrow.check(R.id.arrow_forward);
+                break;
+
+        }
         evenDisabled=false;
     }
 

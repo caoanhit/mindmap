@@ -24,6 +24,7 @@ public class NodeData {
     public int outlineColor= Color.GRAY;
     public int lineStyle=0;
     public int lineColor= Color.BLACK;
+    public int arrow=0;
 
     public NodeData(){
         children=new ArrayList<>();
@@ -44,5 +45,6 @@ public class NodeData {
         outlineColor=data.outlineColor;
         lineStyle=data.lineStyle;
         lineColor=data.lineColor;
+        arrow=data.arrow;
     }
 }
