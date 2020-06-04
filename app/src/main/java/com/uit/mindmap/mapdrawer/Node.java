@@ -225,39 +225,38 @@ public class Node extends RelativeLayout {
     public void addChild(int id){
         data.children.add(id);
     }
-    public int[] anchor(int[] otherPos){
+    public int[] anchor(Node other){
         int[] a=new  int[4];
         int[] a1=new int[2];
         outline.getLocationOnScreen(a1);
         float scale=((MapDrawerActivity)getContext()).zoomLayout.scale;
-        int distanceX=otherPos[0]-data.pos[0];
-        int distanceY=otherPos[1]-data.pos[1];
+        int distanceX=other.data.pos[0]-data.pos[0];
+        int distanceY=other.data.pos[1]-data.pos[1];
         a[0]=a1[0];
         a[1]=a1[1];
         float x;
         if(distanceX==0) x=2;
         else x=Math.abs(distanceY/distanceX);
-        if (x<1){
+        if (x<1&& Math.abs( distanceX)> other.getWidth()/2+getWidth()/2){
             if (distanceX<0)
             {
-                a[1]+=outline.getHeight()*Math.max(Math.min(distanceY/500f+0.5f,0.9f),0.1f)*scale;
+                a[1]+=outline.getHeight()*Math.max(Math.min((float)distanceY/getHeight()/4f+0.5f,0.9f),0.1f)*scale;
                 a[2]=-1;
             }
             else{
                 a[0]+=outline.getWidth()*scale;
-                a[1]+=outline.getHeight()*Math.max(Math.min(distanceY/500f+0.5f,0.9f),0.1f)*scale;
+                a[1]+=outline.getHeight()*Math.max(Math.min((float)distanceY/getHeight()/4f+0.5f,0.9f),0.1f)*scale;
                 a[2]=1;
             }
         }
         else{
-
             if(distanceY<0){
 
-                a[0]+=outline.getWidth()*Math.max(Math.min(distanceX/500f+0.5f,0.9f),0.1f)*scale;
+                a[0]+=outline.getWidth()*Math.max(Math.min((float)distanceX/getWidth()/4f+0.5f,0.9f),0.1f)*scale;
                 a[3]=-1;
             }
             else {
-                a[0]+=outline.getWidth()*Math.max(Math.min(distanceX/500f+0.5f,0.9f),0.1f)*scale;
+                a[0]+=outline.getWidth()*Math.max(Math.min((float)distanceX/getWidth()/4f+0.5f,0.9f),0.1f)*scale;
                 a[1]+=outline.getHeight()*scale;
                 a[3]=1;
             }

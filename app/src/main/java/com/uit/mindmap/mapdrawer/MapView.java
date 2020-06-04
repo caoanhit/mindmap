@@ -302,8 +302,8 @@ public class MapView extends RelativeLayout {
 
     private void drawCurve(int parent_node, int child_node, Canvas canvas) {
         path.reset();
-        int[] p = nodes[parent_node].anchor(nodes[child_node].data.pos);
-        int[] c = nodes[child_node].anchor(nodes[parent_node].data.pos);
+        int[] p = nodes[parent_node].anchor(nodes[child_node]);
+        int[] c = nodes[child_node].anchor(nodes[parent_node]);
         int[] s = new int[2];
         getLocationOnScreen(s);
         float scale = ((MapDrawerActivity) getContext()).zoomLayout.scale;
@@ -336,8 +336,8 @@ public class MapView extends RelativeLayout {
 
     private void drawStraightLine(int parent_node, int child_node, Canvas canvas) {
         paint.setStyle(Paint.Style.STROKE);
-        int[] p = nodes[parent_node].anchor(nodes[child_node].data.pos);
-        int[] c = nodes[child_node].anchor(nodes[parent_node].data.pos);
+        int[] p = nodes[parent_node].anchor(nodes[child_node]);
+        int[] c = nodes[child_node].anchor(nodes[parent_node]);
         int[] s = new int[2];
         getLocationOnScreen(s);
         float scale = ((MapDrawerActivity) getContext()).zoomLayout.scale;
@@ -353,8 +353,8 @@ public class MapView extends RelativeLayout {
     }
     private void drawElbow(int parent_node, int child_node, Canvas canvas) {
         paint.setStyle(Paint.Style.STROKE);
-        int[] p = nodes[parent_node].anchor(nodes[child_node].data.pos);
-        int[] c = nodes[child_node].anchor(nodes[parent_node].data.pos);
+        int[] p = nodes[parent_node].anchor(nodes[child_node]);
+        int[] c = nodes[child_node].anchor(nodes[parent_node]);
         int[] s = new int[2];
         getLocationOnScreen(s);
         float scale = ((MapDrawerActivity) getContext()).zoomLayout.scale;
@@ -370,7 +370,7 @@ public class MapView extends RelativeLayout {
     }
     private void drawArrow(int[] a,Canvas canvas) {
         int size = 10;
-        paint.setStyle(Paint.Style.FILL);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setPathEffect(null);
         path.reset();
         path.moveTo(a[0], a[1]);
@@ -493,6 +493,7 @@ public class MapView extends RelativeLayout {
         ArrayList<Integer> a=new ArrayList<>();
         a.add((Integer) id);
         for (int i : nodes[id].data.children) a.addAll(removeChildNode(i));
+        nodes[id].defocus();
         removeView(nodes[id]);
         nodes[id].deleted=true;
         return a;
@@ -504,6 +505,7 @@ public class MapView extends RelativeLayout {
         Log.i("remove", "" + id);
         if (id != 0) {
             for (int i : nodes[id].data.children) a.addAll(removeChildNode(i));
+            nodes[id].defocus();
             removeView(nodes[id]);
             nodes[id].deleted = true;
         } else Toast.makeText(getContext(), "Cannot delete root node", Toast.LENGTH_SHORT).show();
@@ -569,6 +571,19 @@ public class MapView extends RelativeLayout {
         int index = selectedNodes.indexOf(id);
         if (index > -1) deselectNode(selectedNodes.get(index));
         else selectMultiple(id);
+    }
+    public void rectangleSelect(int[] start, int[] end){
+        for(int i=0; i<255; i++){
+
+            if (nodes[i]!=null){
+                if(nodes[i].data.pos[0]<Math.max(start[0],end[0])
+                        && nodes[i].data.pos[0]>Math.min(start[0],end[0])
+                        && nodes[i].data.pos[1]<Math.max(start[1],end[1])
+                        && nodes[i].data.pos[1]>Math.min(start[1],end[1])){
+                    selectMultiple(i);
+                }
+            }
+        }
     }
     //endregion
 
