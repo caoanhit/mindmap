@@ -103,7 +103,6 @@ public class MapView extends RelativeLayout {
         selectedNodes = new ArrayList<>();
         nodes = new Node[maxNodeAmount];
         paint = new Paint();
-        paint.setStyle(Paint.Style.STROKE);
         paint.setAntiAlias(true);
         path = new Path();
         undoHistory = new ArrayDeque<>();
@@ -276,10 +275,7 @@ public class MapView extends RelativeLayout {
             }
         }
     }
-
-    private void drawLine(int parent_node, int child_node, Canvas canvas) {
-        paint.setColor(nodes[child_node].data.lineColor);
-        paint.setStrokeWidth(getContext().getResources().getDimensionPixelSize(R.dimen.thin_line));
+    private  void applyLineEffect(int parent_node, int child_node){
         float[] intervals;
         int style = nodes[child_node].data.lineStyle;
         switch (style) {
@@ -295,6 +291,12 @@ public class MapView extends RelativeLayout {
                 paint.setPathEffect(new DashPathEffect(intervals, 0));
                 break;
         }
+    }
+
+    private void drawLine(int parent_node, int child_node, Canvas canvas) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(nodes[child_node].data.lineColor);
+        paint.setStrokeWidth(3);
         drawCurve(parent_node, child_node, canvas);
     }
 
@@ -305,6 +307,7 @@ public class MapView extends RelativeLayout {
         int[] s = new int[2];
         getLocationOnScreen(s);
         float scale = ((MapDrawerActivity) getContext()).zoomLayout.scale;
+
         p[0] /= scale;
         p[1] /= scale;
         c[0] /= scale;
@@ -313,16 +316,25 @@ public class MapView extends RelativeLayout {
         p[1] -= (int) (s[1] / scale);
         c[0] -= (int) (s[0] / scale);
         c[1] -= (int) (s[1] / scale);
+
+        drawArrow(p,canvas);
+
+        paint.setStyle(Paint.Style.STROKE);
+        applyLineEffect(parent_node,child_node);
+        c[2]= Math.abs(c[2]);
+        c[3]= Math.abs(c[3]);
+        p[2]= Math.abs(p[2]);
+        p[3]= Math.abs(p[3]);
         path.moveTo(p[0], p[1]);
-        path.cubicTo(p[0] * c[3] + (c[0] / 2 + p[0] / 2) * c[2]
-                , p[1] * p[2] + p[3] * (c[1] / 2 + p[1] / 2)
-                , c[0] * p[3] + (p[0] / 2 + c[0] / 2) * p[2]
-                , c[1] * c[2] + c[3] * (p[1] / 2 + c[1] / 2), c[0], c[1]);
+        path.cubicTo(p[0] * c[3] + (c[0]/2 + p[0]/2) * c[2]
+                , p[1] * p[2] + p[3] * (c[1]/2 + p[1]/2)
+                , c[0] * p[3] + (p[0]/2 + c[0]/2) * p[2]
+                , c[1] * c[2] + c[3] * (p[1]/2 + c[1]/2), c[0], c[1]);
         canvas.drawPath(path, paint);
     }
 
     private void drawStraightLine(int parent_node, int child_node, Canvas canvas) {
-        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.STROKE);
         int[] p = nodes[parent_node].anchor(nodes[child_node].data.pos);
         int[] c = nodes[child_node].anchor(nodes[parent_node].data.pos);
         int[] s = new int[2];
@@ -338,9 +350,40 @@ public class MapView extends RelativeLayout {
         c[1] -= (int) (s[1] / scale);
         canvas.drawLine(p[0], p[1], c[0], c[1], paint);
     }
-
-    private void drawTriangle(int parent_node, int child_node, int side, Canvas canvas) {
-
+    private void drawElbow(int parent_node, int child_node, Canvas canvas) {
+        paint.setStyle(Paint.Style.STROKE);
+        int[] p = nodes[parent_node].anchor(nodes[child_node].data.pos);
+        int[] c = nodes[child_node].anchor(nodes[parent_node].data.pos);
+        int[] s = new int[2];
+        getLocationOnScreen(s);
+        float scale = ((MapDrawerActivity) getContext()).zoomLayout.scale;
+        p[0] /= scale;
+        p[1] /= scale;
+        c[0] /= scale;
+        c[1] /= scale;
+        p[0] -= (int) (s[0] / scale);
+        p[1] -= (int) (s[1] / scale);
+        c[0] -= (int) (s[0] / scale);
+        c[1] -= (int) (s[1] / scale);
+        canvas.drawLine(p[0], p[1], c[0], c[1], paint);
+    }
+    private void drawArrow(int[] a,Canvas canvas) {
+        int size = 10;
+        paint.setStyle(Paint.Style.FILL);
+        paint.setPathEffect(null);
+        path.reset();
+        path.moveTo(a[0], a[1]);
+        if (a[3]==0) {
+            path.lineTo(a[0] + a[2] * size, a[1] -size/2);
+            path.lineTo(a[0] + a[2] * size, a[1] +size/2);
+            path.close();
+        }
+        else{
+            path.lineTo(a[0] -size/2, a[1] +a[3]*size);
+            path.lineTo(a[0] +size/2, a[1] +a[3]*size);
+            path.close();
+        }
+        canvas.drawPath(path, paint);
     }
     //endregion
 

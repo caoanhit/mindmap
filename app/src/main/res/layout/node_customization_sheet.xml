@@ -267,7 +267,43 @@
             android:textSize="@dimen/medium_text_size">
 
         </TextView>
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end">
 
+            <com.google.android.material.button.MaterialButton
+
+                android:id="@+id/arrow_back"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:width="@dimen/icon_size"
+                android:padding="0dp"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_arrow_back_black_24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/icon_padding"
+                app:strokeWidth="2dp">
+
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/arrow_forward"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:width="@dimen/icon_size"
+                android:padding="0dp"
+                app:cornerRadius="20dp"
+                app:icon="@drawable/ic_arrow_forward_black_24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/icon_padding"
+                app:strokeWidth="2dp">
+
+            </com.google.android.material.button.MaterialButton>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
     </LinearLayout>
 

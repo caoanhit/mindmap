@@ -224,7 +224,7 @@ public class Node extends RelativeLayout {
     public int[] anchor(int[] otherPos){
         int[] a=new  int[4];
         int[] a1=new int[2];
-        text_field.getLocationOnScreen(a1);
+        outline.getLocationOnScreen(a1);
         float scale=((MapDrawerActivity)getContext()).zoomLayout.scale;
         int distanceX=otherPos[0]-data.pos[0];
         int distanceY=otherPos[1]-data.pos[1];
@@ -236,12 +236,12 @@ public class Node extends RelativeLayout {
         if (x<1){
             if (distanceX<0)
             {
-                a[1]+=text_field.getHeight()*Math.max(Math.min(distanceY/500f+0.5f,1f),0f)*scale;
-                a[2]=1;
+                a[1]+=outline.getHeight()*Math.max(Math.min(distanceY/500f+0.5f,0.9f),0.1f)*scale;
+                a[2]=-1;
             }
             else{
-                a[0]+=text_field.getWidth()*scale;
-                a[1]+=text_field.getHeight()*Math.max(Math.min(distanceY/500f+0.5f,1f),0f)*scale;
+                a[0]+=outline.getWidth()*scale;
+                a[1]+=outline.getHeight()*Math.max(Math.min(distanceY/500f+0.5f,0.9f),0.1f)*scale;
                 a[2]=1;
             }
         }
@@ -249,12 +249,12 @@ public class Node extends RelativeLayout {
 
             if(distanceY<0){
 
-                a[0]+=text_field.getWidth()*Math.max(Math.min(distanceX/500f+0.5f,1f),0f)*scale;
-                a[3]=1;
+                a[0]+=outline.getWidth()*Math.max(Math.min(distanceX/500f+0.5f,0.9f),0.1f)*scale;
+                a[3]=-1;
             }
             else {
-                a[0]+=text_field.getWidth()*Math.max(Math.min(distanceX/500f+0.5f,1f),0f)*scale;
-                a[1]+=text_field.getHeight()*scale;
+                a[0]+=outline.getWidth()*Math.max(Math.min(distanceX/500f+0.5f,0.9f),0.1f)*scale;
+                a[1]+=outline.getHeight()*scale;
                 a[3]=1;
             }
         }
