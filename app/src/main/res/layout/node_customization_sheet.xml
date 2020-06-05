@@ -63,7 +63,7 @@
                 android:padding="0dp"
                 android:text="@string/medium"
                 android:textAllCaps="false"
-                android:textSize="@dimen/medium_text_size"
+                android:textSize="@dimen/small_text_size"
                 app:cornerRadius="@dimen/corner_radius"
                 app:iconPadding="4dp"
                 app:strokeWidth="2dp">
@@ -79,7 +79,7 @@
                 android:padding="0dp"
                 android:text="@string/large"
                 android:textAllCaps="false"
-                android:textSize="@dimen/large_text_size"
+                android:textSize="@dimen/small_text_size"
                 app:cornerRadius="@dimen/corner_radius"
                 app:iconPadding="4dp"
                 app:strokeWidth="2dp">

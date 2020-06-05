@@ -4,13 +4,13 @@
     android:layout_height="wrap_content"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:padding="5dp">
+    android:paddingVertical="5dp">
     <androidx.appcompat.widget.AppCompatButton
     android:id="@+id/btn_color"
     android:layout_width="70dp"
     android:layout_height="30dp"
     android:background="@drawable/layout_bg"
     android:backgroundTintMode="multiply"
-    android:layout_gravity="center">
+    android:layout_gravity="right">
 </androidx.appcompat.widget.AppCompatButton>
 </RelativeLayout>

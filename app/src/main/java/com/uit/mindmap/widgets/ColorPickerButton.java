@@ -58,6 +58,7 @@ public class ColorPickerButton extends RelativeLayout {
                     @Override
                     public void setOnFastChooseColorListener(int position, int color) {
                         if(onColorPickedListener!=null){
+                            setColor(color);
                             onColorPickedListener.onPick(color);
                         }
                     }
