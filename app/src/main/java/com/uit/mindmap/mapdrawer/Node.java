@@ -228,6 +228,8 @@ public class Node extends RelativeLayout {
     public int[] anchor(Node other){
         int[] a=new  int[4];
         int[] a1=new int[2];
+        int width=outline.getWidth();
+        int height=outline.getHeight();
         outline.getLocationOnScreen(a1);
         float scale=((MapDrawerActivity)getContext()).zoomLayout.scale;
         int distanceX=other.data.pos[0]-data.pos[0];
@@ -240,24 +242,24 @@ public class Node extends RelativeLayout {
         if (x<1&& Math.abs( distanceX)> other.getWidth()/2+getWidth()/2){
             if (distanceX<0)
             {
-                a[1]+=outline.getHeight()*Math.max(Math.min((float)distanceY/getHeight()/4f+0.5f,0.9f),0.1f)*scale;
+                a[1]+=height*Math.max(Math.min((float)distanceY/height/4f+0.5f,0.9f),0.1f)*scale;
                 a[2]=-1;
             }
             else{
-                a[0]+=outline.getWidth()*scale;
-                a[1]+=outline.getHeight()*Math.max(Math.min((float)distanceY/getHeight()/4f+0.5f,0.9f),0.1f)*scale;
+                a[0]+=width*scale;
+                a[1]+=height*Math.max(Math.min((float)distanceY/height/4f+0.5f,0.9f),0.1f)*scale;
                 a[2]=1;
             }
         }
         else{
             if(distanceY<0){
 
-                a[0]+=outline.getWidth()*Math.max(Math.min((float)distanceX/getWidth()/4f+0.5f,0.9f),0.1f)*scale;
+                a[0]+=width*Math.max(Math.min((float)distanceX/width/4f+0.5f,0.9f),0.1f)*scale;
                 a[3]=-1;
             }
             else {
-                a[0]+=outline.getWidth()*Math.max(Math.min((float)distanceX/getWidth()/4f+0.5f,0.9f),0.1f)*scale;
-                a[1]+=outline.getHeight()*scale;
+                a[0]+=width*Math.max(Math.min((float)distanceX/width/4f+0.5f,0.9f),0.1f)*scale;
+                a[1]+=height*scale;
                 a[3]=1;
             }
         }

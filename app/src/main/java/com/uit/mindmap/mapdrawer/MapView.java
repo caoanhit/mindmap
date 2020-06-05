@@ -369,7 +369,7 @@ public class MapView extends RelativeLayout {
         canvas.drawLine(p[0], p[1], c[0], c[1], paint);
     }
     private void drawArrow(int[] a,Canvas canvas) {
-        int size = 10;
+        int size = 15;
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setPathEffect(null);
         path.reset();

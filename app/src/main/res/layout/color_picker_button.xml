@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.AppCompatButton xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="35sp"
-    android:layout_gravity="end"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:padding="5dp">
+    <androidx.appcompat.widget.AppCompatButton
+    android:id="@+id/btn_color"
+    android:layout_width="70dp"
+    android:layout_height="30dp"
     android:background="@drawable/layout_bg"
-    android:backgroundTint="@android:color/white"
-    android:backgroundTintMode="multiply">
+    android:backgroundTintMode="multiply"
+    android:layout_gravity="center">
 </androidx.appcompat.widget.AppCompatButton>
+</RelativeLayout>

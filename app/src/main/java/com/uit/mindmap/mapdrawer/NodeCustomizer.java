@@ -13,6 +13,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.uit.mindmap.R;
 import com.uit.mindmap.maploader.NodeData;
+import com.uit.mindmap.widgets.ColorPickerButton;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
 
@@ -20,8 +21,8 @@ public class NodeCustomizer extends CoordinatorLayout {
     private NodeData data;
     private MapView mapView;
     private MaterialButtonToggleGroup textSize, connectionStyle, arrow;
-    private AppCompatButton textColor, backgroundColor, outlineColor, connectionColor;
-    int[] colorList;
+    private ColorPickerButton btnTextColor, btnFillColor, btnOutlineColor, btnLineColor;
+    private int[] colorList;
     boolean evenDisabled = false;
 
     public NodeCustomizer(Context context) {
@@ -41,114 +42,54 @@ public class NodeCustomizer extends CoordinatorLayout {
 
     private void init(@Nullable AttributeSet attrs) {
         inflate(getContext(), R.layout.node_customization_sheet, this);
-        textSize = findViewById(R.id.text_size);
-        textColor = findViewById(R.id.text_color);
-        backgroundColor = findViewById(R.id.background_color);
-        outlineColor = findViewById(R.id.outline_color);
-        connectionColor = findViewById(R.id.connection_color);
-        connectionStyle = findViewById((R.id.line_style));
-        arrow= findViewById(R.id.arrow);
-
-        String colors[] = getResources().getStringArray(R.array.colors);
-        colorList = new int[colors.length];
-        for (int i = 0; i < colors.length; i++) {
-            colorList[i] = Color.parseColor(colors[i]);
-        }
-
-        textColor.setOnClickListener(new OnClickListener() {
+        findViewsByIds();
+        btnTextColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
             @Override
-            public void onClick(View v) {
-                final ColorPicker colorPicker = new ColorPicker((MapDrawerActivity) getContext());
-                colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
-                    @Override
-                    public void setOnFastChooseColorListener(int position, int color) {
-                        textColor.setBackgroundTintList(ColorStateList.valueOf(color));
-                        mapView.setTextColor(color);
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // put code
-                    }
-                })
-                        .disableDefaultButtons(true)
-                        .setColumns(7)
-                        .setColors(colorList)
-                        .setColorButtonSize(30, 30)
-                        .show();
-                colorPicker.getNegativeButton().setText(R.string.cancel);
+            public void onPick(int color) {
+                btnTextColor.setBackgroundTintList(ColorStateList.valueOf(color));
+                mapView.setTextColor(color);
             }
         });
-        backgroundColor.setOnClickListener(new OnClickListener() {
+        btnTextColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
             @Override
-            public void onClick(View v) {
-                final ColorPicker colorPicker = new ColorPicker((MapDrawerActivity) getContext());
-                colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
-                    @Override
-                    public void setOnFastChooseColorListener(int position, int color) {
-                        backgroundColor.setBackgroundTintList(ColorStateList.valueOf(color));
-                        mapView.setFillColor(color);
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // put code
-                    }
-                })
-                        .disableDefaultButtons(true)
-                        .setColumns(7)
-                        .setColors(colorList)
-                        .setColorButtonSize(30, 30)
-                        .show();
-                colorPicker.getNegativeButton().setText(R.string.cancel);
+            public void onPick(int color) {
+                btnTextColor.setBackgroundTintList(ColorStateList.valueOf(color));
+                mapView.setTextColor(color);
             }
         });
-        outlineColor.setOnClickListener(new OnClickListener() {
+        btnTextColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
             @Override
-            public void onClick(View v) {
-                final ColorPicker colorPicker = new ColorPicker((MapDrawerActivity) getContext());
-                colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
-                    @Override
-                    public void setOnFastChooseColorListener(int position, int color) {
-                        outlineColor.setBackgroundTintList(ColorStateList.valueOf(color));
-                        mapView.setOutlineColor(color);
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // put code
-                    }
-                })
-                        .disableDefaultButtons(true)
-                        .setColumns(7)
-                        .setColors(colorList)
-                        .setColorButtonSize(30, 30)
-                        .show();
-                colorPicker.getNegativeButton().setText(R.string.cancel);
+            public void onPick(int color) {
+                btnTextColor.setBackgroundTintList(ColorStateList.valueOf(color));
+                mapView.setTextColor(color);
             }
         });
-        connectionColor.setOnClickListener(new OnClickListener() {
+        btnTextColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
             @Override
-            public void onClick(View v) {
-                final ColorPicker colorPicker = new ColorPicker((MapDrawerActivity) getContext());
-                colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
-                    @Override
-                    public void setOnFastChooseColorListener(int position, int color) {
-                        connectionColor.setBackgroundTintList(ColorStateList.valueOf(color));
-                        mapView.setLineColor(color);
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // put code
-                    }
-                })
-                        .disableDefaultButtons(true)
-                        .setColumns(7)
-                        .setColors(colorList)
-                        .setColorButtonSize(30, 30)
-                        .show();
-                colorPicker.getNegativeButton().setText(R.string.cancel);
+            public void onPick(int color) {
+                btnTextColor.setBackgroundTintList(ColorStateList.valueOf(color));
+                mapView.setTextColor(color);
+            }
+        });
+        btnFillColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
+            @Override
+            public void onPick(int color) {
+                btnFillColor.setBackgroundTintList(ColorStateList.valueOf(color));
+                mapView.setFillColor(color);
+            }
+        });
+        btnOutlineColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
+            @Override
+            public void onPick(int color) {
+                btnOutlineColor.setBackgroundTintList(ColorStateList.valueOf(color));
+                mapView.setOutlineColor(color);
+            }
+        });
+        btnLineColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
+            @Override
+            public void onPick(int color) {
+                btnLineColor.setBackgroundTintList(ColorStateList.valueOf(color));
+                mapView.setLineColor(color);
             }
         });
         textSize.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
@@ -206,6 +147,15 @@ public class NodeCustomizer extends CoordinatorLayout {
         });
     }
 
+    private void findViewsByIds(){
+        textSize = findViewById(R.id.text_size);
+        btnTextColor = findViewById(R.id.btn_text_color);
+        btnFillColor = findViewById(R.id.btn_fill_color);
+        btnOutlineColor = findViewById(R.id.btn_outline_color);
+        btnLineColor = findViewById(R.id.btn_line_color);
+        connectionStyle = findViewById((R.id.line_style));
+        arrow= findViewById(R.id.arrow);
+    }
     public void setData(NodeData data) {
         evenDisabled=true;
         this.data = data;
@@ -231,10 +181,10 @@ public class NodeCustomizer extends CoordinatorLayout {
                 connectionStyle.check(R.id.connection_style_dotted_dash);
                 break;
         }
-        textColor.setBackgroundTintList(ColorStateList.valueOf(data.textColor));
-        backgroundColor.setBackgroundTintList(ColorStateList.valueOf(data.fillColor));
-        outlineColor.setBackgroundTintList(ColorStateList.valueOf(data.outlineColor));
-        connectionColor.setBackgroundTintList(ColorStateList.valueOf(data.lineColor));
+        btnTextColor.setColor(data.textColor);
+        btnFillColor.setColor(data.fillColor);
+        btnOutlineColor.setColor(data.outlineColor);
+        btnLineColor.setColor(data.lineColor);
         switch (data.arrow){
             case 0:
                 arrow.uncheck(R.id.arrow_back);
