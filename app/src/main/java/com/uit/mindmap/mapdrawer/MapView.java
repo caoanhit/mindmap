@@ -715,23 +715,21 @@ public class MapView extends RelativeLayout {
         etName.selectAll();
         alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                mapName = etName.getText().toString();
                 final MapLoader loader = new MapLoader(getContext());
-                if (loader.mapExist(mapName)) {
+                if (loader.mapExist(etName.getText().toString())) {
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                     alertDialog.setMessage("Map already exist. Do you want to overwrite?");
                     alertDialog.setIcon(R.mipmap.ic_launcher);
-                    alertDialog.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
+                    alertDialog.setPositiveButton(R.string.no, null);
                     alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+                            mapName =etName.getText().toString();
                             if (loader.saveMap(mapName, getData())) {
                                 loader.saveThumbnail(mapName, getThumbnail());
+                                Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
                                 changed = false;
                             }
+                            else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
                             dialog.cancel();
                         }
                     });
