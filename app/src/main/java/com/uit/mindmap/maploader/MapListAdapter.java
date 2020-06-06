@@ -103,10 +103,12 @@ public class MapListAdapter extends BaseAdapter {
                                             Toast.makeText(context, "Map name already exists", Toast.LENGTH_SHORT).show();
                                         }
                                         else {
-                                            data.set(position,s);
-                                            mapName.setText(etName.getText().toString());
-                                            loader.renameMap(data.get(position), etName.getText().toString());
-                                            notifyDataSetChanged();
+                                            if(loader.renameMap(data.get(position), etName.getText().toString())) {
+                                                data.set(position, s);
+                                                mapName.setText(etName.getText().toString());
+                                                notifyDataSetChanged();
+                                            }
+                                            else Toast.makeText(context, "Error: can not rename map", Toast.LENGTH_SHORT).show();
                                             alertDialog.dismiss();
                                         }
                                     }

@@ -220,7 +220,7 @@ public class MapLoader {
         return null;
     }
 
-    public void renameMap(String fileName, String newName) {
+    public boolean renameMap(String fileName, String newName) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         File f, t, fNew, tNew;
@@ -236,13 +236,15 @@ public class MapLoader {
             fNew = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + newName + ".map");
             tNew = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + newName + ".thb");
         }
-        if (f.exists()) {
-            if (f.renameTo(fNew)) {
-                if (t.exists()) {
-                    t.renameTo(tNew);
-                }
+        if (f.exists() && f.renameTo(fNew)) {
+            if (t.exists() && t.renameTo(tNew))
+            {
+                
             }
+            else return false;
+            return true;
         }
+        return false;
     }
 
     public boolean copyMap(String fileName, String newName) {
@@ -270,7 +272,7 @@ public class MapLoader {
             if (t.exists()) {
                 try {
                     copy(t, tNew);
-                }catch (Exception e){
+                } catch (Exception e) {
                 }
             }
             return true;
