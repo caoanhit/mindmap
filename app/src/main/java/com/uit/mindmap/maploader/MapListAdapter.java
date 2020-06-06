@@ -3,6 +3,7 @@ package com.uit.mindmap.maploader;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -168,6 +169,10 @@ public class MapListAdapter extends BaseAdapter {
                         }
                         else{
                             data.remove(position);
+                            if(data.size()==0) {
+                                Log.i("List", "empty" );
+                                ((MapManagerActivity)context).showEmptyText();
+                            }
                             notifyDataSetChanged();
                         }
                     }

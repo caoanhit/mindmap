@@ -100,4 +100,7 @@ public class MapManagerActivity extends AppCompatActivity {
         }
         else findViewById(R.id.tv_empty).setVisibility(View.VISIBLE);
     }
+    public void showEmptyText(){
+        findViewById(R.id.tv_empty).setVisibility(View.VISIBLE);
+    }
 }
