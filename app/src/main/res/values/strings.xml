@@ -28,5 +28,6 @@
     <string name="multiple_select_messages">Select multiple nodes</string>
     <string name="undo">Undo</string>
     <string name="redo">Redo</string>
-
+    <string name="rename_map">Rename map</string>
+    <string name="copy_map">Copy map</string>
 </resources>

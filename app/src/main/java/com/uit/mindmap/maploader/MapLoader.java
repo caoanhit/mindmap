@@ -24,6 +24,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.nio.channels.FileChannel;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,18 +62,20 @@ public class MapLoader {
         }
         return map;
     }
-    public String mapDate(String fileName){
+
+    public String mapDate(String fileName) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         File f;
         if (isExternalStorageWritable()) {
             f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");
         } else f = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + fileName + ".map");
-        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.MEDIUM);
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
 
         if (f.exists()) return dateFormat.format(f.lastModified());
         return "";
     }
+
     public boolean saveMap(String fileName, NodeData[] map) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -109,7 +114,7 @@ public class MapLoader {
         if (!f.exists()) {
             f.mkdirs();
         }
-        if (!t.exists()){
+        if (!t.exists()) {
             t.mkdir();
         }
         List<String> list;
@@ -167,41 +172,119 @@ public class MapLoader {
         File f;
         if (isExternalStorageWritable()) {
             f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/.thumbnail/" + fileName + ".thb");
-        } else f = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + fileName + ".thb");
+        } else
+            f = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + fileName + ".thb");
         try (FileOutputStream out = new FileOutputStream(f)) {
 
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
         } catch (IOException e) {
             e.printStackTrace();
-            Log.i("thumbnail",e.getMessage());
+            Log.i("thumbnail", e.getMessage());
         }
     }
 
-    public boolean deleteMap(String fileName){
+    public boolean deleteMap(String fileName) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        File f;
+        File f, t;
         if (isExternalStorageWritable()) {
             f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");
-        } else f = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + fileName + ".map");
-        if (f.exists()){
-            if(f.delete()){
+            t = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/.thumbnail/" + fileName + ".thb");
+        } else {
+            f = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + fileName + ".map");
+            t = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + fileName + ".thb");
+        }
+        if (f.exists()) {
+            if (f.delete()) {
+                if (t.exists()) {
+                    t.delete();
+                }
                 return true;
             }
         }
         return false;
     }
-    public Bitmap loadThumbnail(String fileName){
+
+    public Bitmap loadThumbnail(String fileName) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         File f;
         if (isExternalStorageWritable()) {
             f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/.thumbnail/" + fileName + ".thb");
-        } else f = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + fileName + ".thb");
-        if(f.exists()){
-            Bitmap b= BitmapFactory.decodeFile(f.getAbsolutePath());
+        } else
+            f = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + fileName + ".thb");
+        if (f.exists()) {
+            Bitmap b = BitmapFactory.decodeFile(f.getAbsolutePath());
             return b;
         }
         return null;
+    }
+
+    public void renameMap(String fileName, String newName) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        File f, t, fNew, tNew;
+        if (isExternalStorageWritable()) {
+            f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");
+            t = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/.thumbnail/" + fileName + ".thb");
+            fNew = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + newName + ".map");
+            tNew = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/.thumbnail/" + newName + ".thb");
+
+        } else {
+            f = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + fileName + ".map");
+            t = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + fileName + ".thb");
+            fNew = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + newName + ".map");
+            tNew = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + newName + ".thb");
+        }
+        if (f.exists()) {
+            if (f.renameTo(fNew)) {
+                if (t.exists()) {
+                    t.renameTo(tNew);
+                }
+            }
+        }
+    }
+
+    public boolean copyMap(String fileName, String newName) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        File f, t, fNew, tNew;
+        if (isExternalStorageWritable()) {
+            f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");
+            t = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/.thumbnail/" + fileName + ".thb");
+            fNew = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + newName + ".map");
+            tNew = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/.thumbnail/" + newName + ".thb");
+
+        } else {
+            f = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + fileName + ".map");
+            t = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + fileName + ".thb");
+            fNew = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + newName + ".map");
+            tNew = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + newName + ".thb");
+        }
+        if (f.exists()) {
+            try {
+                copy(f, fNew);
+            } catch (Exception e) {
+                return false;
+            }
+            if (t.exists()) {
+                try {
+                    copy(t, tNew);
+                }catch (Exception e){
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void copy(File src, File dst) throws IOException {
+        FileInputStream inStream = new FileInputStream(src);
+        FileOutputStream outStream = new FileOutputStream(dst);
+        FileChannel inChannel = inStream.getChannel();
+        FileChannel outChannel = outStream.getChannel();
+        inChannel.transferTo(0, inChannel.size(), outChannel);
+        inStream.close();
+        outStream.close();
     }
 }

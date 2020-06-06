@@ -1,21 +1,35 @@
 package com.uit.mindmap.maploader;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.uit.mindmap.R;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class MapListAdapter extends BaseAdapter {
     Context context;
-    String[] data;
+    List<String> data;
+    Boolean isInSelectMode;
     private static LayoutInflater inflater = null;
 
-    public MapListAdapter(Context context, String[] data){
+    public MapListAdapter(Context context, List<String> data){
         this.context = context;
         this.data = data;
         inflater = (LayoutInflater) context
@@ -24,12 +38,12 @@ public class MapListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return data.length;
+        return data.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return data[position];
+        return data.get(position);
     }
 
     @Override
@@ -38,17 +52,130 @@ public class MapListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         if (vi == null)
             vi = inflater.inflate(R.layout.item_list, null);
-        TextView mapName = vi.findViewById(R.id.map_name);
-        TextView date= vi.findViewById(R.id.map_date);
-        mapName.setText(data[position]);
-        MapLoader loader=new MapLoader(context);
-        date.setText(loader.mapDate(data[position]));
+
+        final TextView mapName = vi.findViewById(R.id.map_name);
+        final TextView date= vi.findViewById(R.id.map_date);
+        final ImageButton btn= vi.findViewById(R.id.map_option);
+
+        mapName.setText(data.get(position));
+        final MapLoader loader=new MapLoader(context);
+        date.setText(loader.mapDate(data.get(position)));
         ImageView thumbnail=vi.findViewById(R.id.map_thumbnail);
-        thumbnail.setImageBitmap(loader.loadThumbnail(data[position]));
+        thumbnail.setImageBitmap(loader.loadThumbnail(data.get(position)));
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final View popup= inflater.inflate(R.layout.map_options,null);
+                final PopupWindow popupWindow=new PopupWindow(popup,LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT,true);
+                popupWindow.setBackgroundDrawable(context.getDrawable(R.drawable.rounded_flat));
+                popupWindow.setElevation(context.getResources().getDimension(R.dimen.elevation));
+                popup.findViewById(R.id.btn_rename_map).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(popupWindow.isShowing()) popupWindow.dismiss();
+                        LayoutInflater li = LayoutInflater.from(context);
+                        View customDialogView = li.inflate(R.layout.edit_text_dialog, null);
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                        TextView t=customDialogView.findViewById(R.id.tv_dialog);
+                        t.setText(context.getResources().getString(R.string.rename_map));
+                        alertDialogBuilder.setView(customDialogView);
+                        final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
+                        etName.setText(data.get(position));
+                        etName.selectAll();
+                        alertDialogBuilder.setCancelable(true).setPositiveButton("OK",null)
+                        .setNegativeButton("Cancel",null);
+                        final AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                            @Override
+                            public void onShow(DialogInterface dialog) {
+                                Button ok=alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                                ok.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String s=etName.getText().toString();
+                                        if(data.contains(s)){
+                                            Toast.makeText(context, "Map name already exists", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else {
+                                            data.set(position,s);
+                                            mapName.setText(etName.getText().toString());
+                                            loader.renameMap(data.get(position), etName.getText().toString());
+                                            notifyDataSetChanged();
+                                            alertDialog.dismiss();
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                        alertDialog.show();
+                    }
+                });
+                popup.findViewById(R.id.btn_duplicate_map).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(popupWindow.isShowing()) popupWindow.dismiss();
+                        LayoutInflater li = LayoutInflater.from(context);
+                        View customDialogView = li.inflate(R.layout.edit_text_dialog, null);
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                        TextView t=customDialogView.findViewById(R.id.tv_dialog);
+                        t.setText(context.getResources().getString(R.string.copy_map));
+                        alertDialogBuilder.setView(customDialogView);
+                        final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
+                        etName.setText(data.get(position)+ " (copy)");
+                        etName.selectAll();
+                        alertDialogBuilder.setCancelable(true).setPositiveButton("OK",null)
+                                .setNegativeButton("Cancel",null);
+                        final AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                            @Override
+                            public void onShow(DialogInterface dialog) {
+                                Button ok=alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                                ok.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String s=etName.getText().toString();
+                                        if(data.contains(s)){
+                                            Toast.makeText(context, "Map name already exists", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else {
+                                            if(loader.copyMap(data.get(position),s)) {
+                                                data.add(s);
+                                                notifyDataSetChanged();
+                                            }
+                                            else {
+                                                Toast.makeText(context, "Error: can not copy map", Toast.LENGTH_SHORT).show();
+                                            }
+                                            alertDialog.dismiss();
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                        alertDialog.show();
+                    }
+                });
+                popup.findViewById(R.id.btn_delete_map).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(popupWindow.isShowing()) popupWindow.dismiss();
+                        if(!loader.deleteMap(data.get(position))){
+                            Toast.makeText(context, "Error: can not delete map", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            data.remove(position);
+                            notifyDataSetChanged();
+                        }
+                    }
+                });
+                popupWindow.showAsDropDown(v,-v.getWidth(),-v.getHeight());
+            }
+        });
+
         return vi;
     }
 }

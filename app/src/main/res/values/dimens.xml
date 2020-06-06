@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="elevation">15dp</dimen>
+    <dimen name="elevation">10dp</dimen>
     <dimen name="icon_padding">0dp</dimen>
     <dimen name="icon_size">30dp</dimen>
     <dimen name="margin_base">15dp</dimen>
