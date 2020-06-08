@@ -48,17 +48,19 @@
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
         </com.uit.mindmap.widgets.ZoomLayout>
 
-        <com.uit.mindmap.widgets.FloatingMenu
-            android:id="@+id/floating_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/rounded_flat"
-            android:elevation="@dimen/elevation" />
+        <include layout="@layout/floating_menu"
+            android:id="@+id/floating_menu"/>
     </FrameLayout>
     <com.uit.mindmap.mapdrawer.NodeCustomizer
         android:id="@+id/node_customizer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <com.uit.mindmap.mapdrawer.TextCustomizer
+        android:id="@+id/text_customizer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <com.uit.mindmap.mapdrawer.LineCustomizer
+        android:id="@+id/line_customizer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </FrameLayout>

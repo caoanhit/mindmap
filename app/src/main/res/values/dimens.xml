@@ -3,25 +3,22 @@
 
     <dimen name="elevation">10dp</dimen>
     <dimen name="icon_padding">0dp</dimen>
-    <dimen name="icon_size">30dp</dimen>
+    <dimen name="icon_size">38dp</dimen>
     <dimen name="margin_base">15dp</dimen>
     <dimen name="button_margin">0dp</dimen>
-    <dimen name="button_width">70dp</dimen>
-
-    <!--Mapview -->
+    <dimen name="button_width">45dp</dimen>
+    <dimen name="corner_radius">10dp</dimen>
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>
     <dimen name="large_text_size">20sp</dimen>
-
     <dimen name="list_item_height">45dp</dimen>
-
-    <dimen name="thin_line">3dp</dimen>
-    <dimen name="medium_line">5dp</dimen>
-    <dimen name="thick_line">7dp</dimen>
-
     <dimen name="outline_width">3dp</dimen>
-    <dimen name="map_size">3000dp</dimen>
+    <dimen name="number_picker_height">150dp</dimen>
+    <dimen name="number_picker_width">60dp</dimen>
 
-    <dimen name="corner_radius">10dp</dimen>
-    <dimen name="min_node_width">40dp</dimen>
+    <!--Mapview -->
+    <dimen name="map_size">4000px</dimen>
+    <dimen name="min_node_width">40px</dimen>
+    <dimen name="node_corner_radius">10px</dimen>
+
 </resources>

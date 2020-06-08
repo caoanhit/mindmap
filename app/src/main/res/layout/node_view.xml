@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/outline_width"
-            android:background="@drawable/layout_bg">
+            android:background="@drawable/node_bg">
 
             <TextView
                 android:id="@+id/text"
@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="3dp"
-                android:background="@drawable/rounded_flat"
+                android:background="@drawable/node_bg"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:focusedByDefault="false"

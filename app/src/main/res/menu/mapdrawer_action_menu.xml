@@ -5,7 +5,7 @@
         android:id="@+id/undo"
         android:title="@string/undo"
         android:icon="@drawable/ic_undo_black_24dp"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/redo"
         android:title="@string/redo"

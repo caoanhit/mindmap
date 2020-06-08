@@ -57,8 +57,8 @@ public class ColorPickerButton extends RelativeLayout {
                 colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
                     @Override
                     public void setOnFastChooseColorListener(int position, int color) {
+                        setColor(color);
                         if(onColorPickedListener!=null){
-                            setColor(color);
                             onColorPickedListener.onPick(color);
                         }
                     }
@@ -73,7 +73,6 @@ public class ColorPickerButton extends RelativeLayout {
                         .setColors(colorList)
                         .setColorButtonSize(30, 30)
                         .show();
-                colorPicker.getNegativeButton().setText(R.string.cancel);
             }
         });
     }

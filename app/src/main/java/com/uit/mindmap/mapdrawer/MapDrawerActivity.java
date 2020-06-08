@@ -2,43 +2,39 @@ package com.uit.mindmap.mapdrawer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.uit.mindmap.R;
-import com.uit.mindmap.widgets.FloatingMenu;
+import com.uit.mindmap.data.LinePreferences;
+import com.uit.mindmap.data.NodePreferences;
+import com.uit.mindmap.data.TextPreferences;
 import com.uit.mindmap.widgets.ZoomLayout;
 
 public class MapDrawerActivity extends AppCompatActivity {
     private MapView mapView;
-    private LinearLayout bottomSheet;
+    private LinearLayout nodeSheet, textSheet, lineSheet, menu;
     private NodeCustomizer nodeCustomizer;
-    public FloatingMenu menu;
-    public BottomSheetBehavior bottomSheetBehavior;
+    private LineCustomizer lineCustomizer;
+    private TextCustomizer textCustomizer;
+    private BottomSheetBehavior nodeCustomizerBehavior, textCustomizerBehavior, lineCustomizerBehavior;
     private String mapName;
-    public ZoomLayout zoomLayout;
+    private ZoomLayout zoomLayout;
     private TextView zoomPercentage;
+    private CountDownTimer timer;
 
     private boolean undoAvailable;
     private boolean redoAvailable;
@@ -48,11 +44,171 @@ public class MapDrawerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewByIds();
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final CountDownTimer timer=new CountDownTimer(500,500) {
+        initViews();
+
+        initZoomPercentage();
+
+        Bundle extra = getIntent().getExtras();
+        mapName = null;
+        if (extra != null) {
+            mapName = extra.getString("mapName");
+            Log.i("map", mapName);
+        }
+        mapView.loadMap(mapName);
+        mapView.setNodeCustomizer(nodeCustomizer);
+        mapView.setOnChangeListener(new MapView.onChangeListener() {
+            @Override
+            public void onChange(boolean undoAvailable, boolean redoAvailable) {
+                if (undoAvailable){
+                    enableUndo();
+                }
+                else {
+                    disableUndo();
+                }
+                if (redoAvailable){
+                    enableRedo();
+                }
+                else {
+                    disableRedo();
+                }
+            }
+        });
+
+        findViewById(R.id.new_node).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapView.addNode();
+            }
+        });
+        findViewById(R.id.edit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapView.editText();
+            }
+        });
+        findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapView.removeNode();
+                deselect();
+            }
+        });
+        findViewById(R.id.node_customize).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                nodeCustomizer.setPreferences(mapView.getFirstData().nodePreferences);
+            }
+        });
+        findViewById(R.id.text_customize).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textCustomizerBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                textCustomizer.setPreferences(mapView.getFirstData().textPreferences);
+            }
+        });
+        findViewById(R.id.line_customize).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                lineCustomizer.setPreferences(mapView.getFirstData().linePreferences);
+            }
+        });
+        nodeCustomizer.setOnPreferenceChange(new NodeCustomizer.OnPreferenceChangeListener() {
+            @Override
+            public void OnChange(NodePreferences data) {
+                mapView.setNodePreferences(data);
+            }
+        });
+
+        textCustomizer.setOnPreferenceChange(new TextCustomizer.OnPreferenceChangeListener() {
+            @Override
+            public void OnChange(TextPreferences data) {
+                mapView.setTextPreferences(data);
+            }
+        });
+
+        lineCustomizer.setOnPreferenceChange(new LineCustomizer.OnPreferenceChangeListener() {
+            @Override
+            public void OnChange(LinePreferences data) {
+                mapView.setLinePreferences(data);
+            }
+        });
+
+    }
+
+    private void initViews(){
+        zoomLayout = findViewById(R.id.zoom);
+        zoomLayout.setOnScaleListener(new ZoomLayout.onScaleListener() {
+            @Override
+            public void onScale(float scale) {
+                zoomPercentage.setAlpha(0.5f);
+                zoomPercentage.setVisibility(View.VISIBLE);
+                zoomPercentage.setText((int) (scale * 100) + "%");
+                timer.start();
+            }
+        });
+        zoomLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (zoomLayout.holdTime < 200) {
+                    mapView.deselectAll();
+                    zoomLayout.requestFocus();
+                    View view = getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+            }
+
+        });
+
+        mapView = findViewById(R.id.map_view);
+        menu = findViewById(R.id.floating_menu);
+        zoomPercentage = findViewById(R.id.zoom_percentage);
+
+        nodeSheet = findViewById(R.id.node_customizer_sheet);
+        nodeCustomizer = findViewById(R.id.node_customizer);
+        nodeCustomizerBehavior = BottomSheetBehavior.from(nodeSheet);
+        nodeSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                    nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+
+        textSheet = findViewById(R.id.text_customizer_sheet);
+        textCustomizer = findViewById(R.id.text_customizer);
+        textCustomizerBehavior= BottomSheetBehavior.from(textSheet);
+        textSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                    textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+
+        lineSheet = findViewById(R.id.line_customizer_sheet);
+        lineCustomizer = findViewById(R.id.line_customizer);
+        lineCustomizerBehavior= BottomSheetBehavior.from(lineSheet);
+        lineSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                    lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+    }
+    private void initZoomPercentage(){
+        timer=new CountDownTimer(500,500) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -73,90 +229,7 @@ public class MapDrawerActivity extends AppCompatActivity {
                         });
             }
         };
-
         zoomPercentage.setVisibility(View.GONE);
-        zoomLayout.setOnScaleListener(new ZoomLayout.onScaleListener() {
-            @Override
-            public void onScale(float scale) {
-                zoomPercentage.setAlpha(0.5f);
-                zoomPercentage.setVisibility(View.VISIBLE);
-                zoomPercentage.setText((int) (scale * 100) + "%");
-                timer.start();
-            }
-        });
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-
-        Bundle extra = getIntent().getExtras();
-        mapName = null;
-        if (extra != null) {
-            mapName = extra.getString("mapName");
-            Log.i("map", mapName);
-        }
-        mapView.loadMap(mapName);
-        mapView.setNodeCustomizer(nodeCustomizer);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        zoomLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (zoomLayout.holdTime < 200) {
-                    mapView.deselectAll();
-                    zoomLayout.requestFocus();
-                    View view = getCurrentFocus();
-                    if (view != null) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    }
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-            }
-
-        });
-        mapView.setOnChangeListener(new MapView.onChangeListener() {
-            @Override
-            public void onChange(boolean undoAvailable, boolean redoAvailable) {
-                if (undoAvailable){
-                    Log.i("button", "enable undo");
-                    enableUndo();
-                }
-                else {
-                    Log.i("button", "disable undo");
-                    disableUndo();
-                }
-                if (redoAvailable){
-                    Log.i("button", "enable redo");
-                    enableRedo();
-                }
-                else {
-                    Log.i("button", "disable redo");
-                    disableRedo();
-                }
-            }
-        });
-        menu.assignMap(mapView);
-        ((ImageButton) menu.findViewById(R.id.customize)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                mapView.setSheetData();
-            }
-        });
-        bottomSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
-    }
-
-    private void findViewByIds(){
-        zoomLayout = findViewById(R.id.zoom);
-        mapView = findViewById(R.id.map_view);
-        menu = findViewById(R.id.floating_menu);
-        zoomPercentage = findViewById(R.id.zoom_percentage);
-        bottomSheet = findViewById(R.id.bottom_sheet);
-        nodeCustomizer = (NodeCustomizer) findViewById(R.id.node_customizer);
     }
 
     @Override
@@ -227,7 +300,7 @@ public class MapDrawerActivity extends AppCompatActivity {
                 }
             });
             alertDialog.show();
-        } else finish();
+        } else super.onBackPressed();
     }
 
     @Override
@@ -272,6 +345,17 @@ public class MapDrawerActivity extends AppCompatActivity {
     private void disableRedo() {
         redoAvailable = false;
         invalidateOptionsMenu();
+    }
+    public void deselect(){
+        if(menu!=null)
+            menu.setVisibility(View.GONE);
+        nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+    public void select(){
+        if(menu!=null)
+            menu.setVisibility(View.VISIBLE);
     }
 
 }

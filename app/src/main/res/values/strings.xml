@@ -10,7 +10,7 @@
     <string name="medium">Medium</string>
     <string name="large">Large</string>
     <string name="line_color">Line color</string>
-    <string name="line_style">Line style</string>
+    <string name="line_effect">Line effect</string>
     <string name="delete_root_message">Root node can not be deleted.</string>
     <string name="edit_text">Edit text</string>
     <string name="map_name">Map name</string>
@@ -28,6 +28,20 @@
     <string name="multiple_select_messages">Select multiple nodes</string>
     <string name="undo">Undo</string>
     <string name="redo">Redo</string>
-    <string name="rename_map">Rename map</string>
-    <string name="copy_map">Copy map</string>
+
+    <string name="rename_map">Rename</string>
+    <string name="copy_map">Copy</string>
+    <string name="delete_map">Delete</string>
+
+    <string name="outline_width">Outline width</string>
+    <string name="text_effect">Text effect</string>
+    <string name="text_alignment">Alignment</string>
+
+    <string name="curve">Curve</string>
+
+    <string name="line_width">Line width</string>
+
+    <string name="bold"><b>B</b></string>
+    <string name="italic"><i>I</i></string>
+    <string name="underline"><u>U</u></string>
 </resources>

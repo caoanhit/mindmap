@@ -20,10 +20,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.uit.mindmap.R;
+import com.uit.mindmap.data.LinePreferences;
+import com.uit.mindmap.data.NodePreferences;
+import com.uit.mindmap.data.TextPreferences;
 import com.uit.mindmap.maploader.MapLoader;
-import com.uit.mindmap.maploader.NodeData;
+import com.uit.mindmap.data.NodeData;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -72,8 +74,7 @@ public class MapView extends RelativeLayout {
 
     Node[] nodes;
     ArrayList<Integer> selectedNodes;
-    Paint paint;
-    Path path;
+    LinePaint paint;
     String mapName;
     NodeCustomizer nodeCustomizer;
     boolean changed = false;
@@ -102,9 +103,8 @@ public class MapView extends RelativeLayout {
     public void init(@Nullable AttributeSet set) {
         selectedNodes = new ArrayList<>();
         nodes = new Node[maxNodeAmount];
-        paint = new Paint();
+        paint = new LinePaint();
         paint.setAntiAlias(true);
-        path = new Path();
         undoHistory = new ArrayDeque<>();
         redoHistory = new ArrayDeque<>();
     }
@@ -156,8 +156,6 @@ public class MapView extends RelativeLayout {
                     invalidate();
                 } else {
                     nodes[state.ids.get(i)].setData(new NodeData(state.data[i]));
-                    nodes[state.ids.get(i)].applyData();
-                    setSheetData();
                 }
             }
         }
@@ -270,122 +268,12 @@ public class MapView extends RelativeLayout {
             if (nodes[i] != null && nodes[i].data != null) {
                 for (int a : nodes[i].data.children) {
                     if (!nodes[a].deleted)
-                    drawLine(i, a, canvas);
+                    paint.drawConnection(nodes[i],nodes[a],canvas);
                 }
             }
         }
     }
-    private  void applyLineEffect(int parent_node, int child_node){
-        float[] intervals;
-        int style = nodes[child_node].data.lineStyle;
-        switch (style) {
-            case 0:
-                paint.setPathEffect(null);
-                break;
-            case 1:
-                intervals = new float[]{15, 15};
-                paint.setPathEffect(new DashPathEffect(intervals, 0));
-                break;
-            case 2:
-                intervals = new float[]{15, 15, 5, 15};
-                paint.setPathEffect(new DashPathEffect(intervals, 0));
-                break;
-        }
-    }
 
-    private void drawLine(int parent_node, int child_node, Canvas canvas) {
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(nodes[child_node].data.lineColor);
-        paint.setStrokeWidth(3);
-        drawCurve(parent_node, child_node, canvas);
-    }
-
-    private void drawCurve(int parent_node, int child_node, Canvas canvas) {
-        path.reset();
-        int[] p = nodes[parent_node].anchor(nodes[child_node]);
-        int[] c = nodes[child_node].anchor(nodes[parent_node]);
-        int[] s = new int[2];
-        getLocationOnScreen(s);
-        float scale = ((MapDrawerActivity) getContext()).zoomLayout.scale;
-
-        p[0] /= scale;
-        p[1] /= scale;
-        c[0] /= scale;
-        c[1] /= scale;
-        p[0] -= (int) (s[0] / scale);
-        p[1] -= (int) (s[1] / scale);
-        c[0] -= (int) (s[0] / scale);
-        c[1] -= (int) (s[1] / scale);
-
-        if(nodes[child_node].data.arrow==1||nodes[child_node].data.arrow==3) drawArrow(p,canvas);
-        if(nodes[child_node].data.arrow==2||nodes[child_node].data.arrow==3) drawArrow(c,canvas);
-
-        paint.setStyle(Paint.Style.STROKE);
-        applyLineEffect(parent_node,child_node);
-        c[2]= Math.abs(c[2]);
-        c[3]= Math.abs(c[3]);
-        p[2]= Math.abs(p[2]);
-        p[3]= Math.abs(p[3]);
-        path.moveTo(p[0], p[1]);
-        path.cubicTo(p[0] * c[3] + (c[0]/2 + p[0]/2) * c[2]
-                , p[1] * p[2] + p[3] * (c[1]/2 + p[1]/2)
-                , c[0] * p[3] + (p[0]/2 + c[0]/2) * p[2]
-                , c[1] * c[2] + c[3] * (p[1]/2 + c[1]/2), c[0], c[1]);
-        canvas.drawPath(path, paint);
-    }
-
-    private void drawStraightLine(int parent_node, int child_node, Canvas canvas) {
-        paint.setStyle(Paint.Style.STROKE);
-        int[] p = nodes[parent_node].anchor(nodes[child_node]);
-        int[] c = nodes[child_node].anchor(nodes[parent_node]);
-        int[] s = new int[2];
-        getLocationOnScreen(s);
-        float scale = ((MapDrawerActivity) getContext()).zoomLayout.scale;
-        p[0] /= scale;
-        p[1] /= scale;
-        c[0] /= scale;
-        c[1] /= scale;
-        p[0] -= (int) (s[0] / scale);
-        p[1] -= (int) (s[1] / scale);
-        c[0] -= (int) (s[0] / scale);
-        c[1] -= (int) (s[1] / scale);
-        canvas.drawLine(p[0], p[1], c[0], c[1], paint);
-    }
-    private void drawElbow(int parent_node, int child_node, Canvas canvas) {
-        paint.setStyle(Paint.Style.STROKE);
-        int[] p = nodes[parent_node].anchor(nodes[child_node]);
-        int[] c = nodes[child_node].anchor(nodes[parent_node]);
-        int[] s = new int[2];
-        getLocationOnScreen(s);
-        float scale = ((MapDrawerActivity) getContext()).zoomLayout.scale;
-        p[0] /= scale;
-        p[1] /= scale;
-        c[0] /= scale;
-        c[1] /= scale;
-        p[0] -= (int) (s[0] / scale);
-        p[1] -= (int) (s[1] / scale);
-        c[0] -= (int) (s[0] / scale);
-        c[1] -= (int) (s[1] / scale);
-        canvas.drawLine(p[0], p[1], c[0], c[1], paint);
-    }
-    private void drawArrow(int[] a,Canvas canvas) {
-        int size = 15;
-        paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setPathEffect(null);
-        path.reset();
-        path.moveTo(a[0], a[1]);
-        if (a[3]==0) {
-            path.lineTo(a[0] + a[2] * size, a[1] -size/2);
-            path.lineTo(a[0] + a[2] * size, a[1] +size/2);
-            path.close();
-        }
-        else{
-            path.lineTo(a[0] -size/2, a[1] +a[3]*size);
-            path.lineTo(a[0] +size/2, a[1] +a[3]*size);
-            path.close();
-        }
-        canvas.drawPath(path, paint);
-    }
     //endregion
 
     //region Add
@@ -397,9 +285,6 @@ public class MapView extends RelativeLayout {
             i++;
         }
         nodes[i] = node;
-        node.setFillColor(getContext().getResources().getColor(R.color.colorPrimary));
-        node.setTextColor(Color.WHITE);
-        node.setOutlineColor(getContext().getResources().getColor(R.color.colorPrimary));
         node.data.id = i;
         node.setMap(this);
         selectNode(i);
@@ -451,7 +336,6 @@ public class MapView extends RelativeLayout {
     }
 
     public void addNode() {
-        Log.i("add node", "" + selectedNodes.get(0));
         for (int i : selectedNodes) {
             deselectNode(i);
             int node = addNode(i);
@@ -464,7 +348,7 @@ public class MapView extends RelativeLayout {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setView(customDialogView);
         final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
-        etName.setText(nodes[selectedNodes.get(0)].getText());
+        etName.setText(nodes[selectedNodes.get(0)].data.text);
         etName.selectAll();
         alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -539,8 +423,7 @@ public class MapView extends RelativeLayout {
         for (int id : selectedNodes) {
             nodes[id].defocus();
         }
-        View menu = ((MapDrawerActivity) getContext()).menu;
-        if (menu != null) menu.setVisibility(GONE);
+        ((MapDrawerActivity) getContext()).deselect();
         selectedNodes.clear();
     }
 
@@ -548,11 +431,7 @@ public class MapView extends RelativeLayout {
         selectedNodes.add(id);
         nodes[id].focus();
         nodes[id].bringToFront();
-        View menu = ((MapDrawerActivity) getContext()).menu;
-        BottomSheetBehavior bottomSheetBehavior = ((MapDrawerActivity) getContext()).bottomSheetBehavior;
-        if (menu != null) menu.setVisibility(VISIBLE);
-        if (bottomSheetBehavior != null)
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        ((MapDrawerActivity) getContext()).select();
     }
 
     public void selectNode(int id) {
@@ -560,11 +439,7 @@ public class MapView extends RelativeLayout {
         selectedNodes.add(id);
         nodes[id].focus();
         nodes[id].bringToFront();
-        View menu = ((MapDrawerActivity) getContext()).menu;
-        BottomSheetBehavior bottomSheetBehavior = ((MapDrawerActivity) getContext()).bottomSheetBehavior;
-        if (menu != null) menu.setVisibility(VISIBLE);
-        if (bottomSheetBehavior != null)
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        ((MapDrawerActivity) getContext()).select();
     }
 
     public void toggleSelect(int id) {
@@ -588,55 +463,25 @@ public class MapView extends RelativeLayout {
     //endregion
 
     //region Customization
-    public void setTextSize(int text_size) {
-        addCommand();
-        Log.i("command", "Text size");
-        for (int i : selectedNodes) nodes[i].setTextSize(text_size);
-    }
-
-    public void setTextColor(int color) {
-        addCommand();
-        Log.i("command", "Text color");
-        for (int i : selectedNodes) nodes[i].setTextColor(color);
-    }
-
-    public void setFillColor(int color) {
-        addCommand();
-        Log.i("command", "Fill color");
-        for (int i : selectedNodes) nodes[i].setFillColor(color);
-    }
-
-    public void setOutlineColor(int color) {
-        addCommand();
-        Log.i("command", "Outline color");
-        for (int i : selectedNodes) nodes[i].setOutlineColor(color);
-    }
-
-    public void setLineStyle(int style) {
-        addCommand();
-        Log.i("command", "Line style");
-        for (int i : selectedNodes) nodes[i].setLineStyle(style);
-    }
-
-    public void setLineColor(int color) {
-        addCommand();
-        Log.i("command", "Line color");
-        for (int i : selectedNodes) nodes[i].setLineColor(color);
-    }
-    public void setArrow(int arrow){
-        addCommand();
-        for (int i : selectedNodes) nodes[i].setArrow(arrow);
-    }
 
     public void setNodeCustomizer(NodeCustomizer customizer) {
         nodeCustomizer = customizer;
         customizer.setMapView(this);
     }
 
-    public void setSheetData() {
-        if (!selectedNodes.isEmpty())
-            nodeCustomizer.setData(nodes[selectedNodes.get(0)].data);
+    public void setNodePreferences(NodePreferences preferences){
+        addCommand();
+        for (int i : selectedNodes) nodes[i].setNodePreferences(preferences);
     }
+    public void setTextPreferences(TextPreferences preferences){
+        addCommand();
+        for (int i : selectedNodes) nodes[i].setTextPreferences(preferences);
+    }
+    public void setLinePreferences(LinePreferences preferences){
+        addCommand();
+        for (int i : selectedNodes) nodes[i].setLinePreferences(preferences);
+    }
+
     //endregion
 
     //region Text
@@ -647,7 +492,7 @@ public class MapView extends RelativeLayout {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setView(customDialogView);
         final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
-        etName.setText(nodes[selectedNodes.get(0)].getText());
+        etName.setText(nodes[selectedNodes.get(0)].data.text);
         etName.selectAll();
         alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -689,8 +534,14 @@ public class MapView extends RelativeLayout {
         }
         return data;
     }
+    public NodeData getFirstData(){
+        if (selectedNodes!=null&& selectedNodes.size()>0)
+            return nodes[selectedNodes.get(0)].data;
+        return null;
+    }
 
     public void saveData() {
+        deselectAll();
         if (mapName == null) {
             saveAs();
         } else {
@@ -736,6 +587,7 @@ public class MapView extends RelativeLayout {
                     alertDialog.show();
                     return;
                 }
+                mapName =etName.getText().toString();
                 if (loader.saveMap(mapName, getData())) {
                     loader.saveThumbnail(mapName, getThumbnail());
                     changed = false;
@@ -841,6 +693,7 @@ public class MapView extends RelativeLayout {
     }
 
     public Bitmap getThumbnail() {
+        ((MapDrawerActivity) getContext()).deselect();
         int[] d = getMapDimensions();
         int[] a = getMapCenter();
         Bitmap b = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);

@@ -1,10 +1,9 @@
-package com.uit.mindmap.maploader;
+package com.uit.mindmap.widgets;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +13,20 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uit.mindmap.R;
+import com.uit.mindmap.maploader.MapLoader;
+import com.uit.mindmap.maploader.MapManagerActivity;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MapListAdapter extends BaseAdapter {
     Context context;
     List<String> data;
-    Boolean isInSelectMode;
+    boolean isInSelectMode;
     private static LayoutInflater inflater = null;
 
     public MapListAdapter(Context context, List<String> data){
@@ -61,6 +60,9 @@ public class MapListAdapter extends BaseAdapter {
         final TextView mapName = vi.findViewById(R.id.map_name);
         final TextView date= vi.findViewById(R.id.map_date);
         final ImageButton btn= vi.findViewById(R.id.map_option);
+
+        if (isInSelectMode) btn.setVisibility(View.GONE);
+        else btn.setVisibility(View.VISIBLE);
 
         mapName.setText(data.get(position));
         final MapLoader loader=new MapLoader(context);
@@ -173,7 +175,7 @@ public class MapListAdapter extends BaseAdapter {
                             data.remove(position);
                             if(data.size()==0) {
                                 Log.i("List", "empty" );
-                                ((MapManagerActivity)context).showEmptyText();
+                                ((MapManagerActivity)context).setEmpty();
                             }
                             notifyDataSetChanged();
                         }
@@ -184,5 +186,9 @@ public class MapListAdapter extends BaseAdapter {
         });
 
         return vi;
+    }
+    public void setSelectMode(boolean isInSelectMode){
+        this.isInSelectMode=isInSelectMode;
+        notifyDataSetChanged();
     }
 }

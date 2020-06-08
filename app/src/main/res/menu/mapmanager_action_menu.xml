@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/search"
-        android:icon="@drawable/ic_search_black_24dp"
-        android:title="@string/save"
-        app:showAsAction="always"/>
-    <item
-        android:id="@+id/refresh"
-        android:title="@string/refresh"/>
+    <group
+        android:id="@+id/map_option"
+        android:visible="false">
+        <item
+            android:id="@+id/btn_rename_map"
+            android:title="@string/rename_map"
+            android:icon="@drawable/ic_mode_edit_black_24dp"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/btn_delete_map"
+            android:title="@string/delete_map"
+            android:icon="@drawable/ic_delete_black_24dp"
+            app:showAsAction="always"/>
+
+    </group>
     <item
         android:id="@+id/preferences"
-        android:title="@string/preferences"/>
+        android:title="@string/preferences"
+        android:icon="@drawable/ic_settings_black_24dp"
+        app:showAsAction="ifRoom"/>
 </menu>

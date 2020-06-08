@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/text_customizer_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@drawable/rounded_flat"
+    android:elevation="25dp"
+    android:orientation="vertical"
+    android:paddingHorizontal="15dp"
+    android:paddingVertical="10dp"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:text="@string/text_size">
+
+        </TextView>
+
+        <com.uit.mindmap.widgets.SizePickerButton
+            android:id="@+id/text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:text="@string/text_color"/>
+
+        <com.uit.mindmap.widgets.ColorPickerButton
+            android:id="@+id/btn_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:clipChildren="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:text="@string/text_alignment" />
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/text_alignment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+
+                android:id="@+id/text_alignment_left"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="match_parent"
+                app:icon="@drawable/ic_format_align_left_black_24dp"
+                app:cornerRadius="@dimen/corner_radius"
+                app:strokeWidth="2dp">
+
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/text_alignment_center"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="match_parent"
+                app:cornerRadius="@dimen/corner_radius"
+                app:icon="@drawable/ic_format_align_center_black_24dp"
+                app:strokeWidth="2dp">
+
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/text_alignment_right"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="match_parent"
+                app:cornerRadius="@dimen/corner_radius"
+                app:icon="@drawable/ic_format_align_right_black_24dp"
+                app:strokeWidth="2dp">
+            </com.google.android.material.button.MaterialButton>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:text="@string/text_effect" />
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/text_effect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end">
+
+            <com.google.android.material.button.MaterialButton
+
+                android:id="@+id/text_effect_bold"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="match_parent"
+                android:text="@string/bold"
+                app:cornerRadius="@dimen/corner_radius"
+                app:strokeWidth="2dp">
+
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/text_effect_italic"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="match_parent"
+                android:text="@string/italic"
+                app:cornerRadius="@dimen/corner_radius"
+                app:strokeWidth="2dp">
+
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/text_effect_underline"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="match_parent"
+                android:text="@string/underline"
+                android:textAllCaps="false"
+                app:cornerRadius="@dimen/corner_radius"
+                app:strokeWidth="2dp">
+
+            </com.google.android.material.button.MaterialButton>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+    </LinearLayout>
+
+</LinearLayout>

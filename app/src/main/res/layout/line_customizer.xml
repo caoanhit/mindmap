@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bottom_sheet"
+    android:id="@+id/line_customizer_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="@color/white"
+    android:background="@drawable/rounded_flat"
     android:elevation="25dp"
     android:orientation="vertical"
     android:paddingHorizontal="15dp"
-    android:paddingVertical="5dp"
+    android:paddingVertical="10dp"
     app:behavior_hideable="false"
     app:behavior_peekHeight="0dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -24,65 +24,78 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="1"
-            android:text="@string/text_size"
+            android:text="@string/line_width"
+            android:textSize="@dimen/medium_text_size">
+
+        </TextView>
+
+        <com.uit.mindmap.widgets.SizePickerButton
+            android:id="@+id/line_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:text="@string/line_effect"
             android:textSize="@dimen/medium_text_size">
 
         </TextView>
 
         <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/text_size"
+            android:id="@+id/line_effect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            app:selectionRequired="true"
-            app:singleSelection="true">
+            app:singleSelection="true"
+            app:selectionRequired="true">
 
             <com.google.android.material.button.MaterialButton
 
-                android:id="@+id/text_small"
+                android:id="@+id/line_normal"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="@dimen/button_width"
+                android:layout_width="@dimen/action_button_min_width"
                 android:layout_height="match_parent"
-                android:width="@dimen/icon_size"
-                android:padding="0dp"
-                android:text="@string/small"
-                android:textAllCaps="false"
-                android:textSize="@dimen/small_text_size"
                 app:cornerRadius="@dimen/corner_radius"
-                app:iconPadding="4dp"
-                app:strokeWidth="2dp">
+                app:icon="@drawable/ic_straight_line"
+                app:iconSize="@dimen/icon_size"
+                app:strokeWidth="2dp"
+                android:paddingLeft="10dp">
 
             </com.google.android.material.button.MaterialButton>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/text_medium"
+                android:id="@+id/line_dashed"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="@dimen/button_width"
+                android:layout_width="@dimen/action_button_min_width"
                 android:layout_height="match_parent"
-                android:width="@dimen/icon_size"
-                android:padding="0dp"
-                android:text="@string/medium"
-                android:textAllCaps="false"
-                android:textSize="@dimen/small_text_size"
                 app:cornerRadius="@dimen/corner_radius"
-                app:iconPadding="4dp"
-                app:strokeWidth="2dp">
+                app:icon="@drawable/ic_dashed_line"
+                app:iconSize="@dimen/icon_size"
+                app:strokeWidth="2dp"
+                android:paddingLeft="10dp">
 
             </com.google.android.material.button.MaterialButton>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/text_large"
+                android:id="@+id/line_dotted_dashed"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="@dimen/button_width"
+                android:layout_width="@dimen/action_button_min_width"
                 android:layout_height="match_parent"
-                android:width="@dimen/icon_size"
-                android:padding="0dp"
-                android:text="@string/large"
-                android:textAllCaps="false"
-                android:textSize="@dimen/small_text_size"
                 app:cornerRadius="@dimen/corner_radius"
-                app:iconPadding="4dp"
-                app:strokeWidth="2dp">
+                app:icon="@drawable/ic_dotted_dash_line"
+                app:iconSize="@dimen/icon_size"
+                app:strokeWidth="2dp"
+                android:paddingLeft="10dp">
 
             </com.google.android.material.button.MaterialButton>
         </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -99,128 +112,55 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="1"
-            android:text="@string/text_color"
-            android:textSize="@dimen/medium_text_size"/>
-
-        <com.uit.mindmap.widgets.ColorPickerButton
-            android:id="@+id/btn_text_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:clipChildren="false" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:layout_weight="1"
-            android:text="@string/background_color"
-            android:textSize="@dimen/medium_text_size">
-
-        </TextView>
-
-        <com.uit.mindmap.widgets.ColorPickerButton
-            android:id="@+id/btn_fill_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:clipChildren="false" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:layout_weight="1"
-            android:text="@string/outline_color"
-            android:textSize="@dimen/medium_text_size">
-
-        </TextView>
-
-        <com.uit.mindmap.widgets.ColorPickerButton
-            android:id="@+id/btn_outline_color"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:clipChildren="false" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start|center_vertical"
-            android:layout_weight="1"
-            android:text="@string/line_style"
+            android:text="@string/curve"
             android:textSize="@dimen/medium_text_size">
 
         </TextView>
 
         <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/line_style"
+            android:id="@+id/curve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            app:selectionRequired="true"
-            app:singleSelection="true">
+            app:singleSelection="true"
+            app:selectionRequired="true">
 
             <com.google.android.material.button.MaterialButton
 
-                android:id="@+id/line_style_straight"
+                android:id="@+id/straight"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="@dimen/button_width"
+                android:layout_width="@dimen/action_button_min_width"
                 android:layout_height="match_parent"
-                android:width="@dimen/icon_size"
-                android:padding="0dp"
                 app:cornerRadius="@dimen/corner_radius"
-                app:icon="@drawable/ic_straight_line"
-                app:iconGravity="textStart"
-                app:iconPadding="4dp"
-                app:strokeWidth="2dp">
+                app:icon="@drawable/ic_straight"
+                app:iconSize="@dimen/icon_size"
+                app:strokeWidth="2dp"
+                android:paddingLeft="10dp">
 
             </com.google.android.material.button.MaterialButton>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/line_style_dashed"
+                android:id="@+id/bezier"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="@dimen/button_width"
+                android:layout_width="@dimen/action_button_min_width"
                 android:layout_height="match_parent"
-                android:width="@dimen/icon_size"
-                android:padding="0dp"
                 app:cornerRadius="@dimen/corner_radius"
-                app:icon="@drawable/ic_dashed_line"
-                app:iconGravity="textStart"
-                app:iconPadding="4dp"
-                app:strokeWidth="2dp">
+                app:icon="@drawable/ic_bezier"
+                app:iconSize="@dimen/icon_size"
+                app:strokeWidth="2dp"
+                android:paddingLeft="10dp">
 
             </com.google.android.material.button.MaterialButton>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/connection_style_dotted_dash"
+                android:id="@+id/elbow"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="@dimen/button_width"
+                android:layout_width="@dimen/action_button_min_width"
                 android:layout_height="match_parent"
-                android:width="@dimen/icon_size"
-                android:padding="0dp"
                 app:cornerRadius="@dimen/corner_radius"
-                app:icon="@drawable/ic_dotted_dash_line"
-                app:iconGravity="textStart"
-                app:iconPadding="4dp"
-                app:strokeWidth="2dp">
+                app:icon="@drawable/ic_elbow"
+                app:iconSize="@dimen/icon_size"
+                app:strokeWidth="2dp"
+                android:paddingLeft="10dp">
 
             </com.google.android.material.button.MaterialButton>
         </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -274,12 +214,8 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="@dimen/button_width"
                 android:layout_height="match_parent"
-                android:width="@dimen/icon_size"
-                android:padding="0dp"
                 app:cornerRadius="@dimen/corner_radius"
                 app:icon="@drawable/ic_arrow_back_black_24dp"
-                app:iconGravity="textStart"
-                app:iconPadding="4dp"
                 app:strokeWidth="2dp">
 
             </com.google.android.material.button.MaterialButton>
@@ -289,12 +225,8 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="@dimen/button_width"
                 android:layout_height="match_parent"
-                android:width="@dimen/icon_size"
-                android:padding="0dp"
                 app:cornerRadius="@dimen/corner_radius"
                 app:icon="@drawable/ic_arrow_forward_black_24dp"
-                app:iconGravity="textStart"
-                app:iconPadding="4dp"
                 app:strokeWidth="2dp">
 
             </com.google.android.material.button.MaterialButton>

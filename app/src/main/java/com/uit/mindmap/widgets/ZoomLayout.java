@@ -22,20 +22,19 @@ public class ZoomLayout extends CoordinatorLayout implements ScaleGestureDetecto
     }
 
     public interface onScaleListener{
-        public void onScale(float scale);
+        void onScale(float scale);
     }
     private onScaleListener onScaleListener;
     public void setOnScaleListener(onScaleListener onScaleListener){
         this.onScaleListener=onScaleListener;
     }
 
-
     private static final String TAG = "ZoomLayout";
     private static final float MIN_ZOOM = 0.3f;
     private static final float MAX_ZOOM = 3.0f;
 
     private Mode mode = Mode.NONE;
-    public float scale = 1.0f;
+    private float scale = 1.0f;
     private float lastScaleFactor = 0f;
 
     // Where the finger first  touches the screen
