@@ -296,6 +296,10 @@ public class MapView extends RelativeLayout {
             pos[1] += getContext().getResources().getDimension(R.dimen.map_size) / 2;
             node.setPosition(pos);
             node.setText("Root node");
+            int color=getContext().getResources().getColor(R.color.colorPrimary,null);
+            node.setNodePreferences(new NodePreferences(color,Color.WHITE,0));
+            node.setTextSize(16);
+            node.setTextColor(Color.WHITE);
         }
         node.applyData();
         node.setOnClickListener(new OnClickListener() {

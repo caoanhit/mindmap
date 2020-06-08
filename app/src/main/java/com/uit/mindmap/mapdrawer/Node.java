@@ -192,6 +192,15 @@ public class Node extends RelativeLayout {
         data.linePreferences = new LinePreferences(preference);
     }
 
+    public void setTextSize(int value){
+        data.textPreferences.size=value;
+        text.setTextSize(value);
+    }
+    public void setTextColor(int color){
+        data.textPreferences.color=color;
+        text.setTextColor(color);
+    }
+
     public void applyData() {
         setPosition(data.pos);
         text.setText(data.text);
