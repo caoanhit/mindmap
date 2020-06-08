@@ -35,7 +35,6 @@
                 android:maxWidth="500dp"
                 android:minWidth="40dp"
                 android:padding="10dp"
-                android:text="@string/root_node"
                 android:textSize="@dimen/medium_text_size">
 
             </TextView>

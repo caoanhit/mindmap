@@ -295,6 +295,7 @@ public class MapView extends RelativeLayout {
             pos[0] += getContext().getResources().getDimension(R.dimen.map_size) / 2;
             pos[1] += getContext().getResources().getDimension(R.dimen.map_size) / 2;
             node.setPosition(pos);
+            node.setText("Root node");
         }
         node.applyData();
         node.setOnClickListener(new OnClickListener() {
@@ -317,6 +318,7 @@ public class MapView extends RelativeLayout {
         }
         node.data.id = i;
         nodes[i] = node;
+        node.setText("New node");
         node.setMap(this);
         node.applyData();
         nodes[parent].addChild(i);

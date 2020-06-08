@@ -30,6 +30,7 @@ public class NodeData {
         id=data.id;
         parent=data.parent;
         children=new ArrayList<>(data.children);
+        text=data.text;
         pos=new int[2];
         pos[0]=data.pos[0];
         pos[1]=data.pos[1];

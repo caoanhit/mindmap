@@ -194,6 +194,7 @@ public class Node extends RelativeLayout {
 
     public void applyData() {
         setPosition(data.pos);
+        text.setText(data.text);
         setNodePreferences(data.nodePreferences);
         setTextPreferences(data.textPreferences);
     }
