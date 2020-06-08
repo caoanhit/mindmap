@@ -33,6 +33,7 @@ public class MapManagerActivity extends AppCompatActivity {
     Button bttNewMap;
     Menu menu;
     MapListAdapter adapter;
+    MapLoader loader;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +61,13 @@ public class MapManagerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mapNames = new ArrayList<>(Arrays.asList(loader.getSavedMapsName()));
+        if (mapNames != null && mapNames.size() > 0) {
+            sortNameList();
+            findViewById(R.id.tv_empty).setVisibility(View.INVISIBLE);
+            adapter = new MapListAdapter(this, mapNames);
+            lvMap.setAdapter(adapter);
+        } else findViewById(R.id.tv_empty).setVisibility(View.VISIBLE);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
@@ -96,7 +104,7 @@ public class MapManagerActivity extends AppCompatActivity {
     }
 
     private void loadMapNames() {
-        MapLoader loader = new MapLoader(this);
+        loader = new MapLoader(this);
         mapNames = new ArrayList<>(Arrays.asList(loader.getSavedMapsName()));
         lvMap = findViewById(R.id.lv_map);
         if (mapNames != null && mapNames.size() > 0) {
@@ -115,18 +123,6 @@ public class MapManagerActivity extends AppCompatActivity {
                     startActivity(intent);
             }
         });
-//        lvMap.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                if (lvMap.getChoiceMode() == AbsListView.CHOICE_MODE_NONE) {
-//                    lvMap.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-//                    adapter.setSelectMode(true);
-//                    lvMap.setSelection(position);
-//                    menu.setGroupVisible(R.id.map_option,true);
-//                }
-//                return true;
-//            }
-//        });
     }
 
     public void setEmpty() {
