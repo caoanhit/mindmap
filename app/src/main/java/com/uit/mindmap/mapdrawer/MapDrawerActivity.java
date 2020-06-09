@@ -2,6 +2,7 @@ package com.uit.mindmap.mapdrawer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
@@ -62,16 +63,14 @@ public class MapDrawerActivity extends AppCompatActivity {
         mapView.setOnChangeListener(new MapView.onChangeListener() {
             @Override
             public void onChange(boolean undoAvailable, boolean redoAvailable) {
-                if (undoAvailable){
+                if (undoAvailable) {
                     enableUndo();
-                }
-                else {
+                } else {
                     disableUndo();
                 }
-                if (redoAvailable){
+                if (redoAvailable) {
                     enableRedo();
-                }
-                else {
+                } else {
                     disableRedo();
                 }
             }
@@ -140,7 +139,7 @@ public class MapDrawerActivity extends AppCompatActivity {
 
     }
 
-    private void initViews(){
+    private void initViews() {
         zoomLayout = findViewById(R.id.zoom);
         zoomLayout.setOnScaleListener(new ZoomLayout.onScaleListener() {
             @Override
@@ -187,7 +186,7 @@ public class MapDrawerActivity extends AppCompatActivity {
 
         textSheet = findViewById(R.id.text_customizer_sheet);
         textCustomizer = findViewById(R.id.text_customizer);
-        textCustomizerBehavior= BottomSheetBehavior.from(textSheet);
+        textCustomizerBehavior = BottomSheetBehavior.from(textSheet);
         textSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -198,7 +197,7 @@ public class MapDrawerActivity extends AppCompatActivity {
 
         lineSheet = findViewById(R.id.line_customizer_sheet);
         lineCustomizer = findViewById(R.id.line_customizer);
-        lineCustomizerBehavior= BottomSheetBehavior.from(lineSheet);
+        lineCustomizerBehavior = BottomSheetBehavior.from(lineSheet);
         lineSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -207,8 +206,9 @@ public class MapDrawerActivity extends AppCompatActivity {
             }
         });
     }
-    private void initZoomPercentage(){
-        timer=new CountDownTimer(500,500) {
+
+    private void initZoomPercentage() {
+        timer = new CountDownTimer(500, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -246,26 +246,8 @@ public class MapDrawerActivity extends AppCompatActivity {
         Log.i("Button", item.getItemId() + "");
         switch (id) {
             case android.R.id.home:
-                if (mapView.changed) {
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(MapDrawerActivity.this);
-                    alertDialog.setMessage("Some changes are not saved. Do you want to exit?");
-                    alertDialog.setIcon(R.mipmap.ic_launcher);
-                    alertDialog.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            finish();
-                        }
-                    });
-
-                    alertDialog.show();
-                    return true;
-                }
-                break;
+                exit();
+                return true;
             case R.id.save:
                 mapView.saveData();
                 break;
@@ -284,23 +266,22 @@ public class MapDrawerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        exit();
+    }
+
+    private void exit() {
         if (mapView.changed) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(MapDrawerActivity.this);
             alertDialog.setMessage("Some changes are not saved. Do you want to exit?");
             alertDialog.setIcon(R.mipmap.ic_launcher);
-            alertDialog.setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
+            alertDialog.setPositiveButton(R.string.no, null);
             alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
                     finish();
                 }
             });
             alertDialog.show();
-        } else super.onBackPressed();
+        } else finish();
     }
 
     @Override
@@ -346,15 +327,17 @@ public class MapDrawerActivity extends AppCompatActivity {
         redoAvailable = false;
         invalidateOptionsMenu();
     }
-    public void deselect(){
-        if(menu!=null)
+
+    public void deselect() {
+        if (menu != null)
             menu.setVisibility(View.GONE);
         nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
-    public void select(){
-        if(menu!=null)
+
+    public void select() {
+        if (menu != null)
             menu.setVisibility(View.VISIBLE);
     }
 

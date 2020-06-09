@@ -160,7 +160,8 @@ public class MapView extends RelativeLayout {
             }
         }
     }
-    public void releaseUndo(State state){
+
+    public void releaseUndo(State state) {
         for (int i = 0; i < state.ids.size(); i++) {
             if (state.data[i] != null && nodes[state.ids.get(0)].deleted) {
                 nodes[nodes[state.ids.get(i)].data.parent].removeChildren(nodes[state.ids.get(i)].data.id);
@@ -210,45 +211,47 @@ public class MapView extends RelativeLayout {
         redoHistory.clear();
         setChanged();
         if (undoHistory.size() > undoAmount) {
-            State state= undoHistory.pollFirst();
+            State state = undoHistory.pollFirst();
             releaseUndo(state);
         }
 
     }
-    public void addCommandRemoveNode(){
-        NodeData[] data=new NodeData[selectedNodes.size()];
-        for(int i=0; i<selectedNodes.size();i++)
-        {
-            data[i]=new NodeData(nodes[selectedNodes.get(i)].data);
+
+    public void addCommandRemoveNode() {
+        NodeData[] data = new NodeData[selectedNodes.size()];
+        for (int i = 0; i < selectedNodes.size(); i++) {
+            data[i] = new NodeData(nodes[selectedNodes.get(i)].data);
         }
-        undoHistory.add(new State(new ArrayList<Integer>(selectedNodes),data));
+        undoHistory.add(new State(new ArrayList<Integer>(selectedNodes), data));
         Log.i("command", "" + undoHistory.size());
         redoHistory.clear();
         setChanged();
         if (undoHistory.size() > undoAmount) {
-            State state= undoHistory.pollFirst();
+            State state = undoHistory.pollFirst();
             releaseUndo(state);
         }
 
     }
+
     public void addCommandAddNode() {
         undoHistory.add(new State(new ArrayList<Integer>(selectedNodes), new NodeData[selectedNodes.size()]));
         Log.i("command addnode", selectedNodes.size() + "");
         clearRedo();
         setChanged();
         if (undoHistory.size() > undoAmount) {
-            State state= undoHistory.pollFirst();
+            State state = undoHistory.pollFirst();
             releaseUndo(state);
         }
     }
 
-    private void clearRedo(){
-        for (int i=0; i< redoHistory.size()/2; i++){
-            State state= redoHistory.pollLast();
+    private void clearRedo() {
+        for (int i = 0; i < redoHistory.size() / 2; i++) {
+            State state = redoHistory.pollLast();
             releaseState(state);
             redoHistory.pollLast();
         }
     }
+
     public void setChanged() {
 
         changed = true;
@@ -268,7 +271,7 @@ public class MapView extends RelativeLayout {
             if (nodes[i] != null && nodes[i].data != null) {
                 for (int a : nodes[i].data.children) {
                     if (!nodes[a].deleted)
-                    paint.drawConnection(nodes[i],nodes[a],canvas);
+                        paint.drawConnection(nodes[i], nodes[a], canvas);
                 }
             }
         }
@@ -296,8 +299,8 @@ public class MapView extends RelativeLayout {
             pos[1] += getContext().getResources().getDimension(R.dimen.map_size) / 2;
             node.setPosition(pos);
             node.setText("Root node");
-            int color=getContext().getResources().getColor(R.color.colorPrimary,null);
-            node.setNodePreferences(new NodePreferences(color,Color.WHITE,0));
+            int color = getContext().getResources().getColor(R.color.colorPrimary, null);
+            node.setNodePreferences(new NodePreferences(color, Color.WHITE, 0));
             node.setTextSize(16);
             node.setTextColor(Color.WHITE);
         }
@@ -380,18 +383,18 @@ public class MapView extends RelativeLayout {
 
     //region Remove
     public ArrayList<Integer> removeChildNode(int id) {
-        ArrayList<Integer> a=new ArrayList<>();
+        ArrayList<Integer> a = new ArrayList<>();
         a.add((Integer) id);
         for (int i : nodes[id].data.children) a.addAll(removeChildNode(i));
         nodes[id].defocus();
         removeView(nodes[id]);
-        nodes[id].deleted=true;
+        nodes[id].deleted = true;
         return a;
     }
 
     public ArrayList<Integer> removeNode(int id) {
-        ArrayList<Integer> a=new ArrayList<>();
-        a.add((Integer)id);
+        ArrayList<Integer> a = new ArrayList<>();
+        a.add((Integer) id);
         Log.i("remove", "" + id);
         if (id != 0) {
             for (int i : nodes[id].data.children) a.addAll(removeChildNode(i));
@@ -403,16 +406,15 @@ public class MapView extends RelativeLayout {
     }
 
     public void removeNode() {
-        ArrayList<Integer> a= new ArrayList<>();
+        ArrayList<Integer> a = new ArrayList<>();
         for (int i : selectedNodes) {
             a.addAll(removeNode(i));
         }
-        selectedNodes=a;
-        Log.i("selected", a.size()+"");
-        if (selectedNodes.size() != 1 || selectedNodes.get(0) != 0)
-        {
+        selectedNodes = a;
+        Log.i("selected", a.size() + "");
+        if (selectedNodes.size() != 1 || selectedNodes.get(0) != 0) {
             addCommandRemoveNode();
-            Log.i("Undo delete", a.size()+"");
+            Log.i("Undo delete", a.size() + "");
         }
         selectedNodes.clear();
     }
@@ -453,14 +455,15 @@ public class MapView extends RelativeLayout {
         if (index > -1) deselectNode(selectedNodes.get(index));
         else selectMultiple(id);
     }
-    public void rectangleSelect(int[] start, int[] end){
-        for(int i=0; i<255; i++){
 
-            if (nodes[i]!=null){
-                if(nodes[i].data.pos[0]<Math.max(start[0],end[0])
-                        && nodes[i].data.pos[0]>Math.min(start[0],end[0])
-                        && nodes[i].data.pos[1]<Math.max(start[1],end[1])
-                        && nodes[i].data.pos[1]>Math.min(start[1],end[1])){
+    public void rectangleSelect(int[] start, int[] end) {
+        for (int i = 0; i < 255; i++) {
+
+            if (nodes[i] != null) {
+                if (nodes[i].data.pos[0] < Math.max(start[0], end[0])
+                        && nodes[i].data.pos[0] > Math.min(start[0], end[0])
+                        && nodes[i].data.pos[1] < Math.max(start[1], end[1])
+                        && nodes[i].data.pos[1] > Math.min(start[1], end[1])) {
                     selectMultiple(i);
                 }
             }
@@ -475,15 +478,17 @@ public class MapView extends RelativeLayout {
         customizer.setMapView(this);
     }
 
-    public void setNodePreferences(NodePreferences preferences){
+    public void setNodePreferences(NodePreferences preferences) {
         addCommand();
         for (int i : selectedNodes) nodes[i].setNodePreferences(preferences);
     }
-    public void setTextPreferences(TextPreferences preferences){
+
+    public void setTextPreferences(TextPreferences preferences) {
         addCommand();
         for (int i : selectedNodes) nodes[i].setTextPreferences(preferences);
     }
-    public void setLinePreferences(LinePreferences preferences){
+
+    public void setLinePreferences(LinePreferences preferences) {
         addCommand();
         for (int i : selectedNodes) nodes[i].setLinePreferences(preferences);
     }
@@ -533,15 +538,17 @@ public class MapView extends RelativeLayout {
         for (int i = 0; i < maxNodeAmount; i++) {
             if (nodes[i] != null && !nodes[i].deleted) {
                 data[i] = new NodeData(nodes[i].data);
-                for(int a:nodes[i].data.children){
-                    if (nodes[a]==null || nodes[a].deleted) data[i].children.remove(data[i].children.indexOf(a));
+                for (int a : nodes[i].data.children) {
+                    if (nodes[a] == null || nodes[a].deleted)
+                        data[i].children.remove(data[i].children.indexOf(a));
                 }
             }
         }
         return data;
     }
-    public NodeData getFirstData(){
-        if (selectedNodes!=null&& selectedNodes.size()>0)
+
+    public NodeData getFirstData() {
+        if (selectedNodes != null && selectedNodes.size() > 0)
             return nodes[selectedNodes.get(0)].data;
         return null;
     }
@@ -570,42 +577,47 @@ public class MapView extends RelativeLayout {
         ((TextView) customDialogView.findViewById(R.id.tv_dialog)).setText(R.string.map_name);
         etName.setText("New map");
         etName.selectAll();
-        alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                final MapLoader loader = new MapLoader(getContext());
-                if (loader.mapExist(etName.getText().toString())) {
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-                    alertDialog.setMessage("Map already exist. Do you want to overwrite?");
-                    alertDialog.setIcon(R.mipmap.ic_launcher);
-                    alertDialog.setPositiveButton(R.string.no, null);
-                    alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            mapName =etName.getText().toString();
-                            if (loader.saveMap(mapName, getData())) {
-                                loader.saveThumbnail(mapName, getThumbnail());
-                                Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
-                                changed = false;
-                            }
-                            else Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
-                            dialog.cancel();
+        alertDialogBuilder.setCancelable(false).setPositiveButton("OK", null)
+                .setNegativeButton("Cancel", null);
+        final AlertDialog saveDialog = alertDialogBuilder.create();
+        saveDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                saveDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final MapLoader loader = new MapLoader(getContext());
+                        if (loader.mapExist(etName.getText().toString())) {
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                            alertDialog.setMessage("Map already exist. Do you want to overwrite?");
+                            alertDialog.setIcon(R.mipmap.ic_launcher);
+                            alertDialog.setPositiveButton(R.string.no, null);
+                            alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mapName = etName.getText().toString();
+                                    if (loader.saveMap(mapName, getData())) {
+                                        loader.saveThumbnail(mapName, getThumbnail());
+                                        Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
+                                        changed = false;
+                                    } else
+                                        Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
+                                    dialog.cancel();
+                                    saveDialog.dismiss();
+                                }
+                            });
+                            alertDialog.show();
+                            return;
                         }
-                    });
-                    alertDialog.show();
-                    return;
-                }
-                mapName =etName.getText().toString();
-                if (loader.saveMap(mapName, getData())) {
-                    loader.saveThumbnail(mapName, getThumbnail());
-                    changed = false;
-                }
-            }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
+                        mapName = etName.getText().toString();
+                        if (loader.saveMap(mapName, getData())) {
+                            loader.saveThumbnail(mapName, getThumbnail());
+                            changed = false;
+                        }
+                    }
+                });
             }
         });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        saveDialog.show();
     }
 
     public void setMapName(String mapName) {
