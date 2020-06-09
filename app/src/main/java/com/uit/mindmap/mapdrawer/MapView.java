@@ -726,5 +726,9 @@ public class MapView extends RelativeLayout {
         int height = Math.max((d[2] - d[0]) * 120 / 160, d[3] - d[1]);
         return Bitmap.createScaledBitmap(Bitmap.createBitmap(b, a[0] - width / 2, a[1] - height / 2, width, height), 320, 240, true);
     }
+
+    public boolean isRootSelected(){
+        return (selectedNodes.size()==1&& selectedNodes.get(0)==0);
+    }
     //endregion
 }

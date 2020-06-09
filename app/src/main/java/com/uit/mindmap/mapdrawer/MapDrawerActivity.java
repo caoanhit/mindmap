@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class MapDrawerActivity extends AppCompatActivity {
     private ZoomLayout zoomLayout;
     private TextView zoomPercentage;
     private CountDownTimer timer;
+    private ImageButton btnLine;
 
     private boolean undoAvailable;
     private boolean redoAvailable;
@@ -172,6 +174,7 @@ public class MapDrawerActivity extends AppCompatActivity {
         mapView = findViewById(R.id.map_view);
         menu = findViewById(R.id.floating_menu);
         zoomPercentage = findViewById(R.id.zoom_percentage);
+        btnLine=findViewById(R.id.line_customize);
 
         nodeSheet = findViewById(R.id.node_customizer_sheet);
         nodeCustomizer = findViewById(R.id.node_customizer);
@@ -337,8 +340,12 @@ public class MapDrawerActivity extends AppCompatActivity {
     }
 
     public void select() {
-        if (menu != null)
+        if (menu != null) {
+            if(mapView.isRootSelected())
+                btnLine.setVisibility(View.GONE);
+            else btnLine.setVisibility(View.VISIBLE);
             menu.setVisibility(View.VISIBLE);
+        }
     }
 
 }
