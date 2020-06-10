@@ -269,7 +269,13 @@ public class MapDrawerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        exit();
+        if (nodeCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+            nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        else if (textCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+            textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        else if (lineCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+            lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        else exit();
     }
 
     private void exit() {
