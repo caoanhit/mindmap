@@ -17,7 +17,7 @@
     <dimen name="number_picker_width">60dp</dimen>
 
     <!--Mapview -->
-    <dimen name="map_size">4000px</dimen>
+    <dimen name="map_size">6000px</dimen>
     <dimen name="min_node_width">40px</dimen>
     <dimen name="node_corner_radius">10px</dimen>
 

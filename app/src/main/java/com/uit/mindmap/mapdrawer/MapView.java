@@ -582,7 +582,7 @@ public class MapView extends RelativeLayout {
         final AlertDialog saveDialog = alertDialogBuilder.create();
         saveDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onShow(DialogInterface dialog) {
+            public void onShow(final DialogInterface dialog) {
                 saveDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -613,6 +613,7 @@ public class MapView extends RelativeLayout {
                             loader.saveThumbnail(mapName, getThumbnail());
                             changed = false;
                         }
+                        dialog.dismiss();
                     }
                 });
             }

@@ -160,30 +160,36 @@ public class Node extends RelativeLayout {
         text.setTextSize(preference.size);
         switch (preference.alignment) {
             case 0:
-                text.setGravity(ALIGN_LEFT);
+                text.setGravity(Gravity.LEFT);
                 break;
             case 1:
-                text.setGravity(CENTER_HORIZONTAL);
+                text.setGravity(Gravity.CENTER);
                 break;
             case 2:
-                text.setGravity(ALIGN_RIGHT);
+                text.setGravity(Gravity.RIGHT);
                 break;
         }
-        text.setTypeface(null);
         int effect = preference.effect;
         if (effect >= 4) {
             effect -= 4;
             text.setPaintFlags(text.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        } else text.setPaintFlags(text.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+            invalidate();
+        } else {
+            text.setPaintFlags(text.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+            invalidate();
+        }
         switch (effect) {
             case 3:
-                text.setTypeface(null, Typeface.BOLD_ITALIC);
+                text.setTypeface(text.getTypeface(), Typeface.BOLD_ITALIC);
                 break;
             case 2:
-                text.setTypeface(null, Typeface.ITALIC);
+                text.setTypeface(text.getTypeface(), Typeface.ITALIC);
                 break;
             case 1:
-                text.setTypeface(null, Typeface.BOLD);
+                text.setTypeface(text.getTypeface(), Typeface.BOLD);
+                break;
+            case 0:
+                text.setTypeface(null, Typeface.NORMAL);
                 break;
         }
     }
