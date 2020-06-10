@@ -259,9 +259,21 @@ public class MapDrawerActivity extends AppCompatActivity {
                 break;
             case R.id.undo:
                 mapView.undo();
+                if (nodeCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                    nodeCustomizer.setPreferences(mapView.getFirstData().nodePreferences);
+                else if (textCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                    textCustomizer.setPreferences(mapView.getFirstData().textPreferences);
+                else if (lineCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                    lineCustomizer.setPreferences(mapView.getFirstData().linePreferences);
                 break;
             case R.id.redo:
                 mapView.redo();
+                if (nodeCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                    nodeCustomizer.setPreferences(mapView.getFirstData().nodePreferences);
+                else if (textCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                    textCustomizer.setPreferences(mapView.getFirstData().textPreferences);
+                else if (lineCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                    lineCustomizer.setPreferences(mapView.getFirstData().linePreferences);
                 break;
         }
         return super.onOptionsItemSelected(item);
