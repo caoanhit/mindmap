@@ -29,18 +29,33 @@ public class LinePaint extends Paint {
         }
 
         setPathEffect(null);
-
-        switch (child.data.linePreferences.arrow){
-            case 1:
-                drawArrow(p, canvas);
-                break;
-            case 2:
-                drawArrow(c, canvas);
-                break;
-            case 3:
-                drawArrow(p, canvas);
-                drawArrow(c, canvas);
-                break;
+        if (curve!=0) {
+            switch (child.data.linePreferences.arrow) {
+                case 1:
+                    drawArrow(p, canvas);
+                    break;
+                case 2:
+                    drawArrow(c, canvas);
+                    break;
+                case 3:
+                    drawArrow(p, canvas);
+                    drawArrow(c, canvas);
+                    break;
+            }
+        }
+        else{
+            switch (child.data.linePreferences.arrow) {
+                case 1:
+                    drawArrowStraight(p,c, canvas);
+                    break;
+                case 2:
+                    drawArrowStraight(c,p, canvas);
+                    break;
+                case 3:
+                    drawArrowStraight(p,c, canvas);
+                    drawArrowStraight(c,p, canvas);
+                    break;
+            }
         }
     }
 
@@ -85,22 +100,21 @@ public class LinePaint extends Paint {
         Path path = new Path();
 
         path.moveTo(p[0], p[1]);
-        if(p[2]!=0) {
+        if (p[2] != 0) {
             path.lineTo((p[0] + c[0]) / 2, p[1]);
             path.lineTo((p[0] + c[0]) / 2, c[1]);
-        }
-        else{
+        } else {
             path.lineTo(p[0], (p[1] + c[1]) / 2);
             path.lineTo(c[0], (p[1] + c[1]) / 2);
         }
-        path.lineTo(c[0],c[1]);
+        path.lineTo(c[0], c[1]);
         canvas.drawPath(path, this);
     }
 
     private void drawArrow(int[] a, Canvas canvas) {
         setStyle(Style.FILL_AND_STROKE);
         int size = 15;
-        Path path =new Path();
+        Path path = new Path();
         path.moveTo(a[0], a[1]);
         if (a[3] == 0) {
             path.lineTo(a[0] + a[2] * size, a[1] - size / 2);
@@ -112,5 +126,31 @@ public class LinePaint extends Paint {
             path.close();
         }
         canvas.drawPath(path, this);
+    }
+
+    private void drawArrowStraight(int[] a, int[] b, Canvas canvas) {
+        float[] v = vector(a, b);
+        float[] n = new float[2];
+        n[0]=-v[1];
+        n[1]=v[0];
+        setStyle(Style.FILL_AND_STROKE);
+        int size = 15;
+        Path path = new Path();
+        path.moveTo(a[0], a[1]);
+        path.lineTo(a[0] + (v[0]+n[0]*0.5f) * size, a[1] + (v[1]+n[1]*0.5f) *size);
+        path.lineTo(a[0] + (v[0]-n[0]*0.5f) * size, a[1] + (v[1]-n[1]*0.5f) * size);
+        path.close();
+
+        canvas.drawPath(path, this);
+    }
+
+    private float[] vector(int[] p, int[] c) {
+        float x = c[0] - p[0];
+        float y = c[1] - p[1];
+        float mag = (float) Math.sqrt(x * x + y * y);
+        float[] a = new float[2];
+        a[0] = x / mag;
+        a[1] = y / mag;
+        return a;
     }
 }
