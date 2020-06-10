@@ -82,7 +82,7 @@ public class SizePickerButton extends RelativeLayout {
 
     public void setValue(int value) {
         this.value = value;
-        btn.setText(value+"px");
+        btn.setText(value+"");
     }
 
     public void setMax(int max){

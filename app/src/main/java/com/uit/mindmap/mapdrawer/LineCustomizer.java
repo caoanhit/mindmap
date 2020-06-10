@@ -53,7 +53,7 @@ public class LineCustomizer extends CoordinatorLayout {
         lineCurve = findViewById(R.id.curve);
         arrow = findViewById(R.id.arrow);
 
-        lineWidth.setLimit(2,10);
+        lineWidth.setLimit(1,10);
         lineWidth.setOnSizePickedListener(new SizePickerButton.OnSizePickedListener() {
             @Override
             public void onSizePicked(int value) {

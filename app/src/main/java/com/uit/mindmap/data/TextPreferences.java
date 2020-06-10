@@ -6,7 +6,7 @@ public class TextPreferences {
     public int size, color, alignment, effect;
 
     public TextPreferences() {
-        size = 12;
+        size = 5;
         color= Color.BLACK;
         alignment=0;
         effect=0;

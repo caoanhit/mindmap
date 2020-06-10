@@ -53,7 +53,7 @@ public class TextCustomizer extends CoordinatorLayout {
         textAlignment = findViewById(R.id.text_alignment);
         textEffect = findViewById(R.id.text_effect);
 
-        textSize.setLimit(8, 24);
+        textSize.setLimit(1, 20);
         textSize.setOnSizePickedListener(new SizePickerButton.OnSizePickedListener() {
             @Override
             public void onSizePicked(int value) {

@@ -157,7 +157,7 @@ public class Node extends RelativeLayout {
     public void setTextPreferences(TextPreferences preference) {
         data.textPreferences = new TextPreferences(preference);
         text.setTextColor(preference.color);
-        text.setTextSize(preference.size);
+        text.setTextSize(TypedValue.COMPLEX_UNIT_PX,preference.size+15);
         switch (preference.alignment) {
             case 0:
                 text.setGravity(Gravity.LEFT);
