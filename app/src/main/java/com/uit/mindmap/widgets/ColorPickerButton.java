@@ -17,7 +17,7 @@ import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class ColorPickerButton extends RelativeLayout {
     AppCompatButton button;
-    private int[] colorList;
+    private static int[] colorList;
 
     public interface OnColorPickedListener{
         void onPick(int color);
@@ -44,10 +44,12 @@ public class ColorPickerButton extends RelativeLayout {
     }
     public void init(){
         inflate(getContext(),R.layout.color_picker_button,this);
-        String colors[] = getResources().getStringArray(R.array.colors);
-        colorList = new int[colors.length];
-        for (int i = 0; i < colors.length; i++) {
-            colorList[i] = Color.parseColor(colors[i]);
+        if (colorList==null) {
+            String colors[] = getResources().getStringArray(R.array.colors);
+            colorList = new int[colors.length];
+            for (int i = 0; i < colors.length; i++) {
+                colorList[i] = Color.parseColor(colors[i]);
+            }
         }
         button=findViewById(R.id.btn_color);
         button.setOnClickListener(new OnClickListener() {

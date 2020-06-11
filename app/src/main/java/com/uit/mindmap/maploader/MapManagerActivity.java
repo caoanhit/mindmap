@@ -1,7 +1,8 @@
 package com.uit.mindmap.maploader;
 
-import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,50 +11,113 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.uit.mindmap.R;
+import com.uit.mindmap.data.MapData;
 import com.uit.mindmap.mapdrawer.MapDrawerActivity;
 import com.uit.mindmap.widgets.MapListAdapter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MapManagerActivity extends AppCompatActivity {
     ListView lvMap;
-    List<String> mapNames;
+    List<MapData> mapList;
     Button bttNewMap;
     Menu menu;
     MapListAdapter adapter;
     MapLoader loader;
+    Spinner sortOptionSelector;
+    int sortOption;
+
+    MaterialButtonToggleGroup btnLayoutSelector;
+    int layoutOption;
+
+    SharedPreferences sharedpreferences;
+
+    public static final String MyPREFERENCES = "MyPrefs";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_manager);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            ;
-        else
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
-        loadMapNames();
-        bttNewMap = (Button) findViewById(R.id.new_map);
+        initViews();
+    }
+
+    private void initViews() {
+        sortOptionSelector = findViewById(R.id.sort_options);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.sort_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortOptionSelector.setAdapter(adapter);
+        sortOption = sharedpreferences.getInt("sort", 0);
+        sortOptionSelector.setSelection(sortOption);
+
+        sortOptionSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                sortMapList();
+                editor.putInt("sort", position);
+                editor.apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        bttNewMap = findViewById(R.id.new_map);
         bttNewMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                Intent intent = new Intent(MapManagerActivity.this, MapDrawerActivity.class);
+                Intent intent = new Intent(MapManagerActivity.this,
+                        MapDrawerActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        btnLayoutSelector = findViewById(R.id.layout_options);
+        switch (layoutOption=sharedpreferences.getInt("layout", 0)) {
+            case 0:
+                btnLayoutSelector.check(R.id.list);
+                break;
+            case 1:
+                btnLayoutSelector.check(R.id.card);
+                break;
+        }
+        btnLayoutSelector.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
+            @Override
+            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                if(isChecked) {
+                    switch (checkedId) {
+                        case R.id.list:
+                            layoutOption = 0;
+                            setLayout();
+                            break;
+                        case R.id.card:
+                            layoutOption = 1;
+                            setLayout();
+                            break;
+                    }
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putInt("layout", layoutOption);
+                    editor.apply();
+                }
             }
         });
     }
@@ -61,13 +125,7 @@ public class MapManagerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mapNames = new ArrayList<>(Arrays.asList(loader.getSavedMapsName()));
-        if (mapNames != null && mapNames.size() > 0) {
-            sortNameList();
-            findViewById(R.id.tv_empty).setVisibility(View.INVISIBLE);
-            adapter = new MapListAdapter(this, mapNames);
-            lvMap.setAdapter(adapter);
-        } else findViewById(R.id.tv_empty).setVisibility(View.VISIBLE);
+        loadMapNames();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
@@ -86,17 +144,18 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (lvMap.getChoiceMode()==AbsListView.CHOICE_MODE_MULTIPLE){
+        if (lvMap.getChoiceMode() == AbsListView.CHOICE_MODE_MULTIPLE) {
             lvMap.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
             lvMap.clearChoices();
             adapter.setSelectMode(false);
-            menu.setGroupVisible(R.id.map_option,false);
-        }
-        else super.onBackPressed();
+            menu.setGroupVisible(R.id.map_option, false);
+        } else super.onBackPressed();
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 loadMapNames();
@@ -105,30 +164,36 @@ public class MapManagerActivity extends AppCompatActivity {
 
     private void loadMapNames() {
         loader = new MapLoader(this);
-        mapNames = new ArrayList<>(Arrays.asList(loader.getSavedMapsName()));
+        mapList = loader.loadMapList();
         lvMap = findViewById(R.id.lv_map);
-        if (mapNames != null && mapNames.size() > 0) {
-            sortNameList();
+        if (mapList != null && mapList.size() > 0) {
+            sortMapList();
+            findViewById(R.id.sort_bar).setVisibility(View.VISIBLE);
             findViewById(R.id.tv_empty).setVisibility(View.INVISIBLE);
-            adapter = new MapListAdapter(this, mapNames);
+            adapter = new MapListAdapter(this, mapList);
             lvMap.setAdapter(adapter);
-        } else findViewById(R.id.tv_empty).setVisibility(View.VISIBLE);
+        } else setEmpty();
         lvMap.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    Intent intent = new Intent(MapManagerActivity.this, MapDrawerActivity.class);
-                    intent.putExtra("mapName", (String) adapter.getItem(position));
-                    startActivity(intent);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                Intent intent = new Intent(MapManagerActivity.this,
+                        MapDrawerActivity.class);
+                intent.putExtra("mapName", ((MapData) adapter.getItem(position)).name);
+                startActivity(intent);
             }
         });
     }
 
     public void setEmpty() {
+        findViewById(R.id.sort_bar).setVisibility(View.GONE);
         findViewById(R.id.tv_empty).setVisibility(View.VISIBLE);
     }
 
-    private void sortNameList() {
+    private void sortMapList() {
+    }
+    private void setLayout(){
+
     }
 }

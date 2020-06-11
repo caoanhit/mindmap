@@ -12,7 +12,7 @@
         android:gravity="center"
         android:text="@string/empty"
         app:layout_anchor="@+id/linearLayout2"
-        app:layout_anchorGravity="center"/>
+        app:layout_anchorGravity="center" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -20,11 +20,74 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <FrameLayout
+            android:id="@+id/sort_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="@dimen/elevation"
+            android:paddingHorizontal="@dimen/padding_base">
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/layout_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+
+                    android:id="@+id/list"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    app:cornerRadius="@dimen/corner_radius"
+                    app:icon="@drawable/ic_view_list_black_24dp"
+                    app:strokeWidth="2dp">
+
+                </com.google.android.material.button.MaterialButton>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/card"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    app:cornerRadius="@dimen/corner_radius"
+                    app:icon="@drawable/ic_apps_black_24dp"
+                    app:strokeWidth="2dp">
+
+                </com.google.android.material.button.MaterialButton>
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort"/>
+
+                <Spinner
+                    android:id="@+id/sort_options"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
+                    android:popupBackground="@drawable/rounded_flat"
+                    android:popupElevation="@dimen/elevation"/>
+            </LinearLayout>
+        </FrameLayout>
+
         <ListView
             android:id="@+id/lv_map"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:choiceMode="none" />
+            android:choiceMode="none"
+            android:padding="@dimen/padding_base"/>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

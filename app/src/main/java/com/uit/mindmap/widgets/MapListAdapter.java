@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uit.mindmap.R;
+import com.uit.mindmap.data.MapData;
 import com.uit.mindmap.maploader.MapLoader;
 import com.uit.mindmap.maploader.MapManagerActivity;
 
@@ -25,11 +26,11 @@ import java.util.List;
 
 public class MapListAdapter extends BaseAdapter {
     Context context;
-    List<String> data;
+    List<MapData> data;
     boolean isInSelectMode;
     private static LayoutInflater inflater = null;
 
-    public MapListAdapter(Context context, List<String> data){
+    public MapListAdapter(Context context, List<MapData> data){
         this.context = context;
         this.data = data;
         inflater = (LayoutInflater) context
@@ -64,11 +65,11 @@ public class MapListAdapter extends BaseAdapter {
         if (isInSelectMode) btn.setVisibility(View.GONE);
         else btn.setVisibility(View.VISIBLE);
 
-        mapName.setText(data.get(position));
+        mapName.setText(data.get(position).name);
         final MapLoader loader=new MapLoader(context);
-        date.setText(loader.mapDate(data.get(position)));
+        date.setText(data.get(position).getDate());
         ImageView thumbnail=vi.findViewById(R.id.map_thumbnail);
-        thumbnail.setImageBitmap(loader.loadThumbnail(data.get(position)));
+        thumbnail.setImageBitmap(data.get(position).thumbnail);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +89,7 @@ public class MapListAdapter extends BaseAdapter {
                         t.setText(context.getResources().getString(R.string.rename_map));
                         alertDialogBuilder.setView(customDialogView);
                         final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
-                        etName.setText(data.get(position));
+                        etName.setText(data.get(position).name);
                         etName.selectAll();
                         alertDialogBuilder.setCancelable(true).setPositiveButton("OK",null)
                         .setNegativeButton("Cancel",null);
@@ -105,8 +106,8 @@ public class MapListAdapter extends BaseAdapter {
                                             Toast.makeText(context, "Map name already exists", Toast.LENGTH_SHORT).show();
                                         }
                                         else {
-                                            if(loader.renameMap(data.get(position), etName.getText().toString())) {
-                                                data.set(position, s);
+                                            if(loader.renameMap(data.get(position).name, etName.getText().toString())) {
+                                                data.get(position).name=s;
                                                 mapName.setText(etName.getText().toString());
                                                 notifyDataSetChanged();
                                             }
@@ -131,7 +132,7 @@ public class MapListAdapter extends BaseAdapter {
                         t.setText(context.getResources().getString(R.string.copy_map));
                         alertDialogBuilder.setView(customDialogView);
                         final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
-                        etName.setText(data.get(position)+ " (copy)");
+                        etName.setText(data.get(position).name+ " (copy)");
                         etName.selectAll();
                         alertDialogBuilder.setCancelable(true).setPositiveButton("OK",null)
                                 .setNegativeButton("Cancel",null);
@@ -148,8 +149,8 @@ public class MapListAdapter extends BaseAdapter {
                                             Toast.makeText(context, "Map name already exists", Toast.LENGTH_SHORT).show();
                                         }
                                         else {
-                                            if(loader.copyMap(data.get(position),s)) {
-                                                data.add(s);
+                                            if(loader.copyMap(data.get(position).name,s)) {
+                                                data.add(loader.loadMapData(s));
                                                 notifyDataSetChanged();
                                             }
                                             else {
@@ -168,7 +169,7 @@ public class MapListAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         if(popupWindow.isShowing()) popupWindow.dismiss();
-                        if(!loader.deleteMap(data.get(position))){
+                        if(!loader.deleteMap(data.get(position).name)){
                             Toast.makeText(context, "Error: can not delete map", Toast.LENGTH_SHORT).show();
                         }
                         else{

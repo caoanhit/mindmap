@@ -14,16 +14,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|top"
-            android:text="100%"
-            android:textSize="@dimen/large_text_size"
-            android:textColor="@android:color/white"
+            android:layout_marginTop="15dp"
+            android:alpha="0.5"
             android:background="@drawable/rounded_flat"
             android:backgroundTint="@android:color/black"
+            android:elevation="15dp"
             android:paddingHorizontal="20dp"
             android:paddingVertical="10dp"
-            android:alpha="0.5"
-            android:layout_marginTop="15dp"
-            android:elevation="15dp"/>
+            android:text="100%"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/large_text_size" />
 
         <com.uit.mindmap.widgets.ZoomLayout
             android:id="@+id/zoom"
@@ -35,32 +35,30 @@
             android:focusedByDefault="true"
             tools:context=".MainActivity">
 
-            <androidx.coordinatorlayout.widget.CoordinatorLayout
-                android:id="@+id/frame"
+            <com.uit.mindmap.mapdrawer.MapView
+                android:id="@+id/map_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.uit.mindmap.mapdrawer.MapView
-                    android:id="@+id/map_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/canvas" />
-            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                android:layout_height="match_parent"
+                android:background="@color/canvas" />
         </com.uit.mindmap.widgets.ZoomLayout>
 
-        <include layout="@layout/floating_menu"
-            android:id="@+id/floating_menu"/>
+        <include
+            android:id="@+id/floating_menu"
+            layout="@layout/floating_menu" />
     </FrameLayout>
+
     <com.uit.mindmap.mapdrawer.NodeCustomizer
         android:id="@+id/node_customizer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
     <com.uit.mindmap.mapdrawer.TextCustomizer
         android:id="@+id/text_customizer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
+
     <com.uit.mindmap.mapdrawer.LineCustomizer
         android:id="@+id/line_customizer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </FrameLayout>

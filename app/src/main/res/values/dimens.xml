@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="elevation">10dp</dimen>
+    <dimen name="elevation">5dp</dimen>
     <dimen name="icon_padding">0dp</dimen>
     <dimen name="icon_size">38dp</dimen>
+    <dimen name="padding_base">5dp</dimen>
     <dimen name="margin_base">15dp</dimen>
     <dimen name="button_margin">0dp</dimen>
     <dimen name="button_width">45dp</dimen>

@@ -45,4 +45,5 @@
     <string name="bold"><b>B</b></string>
     <string name="italic"><i>I</i></string>
     <string name="underline"><u>U</u></string>
+    <string name="sort">Sort by : </string>
 </resources>
