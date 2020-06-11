@@ -70,15 +70,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sort"/>
+                    android:text="@string/sort" />
 
                 <Spinner
                     android:id="@+id/sort_options"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
+                    android:paddingHorizontal="10dp"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginRight="-15dp"
+
                     android:popupBackground="@drawable/rounded_flat"
-                    android:popupElevation="@dimen/elevation"/>
+                    android:popupElevation="@dimen/elevation" />
             </LinearLayout>
         </FrameLayout>
 

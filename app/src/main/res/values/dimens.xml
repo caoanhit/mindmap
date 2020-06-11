@@ -12,6 +12,7 @@
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>
     <dimen name="large_text_size">20sp</dimen>
+    <dimen name="normal_text_size">16dp</dimen>
     <dimen name="list_item_height">45dp</dimen>
     <dimen name="outline_width">3dp</dimen>
     <dimen name="number_picker_height">150dp</dimen>

@@ -137,6 +137,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/bold"
                 app:cornerRadius="@dimen/corner_radius"
+                android:textSize="@dimen/normal_text_size"
                 app:strokeWidth="2dp">
 
             </com.google.android.material.button.MaterialButton>
@@ -148,6 +149,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/italic"
                 app:cornerRadius="@dimen/corner_radius"
+                android:textSize="@dimen/normal_text_size"
                 app:strokeWidth="2dp">
 
             </com.google.android.material.button.MaterialButton>
@@ -160,6 +162,7 @@
                 android:text="@string/underline"
                 android:textAllCaps="false"
                 app:cornerRadius="@dimen/corner_radius"
+                android:textSize="@dimen/normal_text_size"
                 app:strokeWidth="2dp">
 
             </com.google.android.material.button.MaterialButton>
