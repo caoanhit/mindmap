@@ -26,6 +26,7 @@ import com.uit.mindmap.data.MapData;
 import com.uit.mindmap.mapdrawer.MapDrawerActivity;
 import com.uit.mindmap.widgets.MapListAdapter;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class MapManagerActivity extends AppCompatActivity {
@@ -68,6 +69,7 @@ public class MapManagerActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SharedPreferences.Editor editor = sharedpreferences.edit();
+                sortOption=position;
                 sortMapList();
                 editor.putInt("sort", position);
                 editor.apply();
@@ -167,10 +169,10 @@ public class MapManagerActivity extends AppCompatActivity {
         mapList = loader.loadMapList();
         lvMap = findViewById(R.id.lv_map);
         if (mapList != null && mapList.size() > 0) {
-            sortMapList();
             findViewById(R.id.sort_bar).setVisibility(View.VISIBLE);
             findViewById(R.id.tv_empty).setVisibility(View.INVISIBLE);
             adapter = new MapListAdapter(this, mapList);
+            sortMapList();
             lvMap.setAdapter(adapter);
         } else setEmpty();
         lvMap.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -192,6 +194,19 @@ public class MapManagerActivity extends AppCompatActivity {
     }
 
     private void sortMapList() {
+        mapList.sort(new Comparator<MapData>() {
+            @Override
+            public int compare(MapData o1, MapData o2) {
+                switch (sortOption){
+                    case 0: return o1.name.compareTo(o2.name);
+                    case 1: return o2.name.compareTo(o1.name);
+                    case 2: return (o1.date>o2.date)? -1: 1;
+                    case 3: return (o1.date>o2.date)? 1: -1;
+                }
+                return o1.name.compareTo(o2.name);
+            }
+        });
+        adapter.notifyDataSetChanged();
     }
     private void setLayout(){
 

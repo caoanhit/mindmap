@@ -87,7 +87,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:choiceMode="none"
-            android:padding="@dimen/padding_base"/>
+            android:paddingHorizontal="@dimen/padding_base"
+            android:paddingTop="@dimen/padding_base"
+            android:paddingBottom="90dp"
+            android:clipToPadding="false"/>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -95,7 +98,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_margin="30dp"
-        android:text="@string/new_map"
+        android:layout_margin="25dp"
         app:icon="@drawable/ic_add_black_24dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

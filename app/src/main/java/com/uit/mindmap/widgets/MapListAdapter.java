@@ -102,7 +102,7 @@ public class MapListAdapter extends BaseAdapter {
                                     @Override
                                     public void onClick(View v) {
                                         String s=etName.getText().toString();
-                                        if(data.contains(s)){
+                                        if(loader.mapExist(s)){
                                             Toast.makeText(context, "Map name already exists", Toast.LENGTH_SHORT).show();
                                         }
                                         else {
@@ -145,7 +145,7 @@ public class MapListAdapter extends BaseAdapter {
                                     @Override
                                     public void onClick(View v) {
                                         String s=etName.getText().toString();
-                                        if(data.contains(s)){
+                                        if(loader.mapExist(s)){
                                             Toast.makeText(context, "Map name already exists", Toast.LENGTH_SHORT).show();
                                         }
                                         else {
