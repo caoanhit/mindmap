@@ -62,7 +62,7 @@
 
             <ImageButton
                 android:id="@+id/map_option"
-                android:layout_width="40dp"
+                android:layout_width="@dimen/option_width"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
                 android:background="@drawable/rectangle_button_selector"

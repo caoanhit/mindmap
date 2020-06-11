@@ -96,8 +96,9 @@ public class MapListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 LayoutInflater inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 final View popup= inflater.inflate(R.layout.map_options,null);
-                int width=(int)context.getResources().getDimension(R.dimen.map_option_width);
-                int height=(int) context.getResources().getDimension(R.dimen.thumbnail_list_height);
+                int width=(int)context.getResources().getDimension(R.dimen.button_size)*3;
+                int height=(int) context.getResources().getDimension(R.dimen.button_size);
+                int vheight=(int) context.getResources().getDimension(R.dimen.thumbnail_list_height);
                 final PopupWindow popupWindow=new PopupWindow(popup, width, height,true);
                 popupWindow.setBackgroundDrawable(context.getDrawable(R.drawable.rounded_flat));
                 popupWindow.setElevation(context.getResources().getDimension(R.dimen.elevation));
@@ -205,7 +206,7 @@ public class MapListAdapter extends BaseAdapter {
                         }
                     }
                 });
-                popupWindow.showAsDropDown(v,-width+v.getWidth(),-v.getHeight());
+                popupWindow.showAsDropDown(v,-width+v.getWidth(),-vheight/2-height/2);
             }
         });
 

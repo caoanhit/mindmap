@@ -18,6 +18,9 @@
     <dimen name="number_picker_height">150dp</dimen>
     <dimen name="number_picker_width">60dp</dimen>
 
+    <dimen name="option_width">40dp</dimen>
+    <dimen name="button_size">54dp</dimen>
+
     <dimen name="thumbnail_list_width">80sp</dimen>
     <dimen name="thumbnail_list_height">60sp</dimen>
     <dimen name="map_option_width">180sp</dimen>
