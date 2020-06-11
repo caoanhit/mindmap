@@ -16,7 +16,7 @@ public class MapData {
     }
 
     public String getDate(){
-        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
         return dateFormat.format(date);
     }
 }

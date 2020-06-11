@@ -28,11 +28,13 @@ public class MapListAdapter extends BaseAdapter {
     Context context;
     List<MapData> data;
     boolean isInSelectMode;
+    int layout;
     private static LayoutInflater inflater = null;
 
-    public MapListAdapter(Context context, List<MapData> data){
+    public MapListAdapter(Context context, List<MapData> data,int layout){
         this.context = context;
         this.data = data;
+        this.layout=layout;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -56,7 +58,7 @@ public class MapListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         View vi = convertView;
         if (vi == null)
-            vi = inflater.inflate(R.layout.item_list, null);
+            vi = inflater.inflate(R.layout.item_card, null);
 
         final TextView mapName = vi.findViewById(R.id.map_name);
         final TextView date= vi.findViewById(R.id.map_date);
@@ -70,12 +72,33 @@ public class MapListAdapter extends BaseAdapter {
         date.setText(data.get(position).getDate());
         ImageView thumbnail=vi.findViewById(R.id.map_thumbnail);
         thumbnail.setImageBitmap(data.get(position).thumbnail);
+        LinearLayout card=vi.findViewById(R.id.card_view);
+        LinearLayout.LayoutParams params;
+        switch (layout){
+            case 0:
+                card.setOrientation(LinearLayout.HORIZONTAL);
+                params= (LinearLayout.LayoutParams) thumbnail.getLayoutParams();
+                params.width=(int)context.getResources().getDimension(R.dimen.thumbnail_list_width);
+                params.height= LinearLayout.LayoutParams.MATCH_PARENT;
+                thumbnail.setLayoutParams(params);
+                break;
+            case 1:
+                card.setOrientation(LinearLayout.VERTICAL);
+                params= (LinearLayout.LayoutParams) thumbnail.getLayoutParams();
+                params.width= LinearLayout.LayoutParams.MATCH_PARENT;
+                params.height= LinearLayout.LayoutParams.WRAP_CONTENT;
+                thumbnail.setLayoutParams(params);
+                break;
+        }
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 final View popup= inflater.inflate(R.layout.map_options,null);
-                final PopupWindow popupWindow=new PopupWindow(popup,LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT,true);
+                int width=(int)context.getResources().getDimension(R.dimen.map_option_width);
+                int height=(int) context.getResources().getDimension(R.dimen.thumbnail_list_height);
+                final PopupWindow popupWindow=new PopupWindow(popup, width, height,true);
                 popupWindow.setBackgroundDrawable(context.getDrawable(R.drawable.rounded_flat));
                 popupWindow.setElevation(context.getResources().getDimension(R.dimen.elevation));
                 popup.findViewById(R.id.btn_rename_map).setOnClickListener(new View.OnClickListener() {
@@ -182,7 +205,7 @@ public class MapListAdapter extends BaseAdapter {
                         }
                     }
                 });
-                popupWindow.showAsDropDown(v,-v.getWidth(),-v.getHeight());
+                popupWindow.showAsDropDown(v,-width+v.getWidth(),-v.getHeight());
             }
         });
 
@@ -190,6 +213,10 @@ public class MapListAdapter extends BaseAdapter {
     }
     public void setSelectMode(boolean isInSelectMode){
         this.isInSelectMode=isInSelectMode;
+        notifyDataSetChanged();
+    }
+    public void changeLayout(int layout){
+        this.layout=layout;
         notifyDataSetChanged();
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -148,9 +149,9 @@ public class Node extends RelativeLayout {
         data.nodePreferences = new NodePreferences(preference);
         text.setBackgroundTintList(ColorStateList.valueOf(preference.color));
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) text.getLayoutParams();
-        int margin = preference.outlineWidth;
-        params.setMargins(margin, margin, margin, margin);
-        text.setLayoutParams(params);
+        GradientDrawable drawable=(GradientDrawable) text.getBackground();
+        drawable.setStroke(preference.outlineWidth,preference.outlineColor);
+
         outline.setBackgroundTintList(ColorStateList.valueOf(preference.outlineColor));
     }
 

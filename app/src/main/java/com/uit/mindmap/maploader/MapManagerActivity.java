@@ -13,6 +13,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -30,7 +31,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class MapManagerActivity extends AppCompatActivity {
-    ListView lvMap;
+    GridView gvMap;
     List<MapData> mapList;
     Button bttNewMap;
     Menu menu;
@@ -109,13 +110,12 @@ public class MapManagerActivity extends AppCompatActivity {
                     switch (checkedId) {
                         case R.id.list:
                             layoutOption = 0;
-                            setLayout();
                             break;
                         case R.id.card:
                             layoutOption = 1;
-                            setLayout();
                             break;
                     }
+                    setLayout();
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putInt("layout", layoutOption);
                     editor.apply();
@@ -146,9 +146,9 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (lvMap.getChoiceMode() == AbsListView.CHOICE_MODE_MULTIPLE) {
-            lvMap.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-            lvMap.clearChoices();
+        if (gvMap.getChoiceMode() == AbsListView.CHOICE_MODE_MULTIPLE) {
+            gvMap.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
+            gvMap.clearChoices();
             adapter.setSelectMode(false);
             menu.setGroupVisible(R.id.map_option, false);
         } else super.onBackPressed();
@@ -167,15 +167,23 @@ public class MapManagerActivity extends AppCompatActivity {
     private void loadMapNames() {
         loader = new MapLoader(this);
         mapList = loader.loadMapList();
-        lvMap = findViewById(R.id.lv_map);
+        gvMap = findViewById(R.id.lv_map);
         if (mapList != null && mapList.size() > 0) {
             findViewById(R.id.sort_bar).setVisibility(View.VISIBLE);
             findViewById(R.id.tv_empty).setVisibility(View.INVISIBLE);
-            adapter = new MapListAdapter(this, mapList);
+            adapter = new MapListAdapter(this, mapList, layoutOption);
             sortMapList();
-            lvMap.setAdapter(adapter);
+            gvMap.setAdapter(adapter);
         } else setEmpty();
-        lvMap.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        switch (layoutOption){
+            case 0:
+                gvMap.setNumColumns(1);
+                break;
+            case 1:
+                gvMap.setNumColumns(2);
+                break;
+        }
+        gvMap.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
@@ -209,6 +217,15 @@ public class MapManagerActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
     private void setLayout(){
-
+        switch (layoutOption){
+            case 0:
+                gvMap.setNumColumns(1);
+                adapter.changeLayout(0);
+                break;
+            case 1:
+                gvMap.setNumColumns(2);
+                adapter.changeLayout(1);
+                break;
+        }
     }
 }

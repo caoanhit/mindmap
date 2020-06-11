@@ -41,7 +41,7 @@
                     android:id="@+id/list"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="@dimen/button_width"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/button_width"
                     android:padding="10dp"
                     app:cornerRadius="@dimen/corner_radius"
                     app:icon="@drawable/ic_view_list_black_24dp"
@@ -53,7 +53,7 @@
                     android:id="@+id/card"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="@dimen/button_width"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/button_width"
                     android:padding="10dp"
                     app:cornerRadius="@dimen/corner_radius"
                     app:icon="@drawable/ic_apps_black_24dp"
@@ -86,15 +86,17 @@
             </LinearLayout>
         </FrameLayout>
 
-        <ListView
+        <GridView
             android:id="@+id/lv_map"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:choiceMode="none"
             android:paddingHorizontal="@dimen/padding_base"
             android:paddingTop="@dimen/padding_base"
             android:paddingBottom="90dp"
-            android:clipToPadding="false"/>
+            android:clipToPadding="false"
+            android:horizontalSpacing="@dimen/padding_base"
+            android:verticalSpacing="@dimen/padding_base"/>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
