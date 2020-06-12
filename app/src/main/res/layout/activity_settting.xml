@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom"
+    android:orientation="vertical"
+    android:paddingHorizontal="15dp"
+    android:paddingVertical="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:text="@string/theme">
+
+        </TextView>
+
+        <Spinner
+            android:id="@+id/theme_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
+            android:popupBackground="@drawable/rounded_flat"
+            android:popupElevation="@dimen/elevation" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="1"
+            android:text="@string/background_color">
+
+        </TextView>
+
+        <com.uit.mindmap.widgets.ColorPickerButton
+            android:id="@+id/btn_line_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:clipChildren="false" />
+    </LinearLayout>
+
+</LinearLayout>

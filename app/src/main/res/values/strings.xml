@@ -3,7 +3,7 @@
     <string name="new_map">New map</string>
     <string name="root_node">Root node</string>
     <string name="text_size">Text size</string>
-    <string name="background_color">Fill color</string>
+    <string name="fill_color">Fill color</string>
     <string name="text_color">Text color</string>
     <string name="outline_color">Outline color</string>
     <string name="small">Small</string>
@@ -46,4 +46,8 @@
     <string name="italic"><i>I</i></string>
     <string name="underline"><u>U</u></string>
     <string name="sort">Sort by :</string>
+
+    <string name="theme">Theme</string>
+    <string name="background_color">Background color</string>
+    <string name="settings">Settings</string>
 </resources>

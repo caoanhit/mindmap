@@ -25,6 +25,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.uit.mindmap.R;
 import com.uit.mindmap.data.MapData;
 import com.uit.mindmap.mapdrawer.MapDrawerActivity;
+import com.uit.mindmap.utils.SettingActivity;
 import com.uit.mindmap.widgets.MapListAdapter;
 
 import java.util.Comparator;
@@ -145,7 +146,13 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
+        switch (item.getItemId()){
+            case R.id.preferences:
+                Intent intent = new Intent(MapManagerActivity.this,
+                        SettingActivity.class);
+                startActivity(intent);
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 

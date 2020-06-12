@@ -24,8 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="1"
-            android:text="@string/line_width"
-            android:textSize="@dimen/medium_text_size">
+            android:text="@string/line_width">
 
         </TextView>
 
@@ -47,8 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="1"
-            android:text="@string/line_effect"
-            android:textSize="@dimen/medium_text_size">
+            android:text="@string/line_effect">
 
         </TextView>
 
@@ -112,8 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="1"
-            android:text="@string/curve"
-            android:textSize="@dimen/medium_text_size">
+            android:text="@string/curve">
 
         </TextView>
 
@@ -176,8 +173,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="1"
-            android:text="@string/line_color"
-            android:textSize="@dimen/medium_text_size">
+            android:text="@string/line_color">
 
         </TextView>
 
@@ -198,8 +194,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="1"
-            android:text="@string/arrow"
-            android:textSize="@dimen/medium_text_size">
+            android:text="@string/arrow">
 
         </TextView>
         <com.google.android.material.button.MaterialButtonToggleGroup

@@ -25,8 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="@dimen/elevation"
-            android:background="?attr/colorBackgroundFloating"
-            android:paddingHorizontal="@dimen/padding_base">
+            android:paddingHorizontal="@dimen/padding_base"
+            android:background="?attr/colorSurface">
 
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/layout_options"

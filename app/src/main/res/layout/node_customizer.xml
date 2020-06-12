@@ -24,8 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="1"
-            android:text="@string/outline_width"
-            android:textSize="@dimen/medium_text_size">
+            android:text="@string/outline_width">
 
         </TextView>
 
@@ -46,8 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="1"
-            android:text="@string/outline_color"
-            android:textSize="@dimen/medium_text_size">
+            android:text="@string/outline_color">
 
         </TextView>
 
@@ -68,8 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="1"
-            android:text="@string/background_color"
-            android:textSize="@dimen/medium_text_size">
+            android:text="@string/fill_color">
 
         </TextView>
 
