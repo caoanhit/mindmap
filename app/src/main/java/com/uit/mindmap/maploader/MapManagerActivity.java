@@ -217,7 +217,6 @@ public class MapManagerActivity extends AppCompatActivity {
                 return o1.name.compareTo(o2.name);
             }
         });
-        adapter.notifyDataSetChanged();
     }
     private void setLayout(){
         switch (layoutOption){
