@@ -298,7 +298,7 @@ public class MapView extends RelativeLayout {
             pos[1] += getContext().getResources().getDimension(R.dimen.map_size) / 2;
             node.setPosition(pos);
             node.setText("Root node");
-            int color = getContext().getResources().getColor(R.color.colorPrimary, null);
+            int color = getContext().getResources().getColor(R.color.colorPrimary);
             node.setNodePreferences(new NodePreferences(color, Color.WHITE, 0));
             node.setTextSize(7);
             node.setTextColor(Color.WHITE);
@@ -697,16 +697,17 @@ public class MapView extends RelativeLayout {
         int minY = nodes[0].data.pos[1];
         for (Node node : nodes) {
             if (node != null && !node.deleted) {
-                if (node.data.pos[0] > maxX) maxX = node.data.pos[0];
-                if (node.data.pos[1] > maxY) maxY = node.data.pos[1];
-                if (node.data.pos[0] < minX) minX = node.data.pos[0];
-                if (node.data.pos[1] < minY) minY = node.data.pos[1];
+                int[] bounds=node.bounds();
+                if (bounds[0] < minX) minX = bounds[0];
+                if (bounds[1] < minY) minY = bounds[1];
+                if (bounds[2] > maxX) maxX = bounds[2];
+                if (bounds[3] > maxY) maxY = bounds[3];
             }
         }
-        a[0] = minX - 100;
-        a[1] = minY - 100;
-        a[2] = maxX + 100;
-        a[3] = maxY + 100;
+        a[0] = minX-10;
+        a[1] = minY-10;
+        a[2] = maxX+10;
+        a[3] = maxY+10;
         return a;
     }
 
@@ -714,21 +715,38 @@ public class MapView extends RelativeLayout {
         ((MapDrawerActivity) getContext()).deselect();
         int[] d = getMapDimensions();
         int[] a = getMapCenter();
-        Bitmap b = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        int w = d[2] - d[0];
+        int h = d[3] - d[1];
+        Bitmap b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
-        this.layout(getLeft(), getTop(), getRight(), getBottom());
+        c.translate(-d[0],-d[1]);
+        this.layout(0, 0, getWidth(), getHeight());
         Log.i("Left", "" + d[0]);
         Log.i("Top", "" + d[1]);
         Log.i("Right", "" + d[2]);
         Log.i("Bottom", "" + d[3]);
         this.draw(c);
-        int width = Math.max((d[3] - d[1]) * 4 / 3, d[2] - d[0]);
-        int height = Math.max((d[2] - d[0]) * 3 / 4, d[3] - d[1]);
-        return Bitmap.createScaledBitmap(Bitmap.createBitmap(b, a[0] - width / 2, a[1] - height / 2, width, height), 400, 300, true);
+        int width = Math.max(h * 4 / 3, w);
+        int height = Math.max(w * 3 / 4, h);
+        Bitmap x=getCorrectBitmap(b, width, height);
+        Bitmap b1=Bitmap.createScaledBitmap(x, 400, 300, true);
+        x.recycle();
+        return b1;
     }
 
-    public boolean isRootSelected(){
-        return (selectedNodes.size()==1&& selectedNodes.get(0)==0);
+    public boolean isRootSelected() {
+        return (selectedNodes.size() == 1 && selectedNodes.get(0) == 0);
+    }
+
+    private Bitmap getCorrectBitmap(Bitmap scr, int width, int height) {
+        Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        int[] pixels = new int[width * height];
+        int w = scr.getWidth();
+        int h = scr.getHeight();
+        scr.getPixels(pixels, 0, w, 0, 0, w, h);
+        b.setPixels(pixels, 0, w, (width - w) / 2, (height - h) / 2, w, h);
+        scr.recycle();
+        return b;
     }
     //endregion
 }

@@ -22,6 +22,7 @@ import com.uit.mindmap.data.MapData;
 import com.uit.mindmap.maploader.MapLoader;
 import com.uit.mindmap.maploader.MapManagerActivity;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -228,7 +229,7 @@ public class MapListAdapter extends BaseAdapter {
     }
     public void sortlist(final int option){
         sortOption=option;
-        data.sort(new Comparator<MapData>() {
+        Collections.sort(data,new Comparator<MapData>() {
             @Override
             public int compare(MapData o1, MapData o2) {
                 switch (option){

@@ -103,6 +103,7 @@ public class MapLoader {
             e.printStackTrace();
             Log.i("thumbnail", e.getMessage());
         }
+        bmp.recycle();
     }
 
     public Bitmap loadThumbnail(String fileName) {

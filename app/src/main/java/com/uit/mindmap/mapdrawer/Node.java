@@ -286,4 +286,10 @@ public class Node extends RelativeLayout {
     public void setMap(MapView map) {
         this.map = map;
     }
+
+    public int[] bounds(){
+        int w=outline.getWidth()/2;
+        int h=outline.getHeight()/2;
+        return new int[]{data.pos[0]-w,data.pos[1]-h,data.pos[0]+w,data.pos[1]+h};
+    }
 }
