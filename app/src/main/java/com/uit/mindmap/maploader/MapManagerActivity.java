@@ -129,6 +129,7 @@ public class MapManagerActivity extends AppCompatActivity {
     protected void onResume() {
         mapList = loader.loadMapList();
         sortMapList();
+        setLayout();
         adapter.setData(mapList);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         super.onResume();

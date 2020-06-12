@@ -218,8 +218,7 @@ public class MapListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
     public void changeLayout(int layout){
-        this.layout=layout;
-        notifyDataSetChanged();
+        this.layout=layout;;
     }
     public void setData(List<MapData> data){
         this.data=data;
