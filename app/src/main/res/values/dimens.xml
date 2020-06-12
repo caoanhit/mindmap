@@ -28,6 +28,6 @@
     <!--Mapview -->
     <dimen name="map_size">6000px</dimen>
     <dimen name="min_node_width">40px</dimen>
-    <dimen name="node_corner_radius">20px</dimen>
+    <dimen name="node_corner_radius">25px</dimen>
 
 </resources>

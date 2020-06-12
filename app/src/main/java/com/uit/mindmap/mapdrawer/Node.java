@@ -149,9 +149,9 @@ public class Node extends RelativeLayout {
         data.nodePreferences = new NodePreferences(preference);
         text.setBackgroundTintList(ColorStateList.valueOf(preference.color));
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) text.getLayoutParams();
-        GradientDrawable drawable=(GradientDrawable) text.getBackground();
-        drawable.setStroke(preference.outlineWidth,preference.outlineColor);
-
+        int margin= preference.outlineWidth;
+        params.setMargins(margin,margin,margin,margin);
+        text.setLayoutParams(params);
         outline.setBackgroundTintList(ColorStateList.valueOf(preference.outlineColor));
     }
 
