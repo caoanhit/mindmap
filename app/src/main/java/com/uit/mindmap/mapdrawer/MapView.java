@@ -265,8 +265,6 @@ public class MapView extends RelativeLayout {
     //region Draw
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
         for (int i = 0; i < maxNodeAmount; i++) {
             if (nodes[i] != null && nodes[i].data != null) {
                 for (int a : nodes[i].data.children) {
@@ -275,6 +273,7 @@ public class MapView extends RelativeLayout {
                 }
             }
         }
+        super.onDraw(canvas);
     }
 
     //endregion
@@ -723,9 +722,9 @@ public class MapView extends RelativeLayout {
         Log.i("Right", "" + d[2]);
         Log.i("Bottom", "" + d[3]);
         this.draw(c);
-        int width = Math.max((d[3] - d[1]) * 160 / 120, d[2] - d[0]);
-        int height = Math.max((d[2] - d[0]) * 120 / 160, d[3] - d[1]);
-        return Bitmap.createScaledBitmap(Bitmap.createBitmap(b, a[0] - width / 2, a[1] - height / 2, width, height), 320, 240, true);
+        int width = Math.max((d[3] - d[1]) * 4 / 3, d[2] - d[0]);
+        int height = Math.max((d[2] - d[0]) * 3 / 4, d[3] - d[1]);
+        return Bitmap.createScaledBitmap(Bitmap.createBitmap(b, a[0] - width / 2, a[1] - height / 2, width, height), 400, 300, true);
     }
 
     public boolean isRootSelected(){

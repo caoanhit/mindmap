@@ -20,7 +20,9 @@
             android:id="@+id/map_thumbnail"
             android:layout_width="@dimen/thumbnail_list_width"
             android:layout_height="match_parent"
-            android:layout_gravity="start|center_vertical"/>
+            android:background="@color/canvas"
+            android:layout_gravity="start|center_vertical"
+            android:adjustViewBounds="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -65,9 +67,9 @@
                 android:layout_width="@dimen/option_width"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
-                android:background="@drawable/rectangle_button_selector"
+                android:background="?attr/colorBackgroundFloating"
                 android:src="@drawable/ic_more_vert_black_24dp"
-                android:tint="@android:color/black" />
+                android:tint="?attr/colorControlNormal" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

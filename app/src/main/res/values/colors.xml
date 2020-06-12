@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#3949AB</color>
     <color name="colorAccent">#2196F3</color>
     <color name="canvas">#DADADA</color>
+
+    <color name="transparent">#00000000</color>
 </resources>

@@ -33,13 +33,15 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:focusedByDefault="true"
+            android:background="@color/canvas"
             tools:context=".MainActivity">
 
             <com.uit.mindmap.mapdrawer.MapView
                 android:id="@+id/map_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/canvas" />
+                android:background="@color/transparent"
+                 />
         </com.uit.mindmap.widgets.ZoomLayout>
 
         <include

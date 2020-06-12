@@ -24,8 +24,8 @@
             android:id="@+id/sort_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:elevation="@dimen/elevation"
+            android:background="?attr/colorBackgroundFloating"
             android:paddingHorizontal="@dimen/padding_base">
 
             <com.google.android.material.button.MaterialButtonToggleGroup
