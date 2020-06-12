@@ -67,7 +67,7 @@
                 android:layout_width="@dimen/option_width"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
-                android:background="?attr/colorBackgroundFloating"
+                android:background="@drawable/rectangle_button_selector"
                 android:src="@drawable/ic_more_vert_black_24dp"
                 android:tint="?attr/colorControlNormal" />
         </LinearLayout>
