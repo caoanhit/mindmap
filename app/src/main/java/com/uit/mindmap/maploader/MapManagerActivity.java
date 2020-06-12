@@ -60,7 +60,7 @@ public class MapManagerActivity extends AppCompatActivity {
     private void initViews() {
         loadMapNames();
         sortOptionSelector = findViewById(R.id.sort_options);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sort_options, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortOptionSelector.setAdapter(adapter);
@@ -117,6 +117,7 @@ public class MapManagerActivity extends AppCompatActivity {
                             break;
                     }
                     setLayout();
+                    adapter.notifyDataSetChanged();
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putInt("layout", layoutOption);
                     editor.apply();
@@ -218,6 +219,7 @@ public class MapManagerActivity extends AppCompatActivity {
                 return o1.name.compareTo(o2.name);
             }
         });
+        adapter.notifyDataSetChanged();
     }
     private void setLayout(){
         switch (layoutOption){
