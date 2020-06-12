@@ -23,6 +23,7 @@ import com.uit.mindmap.maploader.MapLoader;
 import com.uit.mindmap.maploader.MapManagerActivity;
 
 import java.util.List;
+import java.util.Map;
 
 public class MapListAdapter extends BaseAdapter {
     Context context;
@@ -218,6 +219,10 @@ public class MapListAdapter extends BaseAdapter {
     }
     public void changeLayout(int layout){
         this.layout=layout;
+        notifyDataSetChanged();
+    }
+    public void setData(List<MapData> data){
+        this.data=data;
         notifyDataSetChanged();
     }
 }

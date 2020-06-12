@@ -58,6 +58,7 @@ public class MapManagerActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+        loadMapNames();
         sortOptionSelector = findViewById(R.id.sort_options);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.sort_options, android.R.layout.simple_spinner_item);
@@ -126,9 +127,11 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
-        loadMapNames();
+        mapList = loader.loadMapList();
+        sortMapList();
+        adapter.setData(mapList);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        super.onResume();
     }
 
     @Override
