@@ -22,6 +22,7 @@ import com.uit.mindmap.data.MapData;
 import com.uit.mindmap.maploader.MapLoader;
 import com.uit.mindmap.maploader.MapManagerActivity;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ public class MapListAdapter extends BaseAdapter {
     List<MapData> data;
     boolean isInSelectMode;
     int layout;
+    int sortOption;
     private static LayoutInflater inflater = null;
 
     public MapListAdapter(Context context, List<MapData> data,int layout){
@@ -134,7 +136,7 @@ public class MapListAdapter extends BaseAdapter {
                                             if(loader.renameMap(data.get(position).name, etName.getText().toString())) {
                                                 data.get(position).name=s;
                                                 mapName.setText(etName.getText().toString());
-                                                notifyDataSetChanged();
+                                                sortlist(sortOption);
                                             }
                                             else Toast.makeText(context, "Error: can not rename map", Toast.LENGTH_SHORT).show();
                                             alertDialog.dismiss();
@@ -176,7 +178,7 @@ public class MapListAdapter extends BaseAdapter {
                                         else {
                                             if(loader.copyMap(data.get(position).name,s)) {
                                                 data.add(loader.loadMapData(s));
-                                                notifyDataSetChanged();
+                                                sortlist(sortOption);
                                             }
                                             else {
                                                 Toast.makeText(context, "Error: can not copy map", Toast.LENGTH_SHORT).show();
@@ -222,6 +224,22 @@ public class MapListAdapter extends BaseAdapter {
     }
     public void setData(List<MapData> data){
         this.data=data;
+        notifyDataSetChanged();
+    }
+    public void sortlist(final int option){
+        sortOption=option;
+        data.sort(new Comparator<MapData>() {
+            @Override
+            public int compare(MapData o1, MapData o2) {
+                switch (option){
+                    case 0: return o1.name.compareTo(o2.name);
+                    case 1: return o2.name.compareTo(o1.name);
+                    case 2: return (o1.date>o2.date)? -1: 1;
+                    case 3: return (o1.date>o2.date)? 1: -1;
+                }
+                return o1.name.compareTo(o2.name);
+            }
+        });
         notifyDataSetChanged();
     }
 }

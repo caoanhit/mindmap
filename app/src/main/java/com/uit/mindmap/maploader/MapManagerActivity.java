@@ -60,10 +60,10 @@ public class MapManagerActivity extends AppCompatActivity {
     private void initViews() {
         loadMapNames();
         sortOptionSelector = findViewById(R.id.sort_options);
-        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        final ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(this,
                 R.array.sort_options, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sortOptionSelector.setAdapter(adapter);
+        a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortOptionSelector.setAdapter(a);
         sortOption = sharedpreferences.getInt("sort", 0);
         sortOptionSelector.setSelection(sortOption);
 
@@ -72,7 +72,7 @@ public class MapManagerActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 sortOption=position;
-                sortMapList();
+                adapter.sortlist(sortOption);
                 editor.putInt("sort", position);
                 editor.apply();
             }
@@ -129,9 +129,9 @@ public class MapManagerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         mapList = loader.loadMapList();
-        sortMapList();
         setLayout();
         adapter.setData(mapList);
+        adapter.sortlist(sortOption);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         super.onResume();
     }
@@ -177,7 +177,7 @@ public class MapManagerActivity extends AppCompatActivity {
             findViewById(R.id.sort_bar).setVisibility(View.VISIBLE);
             findViewById(R.id.tv_empty).setVisibility(View.INVISIBLE);
             adapter = new MapListAdapter(this, mapList, layoutOption);
-            sortMapList();
+            adapter.sortlist(sortOption);
             gvMap.setAdapter(adapter);
         } else setEmpty();
         switch (layoutOption){
@@ -204,22 +204,6 @@ public class MapManagerActivity extends AppCompatActivity {
     public void setEmpty() {
         findViewById(R.id.sort_bar).setVisibility(View.GONE);
         findViewById(R.id.tv_empty).setVisibility(View.VISIBLE);
-    }
-
-    private void sortMapList() {
-        mapList.sort(new Comparator<MapData>() {
-            @Override
-            public int compare(MapData o1, MapData o2) {
-                switch (sortOption){
-                    case 0: return o1.name.compareTo(o2.name);
-                    case 1: return o2.name.compareTo(o1.name);
-                    case 2: return (o1.date>o2.date)? -1: 1;
-                    case 3: return (o1.date>o2.date)? 1: -1;
-                }
-                return o1.name.compareTo(o2.name);
-            }
-        });
-        adapter.notifyDataSetChanged();
     }
     private void setLayout(){
         switch (layoutOption){
