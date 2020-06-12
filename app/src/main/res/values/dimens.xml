@@ -14,7 +14,7 @@
     <dimen name="large_text_size">20sp</dimen>
     <dimen name="normal_text_size">16dp</dimen>
     <dimen name="list_item_height">45dp</dimen>
-    <dimen name="outline_width">5px</dimen>
+    <dimen name="outline_width">3dp</dimen>
     <dimen name="number_picker_height">150dp</dimen>
     <dimen name="number_picker_width">60dp</dimen>
 
@@ -28,6 +28,6 @@
     <!--Mapview -->
     <dimen name="map_size">6000px</dimen>
     <dimen name="min_node_width">40px</dimen>
-    <dimen name="node_corner_radius">25px</dimen>
+    <dimen name="node_corner_radius">20px</dimen>
 
 </resources>

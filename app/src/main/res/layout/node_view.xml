@@ -18,7 +18,7 @@
             android:id="@+id/outline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/node_bg"
+            android:background="@drawable/node_outline"
             android:layout_margin="@dimen/outline_width"
             >
 
@@ -27,8 +27,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-
-                android:background="@drawable/node_bg"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:focusedByDefault="false"
