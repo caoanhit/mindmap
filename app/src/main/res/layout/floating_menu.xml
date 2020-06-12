@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_selector"
         android:padding="15dp"
-        android:src="@drawable/ic_library_add_black_24dp"/>
+        android:src="@drawable/ic_library_add_black_24dp"
+        android:tint="?attr/colorOnBackground"/>
 
     <ImageButton
         android:id="@+id/edit"
@@ -22,7 +23,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_selector"
         android:padding="15dp"
-        android:src="@drawable/ic_mode_edit_black_24dp" />
+        android:src="@drawable/ic_mode_edit_black_24dp"
+        android:tint="?attr/colorOnBackground"/>
 
     <FrameLayout
         android:layout_width="2dp"
@@ -35,7 +37,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_selector"
         android:padding="15dp"
-        android:src="@drawable/ic_color_lens_black_24dp" />
+        android:src="@drawable/ic_color_lens_black_24dp"
+        android:tint="?attr/colorOnBackground"/>
 
     <ImageButton
         android:id="@+id/text_customize"
@@ -43,7 +46,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_selector"
         android:padding="15dp"
-        android:src="@drawable/ic_format_color_text_black_24dp" />
+        android:src="@drawable/ic_format_color_text_black_24dp"
+        android:tint="?attr/colorOnBackground"/>
 
     <ImageButton
         android:id="@+id/line_customize"
@@ -51,7 +55,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_selector"
         android:padding="15dp"
-        android:src="@drawable/ic_line"/>
+        android:src="@drawable/ic_line"
+        android:tint="?attr/colorOnBackground"/>
 
     <FrameLayout
         android:layout_width="2dp"
@@ -64,6 +69,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_selector"
         android:padding="15dp"
-        android:src="@drawable/ic_delete_black_24dp" />
+        android:src="@drawable/ic_delete_black_24dp"
+        android:tint="?attr/colorOnBackground"/>
 
 </LinearLayout>

@@ -7,7 +7,7 @@
     android:descendantFocusability="blocksDescendants"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="@dimen/corner_radius"
-    app:cardElevation="@dimen/elevation">
+    app:cardElevation="2dp">
 
 
     <LinearLayout

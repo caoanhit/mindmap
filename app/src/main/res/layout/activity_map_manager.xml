@@ -88,8 +88,8 @@
 
         <GridView
             android:id="@+id/lv_map"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:choiceMode="none"
             android:paddingHorizontal="@dimen/padding_base"
             android:paddingTop="@dimen/padding_base"
