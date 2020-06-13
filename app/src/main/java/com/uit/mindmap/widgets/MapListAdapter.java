@@ -78,7 +78,7 @@ public class MapListAdapter extends BaseAdapter {
         int backgroundColor=context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).getInt("background_color",0);
         if (backgroundColor!=0)
             thumbnail.setBackgroundColor(backgroundColor);
-        
+
         thumbnail.setImageBitmap(data.get(position).thumbnail);
         LinearLayout card=vi.findViewById(R.id.card_view);
         LinearLayout.LayoutParams params;
