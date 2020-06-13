@@ -61,7 +61,7 @@ public class MapManagerActivity extends AppCompatActivity {
     private void initViews() {
         loadMapNames();
         sortOptionSelector = findViewById(R.id.sort_options);
-        final ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(this,
                 R.array.sort_options, android.R.layout.simple_spinner_item);
         a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortOptionSelector.setAdapter(a);
@@ -129,12 +129,13 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        super.onResume();
         mapList = loader.loadMapList();
-        setLayout();
+        if(layoutOption!=adapter.getLayout())
+            setLayout();
         adapter.setData(mapList);
         adapter.sortlist(sortOption);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        super.onResume();
     }
 
     @Override
@@ -150,7 +151,7 @@ public class MapManagerActivity extends AppCompatActivity {
             case R.id.preferences:
                 Intent intent = new Intent(MapManagerActivity.this,
                         SettingActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,0);
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -8,6 +8,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -24,6 +26,8 @@ import com.uit.mindmap.R;
 import com.uit.mindmap.data.LinePreferences;
 import com.uit.mindmap.data.NodePreferences;
 import com.uit.mindmap.data.TextPreferences;
+import com.uit.mindmap.maploader.MapManagerActivity;
+import com.uit.mindmap.utils.SettingActivity;
 import com.uit.mindmap.widgets.ZoomLayout;
 
 public class MapDrawerActivity extends AppCompatActivity {
@@ -237,8 +241,15 @@ public class MapDrawerActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        int backgroundColor=getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).getInt("background_color",0);
+        if (backgroundColor!=0)
+        findViewById(R.id.zoom).setBackgroundColor(backgroundColor);
+        super.onResume();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.mapdrawer_action_menu, menu);
         return true;
     }
@@ -275,6 +286,11 @@ public class MapDrawerActivity extends AppCompatActivity {
                     textCustomizer.setPreferences(mapView.getFirstData().textPreferences);
                 else if (lineCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
                     lineCustomizer.setPreferences(mapView.getFirstData().linePreferences);
+                break;
+            case R.id.preferences:
+                Intent intent = new Intent(this,
+                        SettingActivity.class);
+                startActivityForResult(intent,0);
                 break;
         }
         return super.onOptionsItemSelected(item);

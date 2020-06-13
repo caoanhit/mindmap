@@ -18,6 +18,7 @@ import petrov.kristiyan.colorpicker.ColorPicker;
 public class ColorPickerButton extends RelativeLayout {
     AppCompatButton button;
     private static int[] colorList;
+    private int color=Color.WHITE;
 
     public interface OnColorPickedListener{
         void onPick(int color);
@@ -79,7 +80,11 @@ public class ColorPickerButton extends RelativeLayout {
         });
     }
     public void setColor(int color){
+        this.color=color;
         button.setBackgroundTintList(ColorStateList.valueOf(color));
     }
 
+    public int getColor(){
+        return color;
+    }
 }

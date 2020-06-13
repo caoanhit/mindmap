@@ -75,6 +75,10 @@ public class MapListAdapter extends BaseAdapter {
         final MapLoader loader=new MapLoader(context);
         date.setText(data.get(position).getDate());
         ImageView thumbnail=vi.findViewById(R.id.map_thumbnail);
+        int backgroundColor=context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).getInt("background_color",0);
+        if (backgroundColor!=0)
+            thumbnail.setBackgroundColor(backgroundColor);
+        
         thumbnail.setImageBitmap(data.get(position).thumbnail);
         LinearLayout card=vi.findViewById(R.id.card_view);
         LinearLayout.LayoutParams params;
@@ -242,5 +246,9 @@ public class MapListAdapter extends BaseAdapter {
             }
         });
         notifyDataSetChanged();
+    }
+
+    public int getLayout() {
+        return layout;
     }
 }

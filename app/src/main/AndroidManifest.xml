@@ -22,8 +22,7 @@
         <activity android:name=".mapdrawer.MapDrawerActivity"
             android:parentActivityName=".maploader.MapManagerActivity">
         </activity>
-        <activity android:name=".utils.SettingActivity"
-            android:parentActivityName=".maploader.MapManagerActivity">
+        <activity android:name=".utils.SettingActivity">
         </activity>
     </application>
 
