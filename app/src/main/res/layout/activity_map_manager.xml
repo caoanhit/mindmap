@@ -45,7 +45,8 @@
                     android:padding="10dp"
                     app:cornerRadius="@dimen/corner_radius"
                     app:icon="@drawable/ic_view_list_black_24dp"
-                    app:strokeWidth="2dp">
+                    app:strokeWidth="2dp"
+                    >
 
                 </com.google.android.material.button.MaterialButton>
 

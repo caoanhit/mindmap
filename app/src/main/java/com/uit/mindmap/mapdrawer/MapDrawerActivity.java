@@ -1,7 +1,9 @@
 package com.uit.mindmap.mapdrawer;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -238,6 +240,13 @@ public class MapDrawerActivity extends AppCompatActivity {
             }
         };
         zoomPercentage.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK)
+            recreate();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

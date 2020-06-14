@@ -1,7 +1,9 @@
 package com.uit.mindmap.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.Menu;
@@ -27,6 +29,7 @@ public class SettingActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     ColorPickerButton btnBackground;
     Spinner spnTheme;
+    boolean changed;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,10 +59,13 @@ public class SettingActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 reverseSetting();
+                setResult(RESULT_CANCELED);
                 finish();
                 break;
             case R.id.confirm:
                 saveSetting();
+
+                finish();
                 finish();
                 break;
         }
@@ -108,7 +114,12 @@ public class SettingActivity extends AppCompatActivity {
     }
     private void saveSetting(){
         SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.putInt("theme",spnTheme.getSelectedItemPosition());
+        int t=spnTheme.getSelectedItemPosition();
+        if (theme!=t){
+            setResult(RESULT_OK);
+            editor.putInt("theme",spnTheme.getSelectedItemPosition());
+        }
+        else setResult(RESULT_CANCELED);
         editor.putInt("background_color", btnBackground.getColor());
         editor.apply();
     }
@@ -124,5 +135,6 @@ public class SettingActivity extends AppCompatActivity {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 break;
         }
+
     }
 }

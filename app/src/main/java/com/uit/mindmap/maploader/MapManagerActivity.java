@@ -56,8 +56,8 @@ public class MapManagerActivity extends AppCompatActivity {
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
-        int theme =sharedpreferences.getInt("theme",0);
-        switch (theme){
+        int theme = sharedpreferences.getInt("theme", 0);
+        switch (theme) {
             case 0:
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                 break;
@@ -86,7 +86,7 @@ public class MapManagerActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SharedPreferences.Editor editor = sharedpreferences.edit();
-                sortOption=position;
+                sortOption = position;
                 adapter.sortlist(sortOption);
                 editor.putInt("sort", position);
                 editor.apply();
@@ -111,7 +111,7 @@ public class MapManagerActivity extends AppCompatActivity {
         });
 
         btnLayoutSelector = findViewById(R.id.layout_options);
-        switch (layoutOption=sharedpreferences.getInt("layout", 0)) {
+        switch (layoutOption = sharedpreferences.getInt("layout", 0)) {
             case 0:
                 btnLayoutSelector.check(R.id.list);
                 break;
@@ -122,7 +122,7 @@ public class MapManagerActivity extends AppCompatActivity {
         btnLayoutSelector.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             @Override
             public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-                if(isChecked) {
+                if (isChecked) {
                     switch (checkedId) {
                         case R.id.list:
                             layoutOption = 0;
@@ -145,11 +145,18 @@ public class MapManagerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mapList = loader.loadMapList();
-        if(layoutOption!=adapter.getLayout())
+        if (layoutOption != adapter.getLayout())
             setLayout();
         adapter.setData(mapList);
         adapter.sortlist(sortOption);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK)
+            recreate();
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -161,11 +168,11 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.preferences:
                 Intent intent = new Intent(MapManagerActivity.this,
                         SettingActivity.class);
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, 0);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -181,16 +188,6 @@ public class MapManagerActivity extends AppCompatActivity {
         } else super.onBackPressed();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                loadMapNames();
-        }
-    }
-
     private void loadMapNames() {
         loader = new MapLoader(this);
         mapList = loader.loadMapList();
@@ -202,7 +199,7 @@ public class MapManagerActivity extends AppCompatActivity {
             adapter.sortlist(sortOption);
             gvMap.setAdapter(adapter);
         } else setEmpty();
-        switch (layoutOption){
+        switch (layoutOption) {
             case 0:
                 gvMap.setNumColumns(1);
                 break;
@@ -218,7 +215,7 @@ public class MapManagerActivity extends AppCompatActivity {
                 Intent intent = new Intent(MapManagerActivity.this,
                         MapDrawerActivity.class);
                 intent.putExtra("mapName", ((MapData) adapter.getItem(position)).name);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
     }
@@ -227,8 +224,9 @@ public class MapManagerActivity extends AppCompatActivity {
         findViewById(R.id.sort_bar).setVisibility(View.GONE);
         findViewById(R.id.tv_empty).setVisibility(View.VISIBLE);
     }
-    private void setLayout(){
-        switch (layoutOption){
+
+    private void setLayout() {
+        switch (layoutOption) {
             case 0:
                 gvMap.setNumColumns(1);
                 adapter.changeLayout(0);
