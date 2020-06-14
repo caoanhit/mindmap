@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <stroke
-        android:dashGap="10px"
-        android:dashWidth="10px"
+        android:dashGap="15px"
+        android:dashWidth="15px"
         android:width="@dimen/outline_width"
         android:color="@color/colorAccent" />
     <corners android:radius="@dimen/node_corner_radius" />

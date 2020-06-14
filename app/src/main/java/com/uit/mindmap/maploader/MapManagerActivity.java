@@ -52,6 +52,7 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(R.style.AppDark);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_manager);
 
