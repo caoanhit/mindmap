@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -153,11 +154,38 @@ public class MapManagerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == RESULT_OK)
-            recreate();
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            switch (layoutOption) {
+                case 0:
+                    gvMap.setNumColumns(1);
+                    break;
+                case 1:
+                    gvMap.setNumColumns(4);
+                    break;
+            }
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            switch (layoutOption) {
+                case 0:
+                    gvMap.setNumColumns(1);;
+                    break;
+                case 1:
+                    gvMap.setNumColumns(2);
+                    break;
+            }
+        }
     }
+
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        if (resultCode == RESULT_OK)
+//            recreate();
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -226,15 +254,30 @@ public class MapManagerActivity extends AppCompatActivity {
     }
 
     private void setLayout() {
-        switch (layoutOption) {
-            case 0:
-                gvMap.setNumColumns(1);
-                adapter.changeLayout(0);
-                break;
-            case 1:
-                gvMap.setNumColumns(2);
-                adapter.changeLayout(1);
-                break;
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            switch (layoutOption) {
+                case 0:
+                    gvMap.setNumColumns(1);
+                    adapter.changeLayout(0);
+                    break;
+                case 1:
+                    gvMap.setNumColumns(4);
+                    adapter.changeLayout(1);
+                    break;
+            }
+        } else {
+            switch (layoutOption) {
+                case 0:
+                    gvMap.setNumColumns(1);
+                    adapter.changeLayout(0);
+                    break;
+                case 1:
+                    gvMap.setNumColumns(2);
+                    adapter.changeLayout(1);
+                    break;
+            }
         }
+
     }
 }
