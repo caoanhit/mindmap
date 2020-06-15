@@ -9,12 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <TextView
             android:id="@+id/zoom_percentage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|top"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="55dp"
             android:alpha="0.5"
             android:background="@drawable/rounded_flat"
             android:backgroundTint="@android:color/black"
@@ -30,23 +31,38 @@
             android:layout_width="@dimen/map_size"
             android:layout_height="@dimen/map_size"
             android:layout_gravity="center"
+            android:background="@color/canvas"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:focusedByDefault="true"
-            android:background="@color/canvas"
             tools:context=".MainActivity">
 
-            <com.uit.mindmap.mapdrawer.MapView
-                android:id="@+id/map_view"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/transparent"
-                 />
+                android:layout_height="match_parent">
+
+                <com.uit.mindmap.mapdrawer.MapView
+                    android:id="@+id/map_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent" />
+                <com.uit.mindmap.widgets.RectangleMarker
+                    android:id="@+id/rectangle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:clickable="true"
+                    android:visibility="gone"
+                    android:elevation="10dp"/>
+            </RelativeLayout>
         </com.uit.mindmap.widgets.ZoomLayout>
 
         <include
             android:id="@+id/floating_menu"
-            layout="@layout/floating_menu" />
+            layout="@layout/node_menu" />
+        <include
+            android:id="@+id/selection_menu"
+            layout="@layout/selection_menu" />
     </FrameLayout>
 
     <com.uit.mindmap.mapdrawer.NodeCustomizer

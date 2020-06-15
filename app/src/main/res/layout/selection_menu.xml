@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/button_width"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="top|center_horizontal"
+    android:background="@drawable/rounded_flat"
+    android:elevation="@dimen/elevation"
+    android:gravity="center"
+    android:orientation="horizontal">
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/selection_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_flat"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        app:checkedButton="@+id/select_single">
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+            android:id="@+id/select_single"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="match_parent"
+            app:cornerRadius="@dimen/corner_radius"
+            app:icon="@drawable/ic_touch_app_black_24dp"
+            app:strokeWidth="2dp"
+            android:padding="10dp"
+            android:layout_marginVertical="0dp">
+
+        </com.google.android.material.button.MaterialButton>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+            android:id="@+id/select_multiple"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="match_parent"
+            app:cornerRadius="@dimen/corner_radius"
+            app:icon="@drawable/ic_library_add_check_24px"
+            app:strokeWidth="2dp"
+            android:padding="10dp"
+            android:layout_marginVertical="0dp">
+
+        </com.google.android.material.button.MaterialButton>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+            android:id="@+id/select_rectangle"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="match_parent"
+            app:cornerRadius="@dimen/corner_radius"
+            app:icon="@drawable/ic_highlight_alt_24px"
+            app:strokeWidth="2dp"
+            android:padding="10dp"
+            android:layout_marginVertical="0dp">
+
+        </com.google.android.material.button.MaterialButton>
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+</FrameLayout>

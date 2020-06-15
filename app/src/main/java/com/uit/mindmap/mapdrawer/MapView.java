@@ -35,6 +35,7 @@ import java.util.List;
 public class MapView extends RelativeLayout {
     private static final int maxNodeAmount = 255;
     private static final int undoAmount = 20;
+    public int selectionMode;
 
     private class State {
         List<Integer> ids;
@@ -344,11 +345,15 @@ public class MapView extends RelativeLayout {
     }
 
     public void addNode() {
+        List<Integer> newNodes=new ArrayList<>();
         for (int i : selectedNodes) {
-            deselectNode(i);
             int node = addNode(i);
-            selectMultiple(node);
+            newNodes.add(node);
             nodes[node].setText("New node");
+        }
+        deselectAll();
+        for (int i:newNodes){
+            selectMultiple(i);
         }
         addCommandAddNode();
         LayoutInflater li = LayoutInflater.from(getContext());
@@ -434,14 +439,7 @@ public class MapView extends RelativeLayout {
         selectedNodes.clear();
     }
 
-    public void selectMultiple(int id) {
-        selectedNodes.add(id);
-        nodes[id].focus();
-        nodes[id].bringToFront();
-        ((MapDrawerActivity) getContext()).select();
-    }
-
-    public void selectNode(int id) {
+    public void selectSingle(int id) {
         deselectAll();
         selectedNodes.add(id);
         nodes[id].focus();
@@ -449,10 +447,36 @@ public class MapView extends RelativeLayout {
         ((MapDrawerActivity) getContext()).select();
     }
 
+    public void selectMultiple(int id) {
+        int index = selectedNodes.indexOf(id);
+        if (index <= -1) {
+            selectedNodes.add(id);
+            nodes[id].focus();
+            nodes[id].bringToFront();
+            ((MapDrawerActivity) getContext()).select();
+        }
+    }
+
+    public void selectNode(int id) {
+        switch (selectionMode) {
+            case 0:
+                selectSingle(id);
+                break;
+            case 1:
+                toggleSelect(id);
+                break;
+        }
+    }
+
     public void toggleSelect(int id) {
         int index = selectedNodes.indexOf(id);
         if (index > -1) deselectNode(selectedNodes.get(index));
-        else selectMultiple(id);
+        else {
+            selectedNodes.add(id);
+            nodes[id].focus();
+            nodes[id].bringToFront();
+            ((MapDrawerActivity) getContext()).select();
+        }
     }
 
     public void rectangleSelect(int[] start, int[] end) {
@@ -697,17 +721,17 @@ public class MapView extends RelativeLayout {
         int minY = nodes[0].data.pos[1];
         for (Node node : nodes) {
             if (node != null && !node.deleted) {
-                int[] bounds=node.bounds();
+                int[] bounds = node.bounds();
                 if (bounds[0] < minX) minX = bounds[0];
                 if (bounds[1] < minY) minY = bounds[1];
                 if (bounds[2] > maxX) maxX = bounds[2];
                 if (bounds[3] > maxY) maxY = bounds[3];
             }
         }
-        a[0] = minX-10;
-        a[1] = minY-10;
-        a[2] = maxX+10;
-        a[3] = maxY+10;
+        a[0] = minX - 10;
+        a[1] = minY - 10;
+        a[2] = maxX + 10;
+        a[3] = maxY + 10;
         return a;
     }
 
@@ -719,7 +743,7 @@ public class MapView extends RelativeLayout {
         int h = d[3] - d[1];
         Bitmap b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
-        c.translate(-d[0],-d[1]);
+        c.translate(-d[0], -d[1]);
         this.layout(0, 0, getWidth(), getHeight());
         Log.i("Left", "" + d[0]);
         Log.i("Top", "" + d[1]);
@@ -728,8 +752,8 @@ public class MapView extends RelativeLayout {
         this.draw(c);
         int width = Math.max(h * 4 / 3, w);
         int height = Math.max(w * 3 / 4, h);
-        Bitmap x=getCorrectBitmap(b, width, height);
-        Bitmap b1=Bitmap.createScaledBitmap(x, 400, 300, true);
+        Bitmap x = getCorrectBitmap(b, width, height);
+        Bitmap b1 = Bitmap.createScaledBitmap(x, 400, 300, true);
         x.recycle();
         return b1;
     }
@@ -749,4 +773,9 @@ public class MapView extends RelativeLayout {
         return b;
     }
     //endregion
+
+    public void setSelectionMode(int selectionMode) {
+        this.selectionMode = selectionMode;
+        Log.i("selection mode", ""+selectionMode);
+    }
 }

@@ -15,21 +15,27 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.uit.mindmap.R;
 import com.uit.mindmap.data.LinePreferences;
 import com.uit.mindmap.data.NodePreferences;
 import com.uit.mindmap.data.TextPreferences;
 import com.uit.mindmap.maploader.MapManagerActivity;
 import com.uit.mindmap.utils.SettingActivity;
+import com.uit.mindmap.widgets.RectangleMarker;
 import com.uit.mindmap.widgets.ZoomLayout;
 
 public class MapDrawerActivity extends AppCompatActivity {
@@ -44,6 +50,8 @@ public class MapDrawerActivity extends AppCompatActivity {
     private TextView zoomPercentage;
     private CountDownTimer timer;
     private ImageButton btnLine;
+    private FrameLayout selectionMenu;
+    private RectangleMarker rectangleMarker;
 
     private boolean undoAvailable;
     private boolean redoAvailable;
@@ -81,6 +89,49 @@ public class MapDrawerActivity extends AppCompatActivity {
                     enableRedo();
                 } else {
                     disableRedo();
+                }
+            }
+        });
+
+        selectionMenu = findViewById(R.id.selection_menu);
+        ((MaterialButtonToggleGroup) findViewById(R.id.selection_mode)).addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
+            @Override
+            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                Toast toast;
+                int[] a= new int[2];
+                a[1]+=selectionMenu.getHeight();
+                selectionMenu.getLocationOnScreen(a);
+                if (isChecked) {
+                    switch (checkedId) {
+                        case R.id.select_single:
+                            mapView.setSelectionMode(0);
+                            toast = Toast.makeText(MapDrawerActivity.this
+                                    , getResources().getString(R.string.single_select)
+                                    , Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, a[1]);
+                            toast.show();
+                            break;
+                        case R.id.select_multiple:
+                            mapView.setSelectionMode(1);
+                            toast = Toast.makeText(MapDrawerActivity.this
+                                    , getResources().getString(R.string.multiple_select)
+                                    , Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, a[1]);
+                            toast.show();
+                            break;
+                        case R.id.select_rectangle:
+                            rectangleMarker.setVisibility(View.VISIBLE);
+                            toast = Toast.makeText(MapDrawerActivity.this
+                                    , getResources().getString(R.string.rectangle_select)
+                                    , Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, a[1]);
+                            toast.show();
+                            break;
+                    }
+                } else {
+                    if (checkedId == R.id.select_rectangle) {
+                        rectangleMarker.setVisibility(View.GONE);
+                    }
                 }
             }
         });
@@ -178,10 +229,34 @@ public class MapDrawerActivity extends AppCompatActivity {
 
         });
 
+        rectangleMarker = findViewById(R.id.rectangle);
+        rectangleMarker.setOnTapListener(new RectangleMarker.OnTapListener() {
+            @Override
+            public void OnTap(int[] pos) {
+                mapView.deselectAll();
+                zoomLayout.requestFocus();
+                View view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+                nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+
+        rectangleMarker.setOnSelectListener(new RectangleMarker.OnSelectListener() {
+            @Override
+            public void onSelect(int[] start, int[] end) {
+                mapView.rectangleSelect(start, end);
+            }
+        });
+
         mapView = findViewById(R.id.map_view);
         menu = findViewById(R.id.floating_menu);
         zoomPercentage = findViewById(R.id.zoom_percentage);
-        btnLine=findViewById(R.id.line_customize);
+        btnLine = findViewById(R.id.line_customize);
 
         nodeSheet = findViewById(R.id.node_customizer_sheet);
         nodeCustomizer = findViewById(R.id.node_customizer);
@@ -251,9 +326,9 @@ public class MapDrawerActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        int backgroundColor=getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).getInt("background_color",0);
-        if (backgroundColor!=0)
-        findViewById(R.id.zoom).setBackgroundColor(backgroundColor);
+        int backgroundColor = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE).getInt("background_color", 0);
+        if (backgroundColor != 0)
+            findViewById(R.id.zoom).setBackgroundColor(backgroundColor);
         super.onResume();
     }
 
@@ -280,26 +355,26 @@ public class MapDrawerActivity extends AppCompatActivity {
                 break;
             case R.id.undo:
                 mapView.undo();
-                if (nodeCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                if (nodeCustomizerBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
                     nodeCustomizer.setPreferences(mapView.getFirstData().nodePreferences);
-                else if (textCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                else if (textCustomizerBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
                     textCustomizer.setPreferences(mapView.getFirstData().textPreferences);
-                else if (lineCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                else if (lineCustomizerBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
                     lineCustomizer.setPreferences(mapView.getFirstData().linePreferences);
                 break;
             case R.id.redo:
                 mapView.redo();
-                if (nodeCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                if (nodeCustomizerBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
                     nodeCustomizer.setPreferences(mapView.getFirstData().nodePreferences);
-                else if (textCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                else if (textCustomizerBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
                     textCustomizer.setPreferences(mapView.getFirstData().textPreferences);
-                else if (lineCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+                else if (lineCustomizerBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
                     lineCustomizer.setPreferences(mapView.getFirstData().linePreferences);
                 break;
             case R.id.preferences:
                 Intent intent = new Intent(this,
                         SettingActivity.class);
-                startActivityForResult(intent,0);
+                startActivityForResult(intent, 0);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -307,11 +382,11 @@ public class MapDrawerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (nodeCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+        if (nodeCustomizerBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
             nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        else if (textCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+        else if (textCustomizerBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
             textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        else if (lineCustomizerBehavior.getState()==BottomSheetBehavior.STATE_EXPANDED)
+        else if (lineCustomizerBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED)
             lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         else exit();
     }
@@ -385,7 +460,7 @@ public class MapDrawerActivity extends AppCompatActivity {
 
     public void select() {
         if (menu != null) {
-            if(mapView.isRootSelected())
+            if (mapView.isRootSelected())
                 btnLine.setVisibility(View.GONE);
             else btnLine.setVisibility(View.VISIBLE);
             menu.setVisibility(View.VISIBLE);

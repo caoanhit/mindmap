@@ -40,7 +40,9 @@ public class Node extends RelativeLayout {
 
     private int mapsize;
     boolean moved;
+    boolean focused;
     public boolean deleted;
+    public long touchtime;
 
     //region Constructor
     public Node(Context context) {
@@ -83,7 +85,7 @@ public class Node extends RelativeLayout {
                         Node.this.bringToFront();
                         prevDx = event.getX();
                         prevDy = event.getY();
-                        map.selectNode(data.id);
+                        if (map.selectionMode == 0) map.selectSingle(data.id);
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (!moved) {
@@ -93,7 +95,8 @@ public class Node extends RelativeLayout {
                         text.clearFocus();
                         dx = event.getX() - prevDx;
                         dy = event.getY() - prevDy;
-                        map.moveNode((int) dx, (int) dy);
+                        if (focused)
+                            map.moveNode((int) dx, (int) dy);
                         break;
                     case MotionEvent.ACTION_POINTER_DOWN:
                         prevDx = event.getX();
@@ -102,10 +105,13 @@ public class Node extends RelativeLayout {
                     case MotionEvent.ACTION_POINTER_UP:
                         break;
                     case MotionEvent.ACTION_UP:
+                        touchtime = event.getEventTime() - event.getDownTime();
+                        if (touchtime < 200)
+                            map.selectNode(data.id);
                         moved = false;
                         break;
                 }
-                return false;
+                return true;
             }
         });
         text.setOnClickListener(new OnClickListener() {
@@ -133,10 +139,12 @@ public class Node extends RelativeLayout {
 
     //endregion
     public void focus() {
+        focused = true;
         highlight.setBackgroundResource(R.drawable.rounded_bounding_box);
     }
 
     public void defocus() {
+        focused = false;
         highlight.setBackground(null);
     }
 
@@ -149,12 +157,12 @@ public class Node extends RelativeLayout {
         data.nodePreferences = new NodePreferences(preference);
         //text.setBackgroundTintList(ColorStateList.valueOf(preference.color));
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) text.getLayoutParams();
-        int margin= preference.outlineWidth;
-        params.setMargins(margin,margin,margin,margin);
+        int margin = preference.outlineWidth;
+        params.setMargins(margin, margin, margin, margin);
         text.setLayoutParams(params);
 
-        GradientDrawable drawable= (GradientDrawable) outline.getBackground();
-        drawable.setStroke(preference.outlineWidth,preference.outlineColor);
+        GradientDrawable drawable = (GradientDrawable) outline.getBackground();
+        drawable.setStroke(preference.outlineWidth, preference.outlineColor);
         drawable.setColor(preference.color);
         outline.setBackground(drawable);
     }
@@ -162,7 +170,7 @@ public class Node extends RelativeLayout {
     public void setTextPreferences(TextPreferences preference) {
         data.textPreferences = new TextPreferences(preference);
         text.setTextColor(preference.color);
-        text.setTextSize(TypedValue.COMPLEX_UNIT_PX,preference.size+15);
+        text.setTextSize(TypedValue.COMPLEX_UNIT_PX, preference.size + 15);
         switch (preference.alignment) {
             case 0:
                 text.setGravity(Gravity.LEFT);
@@ -203,12 +211,13 @@ public class Node extends RelativeLayout {
         data.linePreferences = new LinePreferences(preference);
     }
 
-    public void setTextSize(int value){
-        data.textPreferences.size=value;
+    public void setTextSize(int value) {
+        data.textPreferences.size = value;
         text.setTextSize(value);
     }
-    public void setTextColor(int color){
-        data.textPreferences.color=color;
+
+    public void setTextColor(int color) {
+        data.textPreferences.color = color;
         text.setTextColor(color);
     }
 
@@ -287,9 +296,9 @@ public class Node extends RelativeLayout {
         this.map = map;
     }
 
-    public int[] bounds(){
-        int w=outline.getWidth()/2;
-        int h=outline.getHeight()/2;
-        return new int[]{data.pos[0]-w,data.pos[1]-h,data.pos[0]+w,data.pos[1]+h};
+    public int[] bounds() {
+        int w = outline.getWidth() / 2;
+        int h = outline.getHeight() / 2;
+        return new int[]{data.pos[0] - w, data.pos[1] - h, data.pos[0] + w, data.pos[1] + h};
     }
 }
