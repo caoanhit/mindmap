@@ -57,6 +57,7 @@ public class MapManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map_manager);
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        applyTheme(sharedpreferences.getInt("theme",0));
         initViews();
     }
 
@@ -264,6 +265,20 @@ public class MapManagerActivity extends AppCompatActivity {
                     adapter.changeLayout(1);
                     break;
             }
+        }
+
+    }
+    private void applyTheme(int theme){
+        switch (theme){
+            case 0:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+            case 1:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case 2:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
         }
 
     }
