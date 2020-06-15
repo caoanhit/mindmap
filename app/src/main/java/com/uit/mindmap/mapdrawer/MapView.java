@@ -281,12 +281,15 @@ public class MapView extends RelativeLayout {
 
     //region Add
     public int addNode(@Nullable int[] pos) {
-        Node node = new Node(getContext());
-        addView(node);
         int i = 0;
-        while (nodes[i] != null && !nodes[i].deleted && i < 254) {
+        while (nodes[i] != null && !nodes[i].deleted && i < maxNodeAmount-1) {
             i++;
         }
+        if (i >= maxNodeAmount-1) {
+            return -1;
+        }
+        Node node = new Node(getContext());
+        addView(node);
         nodes[i] = node;
         node.data.id = i;
         node.setMap(this);
@@ -316,13 +319,16 @@ public class MapView extends RelativeLayout {
     }
 
     public int addNode(int parent) {
+        int i = 0;
+        while (nodes[i] != null && i < maxNodeAmount-1) {
+            i++;
+        }
+        if (i >= maxNodeAmount-1) {
+            return -1;
+        }
         Node node = new Node(getContext());
         addView(node);
         node.data.parent = parent;
-        int i = 0;
-        while (nodes[i] != null && i < 254) {
-            i++;
-        }
         node.data.id = i;
         nodes[i] = node;
         node.setText("New node");
@@ -345,14 +351,45 @@ public class MapView extends RelativeLayout {
     }
 
     public void addNode() {
-        List<Integer> newNodes=new ArrayList<>();
+        List<Integer> newNodes = new ArrayList<>();
         for (int i : selectedNodes) {
             int node = addNode(i);
+            if (node == -1) {
+                Toast.makeText(getContext(), "Reach maximum amount of nodes", Toast.LENGTH_SHORT).show();
+                if (newNodes.size() > 0) {
+                    for (int j : newNodes) {
+                        selectMultiple(i);
+                    }
+                    addCommandAddNode();
+                    LayoutInflater li = LayoutInflater.from(getContext());
+                    View customDialogView = li.inflate(R.layout.edit_text_dialog, null);
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                    alertDialogBuilder.setView(customDialogView);
+                    final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
+                    etName.setText(nodes[selectedNodes.get(0)].data.text);
+                    etName.selectAll();
+                    alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            for (int i : selectedNodes) {
+                                nodes[i].setText(etName.getText().toString());
+                            }
+                        }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                    Log.i("command", "" + undoHistory.size());
+                }
+                return;
+            }
             newNodes.add(node);
             nodes[node].setText("New node");
         }
         deselectAll();
-        for (int i:newNodes){
+        for (int i : newNodes) {
             selectMultiple(i);
         }
         addCommandAddNode();
@@ -480,8 +517,7 @@ public class MapView extends RelativeLayout {
     }
 
     public void rectangleSelect(int[] start, int[] end) {
-        for (int i = 0; i < 255; i++) {
-
+        for (int i = 0; i < maxNodeAmount; i++) {
             if (nodes[i] != null) {
                 if (nodes[i].data.pos[0] < Math.max(start[0], end[0])
                         && nodes[i].data.pos[0] > Math.min(start[0], end[0])
@@ -776,6 +812,6 @@ public class MapView extends RelativeLayout {
 
     public void setSelectionMode(int selectionMode) {
         this.selectionMode = selectionMode;
-        Log.i("selection mode", ""+selectionMode);
+        Log.i("selection mode", "" + selectionMode);
     }
 }

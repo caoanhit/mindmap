@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapLoader {
+    public static final int maxNodeAmount=255;
     Context context;
 
     public MapLoader(Context context) {
@@ -66,7 +67,7 @@ public class MapLoader {
     public NodeData[] loadMap(String fileName) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        NodeData[] map = new NodeData[255];
+        NodeData[] map = new NodeData[maxNodeAmount];
         File fl = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");
         try {
             FileInputStream fin = new FileInputStream(fl);
@@ -74,7 +75,7 @@ public class MapLoader {
             fin.close();
             JSONArray arr = new JSONArray(ret);
             Gson gson = new Gson();
-            for (int i = 0; i < 255; i++) {
+            for (int i = 0; i < maxNodeAmount; i++) {
                 try {
                     if (arr.getJSONObject(i) != null)
                         map[i] = gson.fromJson(String.valueOf(arr.getJSONObject(i)), NodeData.class);

@@ -64,8 +64,6 @@ public class SettingActivity extends AppCompatActivity {
                 break;
             case R.id.confirm:
                 saveSetting();
-
-                finish();
                 finish();
                 break;
         }
