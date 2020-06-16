@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -323,6 +324,15 @@ public class MapDrawerActivity extends AppCompatActivity {
 //            recreate();
 //        super.onActivityResult(requestCode, resultCode, data);
 //    }
+
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
 
     @Override
     protected void onResume() {

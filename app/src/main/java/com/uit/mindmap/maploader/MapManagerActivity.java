@@ -59,10 +59,10 @@ public class MapManagerActivity extends AppCompatActivity {
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         applyTheme(sharedpreferences.getInt("theme",0));
         initViews();
+        loadMapNames();
     }
 
     private void initViews() {
-        loadMapNames();
         sortOptionSelector = findViewById(R.id.sort_options);
         ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(this,
                 R.array.sort_options, android.R.layout.simple_spinner_item);
@@ -128,17 +128,46 @@ public class MapManagerActivity extends AppCompatActivity {
                 }
             }
         });
+        loader = new MapLoader(this);
+        gvMap = findViewById(R.id.lv_map);
+        switch (layoutOption) {
+            case 0:
+                gvMap.setNumColumns(1);
+                break;
+            case 1:
+                gvMap.setNumColumns(2);
+                break;
+        }
+        gvMap.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                Intent intent = new Intent(MapManagerActivity.this,
+                        MapDrawerActivity.class);
+                intent.putExtra("mapName", ((MapData) adapter.getItem(position)).name);
+                startActivityForResult(intent, 0);
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mapList = loader.loadMapList();
-        if (layoutOption != adapter.getLayout())
-            setLayout();
-        adapter.setData(mapList);
-        adapter.sortlist(sortOption);
+        loadMapNames();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (int g:grantResults) {
+            if (g==PackageManager.PERMISSION_GRANTED) {
+                loadMapNames();
+                return;
+            }
+        }
     }
 
     @Override
@@ -205,35 +234,22 @@ public class MapManagerActivity extends AppCompatActivity {
     }
 
     private void loadMapNames() {
-        loader = new MapLoader(this);
         mapList = loader.loadMapList();
-        gvMap = findViewById(R.id.lv_map);
         if (mapList != null && mapList.size() > 0) {
             findViewById(R.id.sort_bar).setVisibility(View.VISIBLE);
             findViewById(R.id.tv_empty).setVisibility(View.INVISIBLE);
-            adapter = new MapListAdapter(this, mapList, layoutOption);
-            adapter.sortlist(sortOption);
-            gvMap.setAdapter(adapter);
-        } else setEmpty();
-        switch (layoutOption) {
-            case 0:
-                gvMap.setNumColumns(1);
-                break;
-            case 1:
-                gvMap.setNumColumns(2);
-                break;
-        }
-        gvMap.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                Intent intent = new Intent(MapManagerActivity.this,
-                        MapDrawerActivity.class);
-                intent.putExtra("mapName", ((MapData) adapter.getItem(position)).name);
-                startActivityForResult(intent, 0);
+            if (adapter==null) {
+                adapter = new MapListAdapter(this, mapList, layoutOption);
+                adapter.sortlist(sortOption);
+                gvMap.setAdapter(adapter);
             }
-        });
+            else {
+                if( layoutOption != adapter.getLayout())
+                    setLayout();
+                adapter.setData(mapList);
+                adapter.sortlist(sortOption);
+            }
+        } else setEmpty();
     }
 
     public void setEmpty() {
