@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,6 +61,26 @@ public class MapManagerActivity extends AppCompatActivity {
         applyTheme(sharedpreferences.getInt("theme",0));
         initViews();
         loadMapNames();
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            switch (layoutOption) {
+                case 0:
+                    gvMap.setNumColumns(1);
+                    break;
+                case 1:
+                    gvMap.setNumColumns(4);
+                    break;
+            }
+        } else {
+            switch (layoutOption) {
+                case 0:
+                    gvMap.setNumColumns(1);
+                    break;
+                case 1:
+                    gvMap.setNumColumns(2);
+                    break;
+            }
+        }
     }
 
     private void initViews() {
@@ -172,28 +193,26 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // Checks the orientation of the screen
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             switch (layoutOption) {
                 case 0:
                     gvMap.setNumColumns(1);
                     break;
                 case 1:
-                    gvMap.setNumColumns(4);
+                    gvMap.setNumColumns(2);
                     break;
             }
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        } else
             switch (layoutOption) {
                 case 0:
                     gvMap.setNumColumns(1);;
                     break;
                 case 1:
-                    gvMap.setNumColumns(2);
+                    gvMap.setNumColumns(4);
                     break;
-            }
         }
+        Log.i("configuration", "changed");
+        super.onConfigurationChanged(newConfig);
     }
 
 //
