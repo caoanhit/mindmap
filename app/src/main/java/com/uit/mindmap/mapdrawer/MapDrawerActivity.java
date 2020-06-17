@@ -222,9 +222,7 @@ public class MapDrawerActivity extends AppCompatActivity {
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
-                    nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    closeAllSheets();
                 }
             }
 
@@ -241,9 +239,7 @@ public class MapDrawerActivity extends AppCompatActivity {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
-                nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                closeAllSheets();
             }
         });
 
@@ -293,6 +289,12 @@ public class MapDrawerActivity extends AppCompatActivity {
         });
     }
 
+    private void closeAllSheets(){
+        nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+
     private void initZoomPercentage() {
         timer = new CountDownTimer(500, 500) {
             @Override
@@ -329,9 +331,7 @@ public class MapDrawerActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        closeAllSheets();
     }
 
     @Override

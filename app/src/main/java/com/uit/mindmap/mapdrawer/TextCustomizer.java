@@ -58,14 +58,14 @@ public class TextCustomizer extends CoordinatorLayout {
             @Override
             public void onSizePicked(int value) {
                 data.size=value;
-                if (onPreferenceChange!=null) onPreferenceChange.OnChange(data);
+                if (onPreferenceChange!=null) onPreferenceChange.OnChange(new TextPreferences(value,-10,-1,-1));
             }
         });
         textColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
             @Override
             public void onPick(int color) {
                 data.color=color;
-                if (onPreferenceChange!=null) onPreferenceChange.OnChange(data);
+                if (onPreferenceChange!=null) onPreferenceChange.OnChange(new TextPreferences(-1,color,-1,-1));
             }
         });
         textAlignment.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
@@ -83,7 +83,7 @@ public class TextCustomizer extends CoordinatorLayout {
                             data.alignment=2;
                             break;
                     }
-                    if (onPreferenceChange!=null) onPreferenceChange.OnChange(data);
+                    if (onPreferenceChange!=null) onPreferenceChange.OnChange(new TextPreferences(-1,-10,data.alignment,-1));
                 }
             }
         });
@@ -119,7 +119,7 @@ public class TextCustomizer extends CoordinatorLayout {
                         }
                     }
                     Log.i("text effect", ""+data.effect);
-                    if (onPreferenceChange!=null) onPreferenceChange.OnChange(data);
+                    if (onPreferenceChange!=null) onPreferenceChange.OnChange(new TextPreferences(-1,-10,-1,data.effect));
                 }
             }
         });

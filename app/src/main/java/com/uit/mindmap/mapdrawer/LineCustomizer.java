@@ -59,7 +59,7 @@ public class LineCustomizer extends CoordinatorLayout {
             public void onSizePicked(int value) {
                 data.width=value;
                 if (onPreferenceChange != null)
-                    onPreferenceChange.OnChange(data);
+                    onPreferenceChange.OnChange(new LinePreferences(-1,-1,-1,-1,value));
             }
         });
 
@@ -68,7 +68,7 @@ public class LineCustomizer extends CoordinatorLayout {
             public void onPick(int color) {
                 data.color=color;
                 if (onPreferenceChange != null)
-                    onPreferenceChange.OnChange(data);
+                    onPreferenceChange.OnChange(new LinePreferences(color,-1,-1,-1,-1));
             }
         });
 
@@ -87,7 +87,7 @@ public class LineCustomizer extends CoordinatorLayout {
                             data.effect = 2;
                             break;
                     }
-                    if (onPreferenceChange != null) onPreferenceChange.OnChange(data);
+                    if (onPreferenceChange != null) onPreferenceChange.OnChange(new LinePreferences(-10,data.effect,-1,-1,-1));
                 }
             }
         });
@@ -106,7 +106,7 @@ public class LineCustomizer extends CoordinatorLayout {
                             data.curve = 2;
                             break;
                     }
-                    if (onPreferenceChange != null) onPreferenceChange.OnChange(data);
+                    if (onPreferenceChange != null) onPreferenceChange.OnChange(new LinePreferences(-10,-1,data.curve,-1,-1));
                 }
             }
         });
@@ -134,7 +134,7 @@ public class LineCustomizer extends CoordinatorLayout {
                                 break;
                         }
                     }
-                    if (onPreferenceChange != null) onPreferenceChange.OnChange(data);
+                    if (onPreferenceChange != null) onPreferenceChange.OnChange(new LinePreferences(-10,-1,-1,data.arrow,-1));
                 }
             }
         });

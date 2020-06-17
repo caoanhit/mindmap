@@ -154,24 +154,30 @@ public class Node extends RelativeLayout {
     }
 
     public void setNodePreferences(NodePreferences preference) {
-        data.nodePreferences = new NodePreferences(preference);
-        //text.setBackgroundTintList(ColorStateList.valueOf(preference.color));
+        if (preference.color!=-10) data.nodePreferences.color=preference.color;
+        if (preference.outlineWidth!=-1) data.nodePreferences.outlineWidth=preference.outlineWidth;
+        if (preference.outlineColor!=-10) data.nodePreferences.outlineColor=preference.outlineColor;
+
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) text.getLayoutParams();
-        int margin = preference.outlineWidth;
+        int margin = data.nodePreferences.outlineWidth;
         params.setMargins(margin, margin, margin, margin);
         text.setLayoutParams(params);
 
         GradientDrawable drawable = (GradientDrawable) outline.getBackground();
-        drawable.setStroke(preference.outlineWidth, preference.outlineColor);
-        drawable.setColor(preference.color);
+        drawable.setStroke(data.nodePreferences.outlineWidth, data.nodePreferences.outlineColor);
+        drawable.setColor(data.nodePreferences.color);
+
         outline.setBackground(drawable);
     }
 
     public void setTextPreferences(TextPreferences preference) {
-        data.textPreferences = new TextPreferences(preference);
-        text.setTextColor(preference.color);
-        text.setTextSize(TypedValue.COMPLEX_UNIT_PX, preference.size + 15);
-        switch (preference.alignment) {
+        if (preference.color!=-10) data.textPreferences.color=preference.color;
+        if (preference.size!=-1) data.textPreferences.size=preference.size;
+        if (preference.alignment!=-1) data.textPreferences.alignment=preference.alignment;
+        if (preference.effect!=-1) data.textPreferences.effect=preference.effect;
+        text.setTextColor(data.textPreferences.color);
+        text.setTextSize(TypedValue.COMPLEX_UNIT_PX, data.textPreferences.size + 15);
+        switch (data.textPreferences.alignment) {
             case 0:
                 text.setGravity(Gravity.LEFT);
                 break;
@@ -182,7 +188,7 @@ public class Node extends RelativeLayout {
                 text.setGravity(Gravity.RIGHT);
                 break;
         }
-        int effect = preference.effect;
+        int effect = data.textPreferences.effect;
         if (effect >= 4) {
             effect -= 4;
             text.setPaintFlags(text.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -208,7 +214,11 @@ public class Node extends RelativeLayout {
     }
 
     public void setLinePreferences(LinePreferences preference) {
-        data.linePreferences = new LinePreferences(preference);
+        if (preference.width!=1) data.linePreferences.width=preference.width;
+        if (preference.arrow!=1) data.linePreferences.arrow=preference.arrow;
+        if (preference.color!=10) data.linePreferences.color=preference.color;
+        if (preference.curve!=1) data.linePreferences.curve=preference.curve;
+        if (preference.effect!=1) data.linePreferences.effect=preference.effect;
     }
 
     public void setTextSize(int value) {

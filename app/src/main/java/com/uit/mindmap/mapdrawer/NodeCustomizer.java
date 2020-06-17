@@ -50,21 +50,21 @@ public class NodeCustomizer extends CoordinatorLayout {
             @Override
             public void onPick(int color) {
                 data.color=color;
-                if (onPreferenceChange!=null) onPreferenceChange.OnChange(data);
+                if (onPreferenceChange!=null) onPreferenceChange.OnChange(new NodePreferences(data.color,-10,-1));
             }
         });
         btnOutlineColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
             @Override
             public void onPick(int color) {
                 data.outlineColor=color;
-                if (onPreferenceChange!=null) onPreferenceChange.OnChange(data);
+                if (onPreferenceChange!=null) onPreferenceChange.OnChange(new NodePreferences(-10,data.outlineColor,-1));
             }
         });
         outlineWidth.setOnSizePickedListener(new SizePickerButton.OnSizePickedListener() {
             @Override
             public void onSizePicked(int value) {
                 data.outlineWidth=value;
-                if (onPreferenceChange!=null) onPreferenceChange.OnChange(data);
+                if (onPreferenceChange!=null) onPreferenceChange.OnChange(new NodePreferences(-10,-10,data.outlineWidth));
             }
         });
 
