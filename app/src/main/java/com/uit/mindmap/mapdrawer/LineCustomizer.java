@@ -59,7 +59,7 @@ public class LineCustomizer extends CoordinatorLayout {
             public void onSizePicked(int value) {
                 data.width=value;
                 if (onPreferenceChange != null)
-                    onPreferenceChange.OnChange(new LinePreferences(-1,-1,-1,-1,value));
+                    onPreferenceChange.OnChange(new LinePreferences(-10,-1,-1,-1,value));
             }
         });
 

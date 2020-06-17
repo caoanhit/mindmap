@@ -13,12 +13,12 @@ public class LinePreferences {
         width = 4;
     }
 
-    public LinePreferences(int color, int effect, int curve, int arrow, int thickness) {
+    public LinePreferences(int color, int effect, int curve, int arrow, int width) {
         this.color = color;
         this.effect = effect;
         this.curve = curve;
         this.arrow = arrow;
-        this.width = thickness;
+        this.width = width;
     }
 
     public LinePreferences(LinePreferences preferences) {

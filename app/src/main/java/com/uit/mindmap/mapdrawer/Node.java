@@ -214,11 +214,11 @@ public class Node extends RelativeLayout {
     }
 
     public void setLinePreferences(LinePreferences preference) {
-        if (preference.width!=1) data.linePreferences.width=preference.width;
-        if (preference.arrow!=1) data.linePreferences.arrow=preference.arrow;
-        if (preference.color!=10) data.linePreferences.color=preference.color;
-        if (preference.curve!=1) data.linePreferences.curve=preference.curve;
-        if (preference.effect!=1) data.linePreferences.effect=preference.effect;
+        if (preference.width!=-1) data.linePreferences.width=preference.width;
+        if (preference.arrow!=-1) data.linePreferences.arrow=preference.arrow;
+        if (preference.color!=-10) data.linePreferences.color=preference.color;
+        if (preference.curve!=-1) data.linePreferences.curve=preference.curve;
+        if (preference.effect!=-1) data.linePreferences.effect=preference.effect;
     }
 
     public void setTextSize(int value) {
