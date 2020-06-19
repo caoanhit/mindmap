@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mind Map</string>
+    <string name="app_name">EzMind</string>
     <string name="new_map">New map</string>
     <string name="root_node">Root node</string>
     <string name="text_size">Text size</string>
@@ -20,7 +20,6 @@
     <string name="save_and_exit">Save and exit</string>
     <string name="save_as">Save as</string>
     <string name="search">Search</string>
-    <string name="login">Login</string>
     <string name="preferences">Preferences</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
@@ -54,4 +53,21 @@
     <string name="single_select">Single Select</string>
     <string name="multiple_select">Multiple Select</string>
     <string name="rectangle_select">Rectangle Select</string>
+
+    <string name="export">Export</string>
+
+    <string name="welcome">Welcome</string>
+    <string name="username">Username</string>
+    <string name="username_or_email">Username or Email</string>
+    <string name="email">Email address</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="log_in">Log in</string>
+    <string name="log_in_suggestion">Already have an account? Log in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_up_suggestion">Don\'t have an account? Sign up</string>
+
+    <string name="forgot_password">Forgot password?</string>
+    <string name="or"><strike>--------</strike>   or   <strike>--------</strike></string>
+    <string name="skip">Skip</string>
 </resources>

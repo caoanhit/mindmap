@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "246432550906",
+    "firebase_url": "https://ezmind-e61c2.firebaseio.com",
+    "project_id": "ezmind-e61c2",
+    "storage_bucket": "ezmind-e61c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246432550906:android:afc84303667254c551de43",
+        "android_client_info": {
+          "package_name": "com.uit.ezmind"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246432550906-08333mdkqcslavtaf1d7ie1dcsvu1ndn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwpZWSfuVmPe_LzqSE5juTxy6CEYE2TwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "246432550906-08333mdkqcslavtaf1d7ie1dcsvu1ndn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

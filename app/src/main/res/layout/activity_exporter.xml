@@ -2,7 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.uit.mindmap.mapdrawer.MapView
+    <com.uit.ezmind.mapdrawer.MapView
         android:id="@+id/map_view"
         android:layout_width="@dimen/map_size"
         android:layout_height="@dimen/map_size"

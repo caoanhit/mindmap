@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_base">
+
+    <TextView
+        android:id="@+id/tv_export"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/export"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name : " />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp">
+
+            <requestFocus />
+        </EditText>
+
+        <Spinner
+            android:id="@+id/format"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@android:style/Theme.Holo.Light.DarkActionBar" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location : "
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/path"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_width"
+            android:layout_weight="1"
+            android:layout_gravity="center"/>
+        <ImageButton
+            android:id="@+id/btn_path"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_width"
+            android:src="@drawable/ic_baseline_folder_24"
+            android:background="@color/transparent"
+            android:tint="?attr/colorOnBackground"/>
+    </LinearLayout>
+</LinearLayout>

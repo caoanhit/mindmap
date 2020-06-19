@@ -26,7 +26,7 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/large_text_size" />
 
-        <com.uit.mindmap.widgets.ZoomLayout
+        <com.uit.ezmind.widgets.ZoomLayout
             android:id="@+id/zoom"
             android:layout_width="@dimen/map_size"
             android:layout_height="@dimen/map_size"
@@ -41,12 +41,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.uit.mindmap.mapdrawer.MapView
+                <com.uit.ezmind.mapdrawer.MapView
                     android:id="@+id/map_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/transparent" />
-                <com.uit.mindmap.widgets.RectangleMarker
+                <com.uit.ezmind.widgets.RectangleMarker
                     android:id="@+id/rectangle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -55,7 +55,7 @@
                     android:visibility="gone"
                     android:elevation="10dp"/>
             </RelativeLayout>
-        </com.uit.mindmap.widgets.ZoomLayout>
+        </com.uit.ezmind.widgets.ZoomLayout>
 
         <include
             android:id="@+id/floating_menu"
@@ -65,17 +65,17 @@
             layout="@layout/selection_menu" />
     </FrameLayout>
 
-    <com.uit.mindmap.mapdrawer.NodeCustomizer
+    <com.uit.ezmind.mapdrawer.NodeCustomizer
         android:id="@+id/node_customizer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.uit.mindmap.mapdrawer.TextCustomizer
+    <com.uit.ezmind.mapdrawer.TextCustomizer
         android:id="@+id/text_customizer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.uit.mindmap.mapdrawer.LineCustomizer
+    <com.uit.ezmind.mapdrawer.LineCustomizer
         android:id="@+id/line_customizer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

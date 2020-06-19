@@ -87,4 +87,9 @@
         <item name="light">Light</item>
         <item name="dark">Dark</item>
     </string-array>
+
+    <string-array name="format">
+        <item name="png">.png</item>
+        <item name="pdf">.pdf</item>
+    </string-array>
 </resources>
