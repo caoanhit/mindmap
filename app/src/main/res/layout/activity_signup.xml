@@ -7,10 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="?attr/colorButtonNormal">
-
-    </LinearLayout>
+        android:background="?attr/colorButtonNormal"
+        android:orientation="vertical"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -22,16 +20,16 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="top|center_horizontal"
-            android:src="@drawable/ic_icon_rounded"
             android:background="@drawable/rounded_flat"
             android:elevation="@dimen/elevation"
+            android:src="@drawable/ic_icon_rounded"
             android:translationZ="@dimen/elevation" />
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="30dp"
             android:layout_marginHorizontal="@dimen/margin_base"
+            android:layout_marginVertical="30dp"
             app:cardCornerRadius="@dimen/corner_radius"
             app:cardElevation="@dimen/elevation">
 
@@ -42,52 +40,53 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_base"
                     android:layout_marginBottom="@dimen/margin_base"
                     android:hint="@string/username"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
                     app:boxCornerRadiusBottomStart="@dimen/corner_radius"
                     app:boxCornerRadiusTopEnd="@dimen/corner_radius"
                     app:boxCornerRadiusTopStart="@dimen/corner_radius">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeActionLabel="@string/username"
-                        />
+                        android:imeActionLabel="@string/username" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_base"
                     android:hint="@string/email"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
                     app:boxCornerRadiusBottomStart="@dimen/corner_radius"
                     app:boxCornerRadiusTopEnd="@dimen/corner_radius"
                     app:boxCornerRadiusTopStart="@dimen/corner_radius">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeActionLabel="@string/username"
-                        android:inputType="textEmailAddress"
-                        />
+                        android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_base"
                     android:layout_margin="@dimen/margin_base"
+                    android:layout_marginTop="@dimen/margin_base"
                     android:hint="@string/password"
-                    app:endIconMode="password_toggle"
                     app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
                     app:boxCornerRadiusBottomStart="@dimen/corner_radius"
                     app:boxCornerRadiusTopEnd="@dimen/corner_radius"
                     app:boxCornerRadiusTopStart="@dimen/corner_radius"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    app:endIconMode="password_toggle">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -95,18 +94,19 @@
                         android:inputType="textPassword" />
 
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_base"
                     android:layout_marginBottom="@dimen/margin_base"
                     android:hint="@string/confirm_password"
-                    app:endIconMode="password_toggle"
                     app:boxCornerRadiusBottomEnd="@dimen/corner_radius"
                     app:boxCornerRadiusBottomStart="@dimen/corner_radius"
                     app:boxCornerRadiusTopEnd="@dimen/corner_radius"
                     app:boxCornerRadiusTopStart="@dimen/corner_radius"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    app:endIconMode="password_toggle">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
@@ -120,12 +120,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_base"
+                    android:elevation="@dimen/elevation"
                     android:text="@string/sign_up"
                     android:textAllCaps="false"
-                    app:cornerRadius="@dimen/corner_radius"
                     android:textColor="@color/white"
-                    android:elevation="@dimen/elevation"
-                    />
+                    app:cornerRadius="@dimen/corner_radius" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/log_in_suggestion"
@@ -143,6 +142,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </FrameLayout>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/skip"
         style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -152,5 +152,5 @@
         android:layout_margin="@dimen/margin_base"
         android:text="@string/skip"
         android:textAllCaps="false"
-        android:textColor="@color/material_on_surface_emphasis_medium" />
+        android:textColor="@color/material_on_background_emphasis_medium" />
 </FrameLayout>

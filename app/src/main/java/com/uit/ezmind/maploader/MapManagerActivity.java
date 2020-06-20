@@ -243,7 +243,7 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        System.exit(0);
+        finishAffinity();
     }
 
     private void loadMapNames() {

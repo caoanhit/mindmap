@@ -8,10 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="?attr/colorButtonNormal">
-
-    </LinearLayout>
-
+        android:background="?attr/colorButtonNormal"/>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -141,5 +138,5 @@
                 android:layout_margin="@dimen/margin_base"
                 android:text="@string/skip"
                 android:textAllCaps="false"
-                android:textColor="@color/material_on_surface_emphasis_medium" />
+                android:textColor="@color/material_on_background_emphasis_medium" />
 </FrameLayout>
