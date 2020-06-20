@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -203,7 +202,7 @@ public class MapManagerActivity extends AppCompatActivity {
         } else
             switch (layoutOption) {
                 case 0:
-                    gvMap.setNumColumns(1);;
+                    gvMap.setNumColumns(1);
                     break;
                 case 1:
                     gvMap.setNumColumns(4);
@@ -244,12 +243,7 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (gvMap.getChoiceMode() == AbsListView.CHOICE_MODE_MULTIPLE) {
-            gvMap.setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-            gvMap.clearChoices();
-            adapter.setSelectMode(false);
-            menu.setGroupVisible(R.id.map_option, false);
-        } else super.onBackPressed();
+        System.exit(0);
     }
 
     private void loadMapNames() {

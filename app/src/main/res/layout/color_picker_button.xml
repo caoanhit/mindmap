@@ -10,7 +10,6 @@
     android:layout_width="@dimen/number_picker_width"
     android:layout_height="30dp"
     android:background="@drawable/layout_bg"
-    android:backgroundTintMode="multiply"
-    android:layout_gravity="right">
+    android:backgroundTintMode="multiply">
 </androidx.appcompat.widget.AppCompatButton>
 </RelativeLayout>

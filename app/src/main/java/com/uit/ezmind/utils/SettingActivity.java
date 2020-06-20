@@ -26,7 +26,6 @@ public class SettingActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     ColorPickerButton btnBackground;
     Spinner spnTheme;
-    boolean changed;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

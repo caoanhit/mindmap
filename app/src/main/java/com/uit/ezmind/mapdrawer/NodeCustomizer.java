@@ -17,10 +17,12 @@ public class NodeCustomizer extends CoordinatorLayout {
     private SizePickerButton outlineWidth;
     private ColorPickerButton btnFillColor, btnOutlineColor;
 
-    public interface OnPreferenceChangeListener{
+    public interface OnPreferenceChangeListener {
         void OnChange(NodePreferences data);
     }
+
     private OnPreferenceChangeListener onPreferenceChange;
+
     public void setOnPreferenceChange(OnPreferenceChangeListener onPreferenceChange) {
         this.onPreferenceChange = onPreferenceChange;
     }
@@ -42,48 +44,48 @@ public class NodeCustomizer extends CoordinatorLayout {
 
     private void init(@Nullable AttributeSet attrs) {
         inflate(getContext(), R.layout.node_customizer, this);
-        data=new NodePreferences();
+        data = new NodePreferences();
         findViewsByIds();
 
         btnFillColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
             @Override
             public void onPick(int color) {
-                data.color=color;
-                if (onPreferenceChange!=null) onPreferenceChange.OnChange(new NodePreferences(data.color,-10,-1));
+                data.color = color;
+                if (onPreferenceChange != null)
+                    onPreferenceChange.OnChange(new NodePreferences(data.color, -10, -1));
             }
         });
         btnOutlineColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
             @Override
             public void onPick(int color) {
-                data.outlineColor=color;
-                if (onPreferenceChange!=null) onPreferenceChange.OnChange(new NodePreferences(-10,data.outlineColor,-1));
+                data.outlineColor = color;
+                if (onPreferenceChange != null)
+                    onPreferenceChange.OnChange(new NodePreferences(-10, data.outlineColor, -1));
             }
         });
         outlineWidth.setOnSizePickedListener(new SizePickerButton.OnSizePickedListener() {
             @Override
             public void onSizePicked(int value) {
-                data.outlineWidth=value;
-                if (onPreferenceChange!=null) onPreferenceChange.OnChange(new NodePreferences(-10,-10,data.outlineWidth));
+                data.outlineWidth = value;
+                if (onPreferenceChange != null)
+                    onPreferenceChange.OnChange(new NodePreferences(-10, -10, data.outlineWidth));
             }
         });
 
     }
 
-    private void findViewsByIds(){
+    private void findViewsByIds() {
         outlineWidth = findViewById(R.id.outline_width);
-        outlineWidth.setLimit(0,10);
+        outlineWidth.setLimit(0, 10);
         btnFillColor = findViewById(R.id.btn_fill_color);
         btnOutlineColor = findViewById(R.id.btn_outline_color);
     }
+
     public void setPreferences(NodePreferences data) {
-        this.data=new NodePreferences(data);
+        this.data = new NodePreferences(data);
         outlineWidth.setValue(data.outlineWidth);
         btnFillColor.setColor(data.color);
         btnOutlineColor.setColor(data.outlineColor);
-    }
-
-    public void applyPreferences(MapView map){
-        map.setNodePreferences(data);
     }
 
     public void setMapView(MapView mapView) {

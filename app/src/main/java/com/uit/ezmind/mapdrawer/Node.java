@@ -153,9 +153,11 @@ public class Node extends RelativeLayout {
     }
 
     public void setNodePreferences(NodePreferences preference) {
-        if (preference.color!=-10) data.nodePreferences.color=preference.color;
-        if (preference.outlineWidth!=-1) data.nodePreferences.outlineWidth=preference.outlineWidth;
-        if (preference.outlineColor!=-10) data.nodePreferences.outlineColor=preference.outlineColor;
+        if (preference.color != -10) data.nodePreferences.color = preference.color;
+        if (preference.outlineWidth != -1)
+            data.nodePreferences.outlineWidth = preference.outlineWidth;
+        if (preference.outlineColor != -10)
+            data.nodePreferences.outlineColor = preference.outlineColor;
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) text.getLayoutParams();
         int margin = data.nodePreferences.outlineWidth;
@@ -170,10 +172,10 @@ public class Node extends RelativeLayout {
     }
 
     public void setTextPreferences(TextPreferences preference) {
-        if (preference.color!=-10) data.textPreferences.color=preference.color;
-        if (preference.size!=-1) data.textPreferences.size=preference.size;
-        if (preference.alignment!=-1) data.textPreferences.alignment=preference.alignment;
-        if (preference.effect!=-1) data.textPreferences.effect=preference.effect;
+        if (preference.color != -10) data.textPreferences.color = preference.color;
+        if (preference.size != -1) data.textPreferences.size = preference.size;
+        if (preference.alignment != -1) data.textPreferences.alignment = preference.alignment;
+        if (preference.effect != -1) data.textPreferences.effect = preference.effect;
         text.setTextColor(data.textPreferences.color);
         text.setTextSize(TypedValue.COMPLEX_UNIT_PX, data.textPreferences.size + 15);
         switch (data.textPreferences.alignment) {
@@ -213,11 +215,11 @@ public class Node extends RelativeLayout {
     }
 
     public void setLinePreferences(LinePreferences preference) {
-        if (preference.width!=-1) data.linePreferences.width=preference.width;
-        if (preference.arrow!=-1) data.linePreferences.arrow=preference.arrow;
-        if (preference.color!=-10) data.linePreferences.color=preference.color;
-        if (preference.curve!=-1) data.linePreferences.curve=preference.curve;
-        if (preference.effect!=-1) data.linePreferences.effect=preference.effect;
+        if (preference.width != -1) data.linePreferences.width = preference.width;
+        if (preference.arrow != -1) data.linePreferences.arrow = preference.arrow;
+        if (preference.color != -10) data.linePreferences.color = preference.color;
+        if (preference.curve != -1) data.linePreferences.curve = preference.curve;
+        if (preference.effect != -1) data.linePreferences.effect = preference.effect;
     }
 
     public void setTextSize(int value) {

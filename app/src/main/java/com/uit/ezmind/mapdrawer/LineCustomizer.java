@@ -185,7 +185,4 @@ public class LineCustomizer extends CoordinatorLayout {
         isEnable = true;
     }
 
-    public void applyPreferences(MapView map) {
-        map.setLinePreferences(data);
-    }
 }

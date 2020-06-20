@@ -34,14 +34,15 @@ import com.uit.ezmind.utils.SettingActivity;
 import com.uit.ezmind.widgets.RectangleMarker;
 import com.uit.ezmind.widgets.ZoomLayout;
 
+import java.util.Objects;
+
 public class MapDrawerActivity extends AppCompatActivity {
     private MapView mapView;
-    private LinearLayout nodeSheet, textSheet, lineSheet, menu;
+    private LinearLayout menu;
     private NodeCustomizer nodeCustomizer;
     private LineCustomizer lineCustomizer;
     private TextCustomizer textCustomizer;
     private BottomSheetBehavior nodeCustomizerBehavior, textCustomizerBehavior, lineCustomizerBehavior;
-    private String mapName;
     private ZoomLayout zoomLayout;
     private TextView zoomPercentage;
     private CountDownTimer timer;
@@ -57,7 +58,7 @@ public class MapDrawerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_black_24dp);
 
@@ -66,10 +67,9 @@ public class MapDrawerActivity extends AppCompatActivity {
         initZoomPercentage();
 
         Bundle extra = getIntent().getExtras();
-        mapName = null;
+        String mapName = null;
         if (extra != null) {
             mapName = extra.getString("mapName");
-            Log.i("map", mapName);
         }
         mapView.loadMap(mapName);
         mapView.setNodeCustomizer(nodeCustomizer);
@@ -131,7 +131,95 @@ public class MapDrawerActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    private void initViews() {
+        zoomLayout = findViewById(R.id.zoom);
+        zoomLayout.setOnScaleListener(new ZoomLayout.onScaleListener() {
+            @Override
+            public void onScale(float scale) {
+                zoomPercentage.setAlpha(0.5f);
+                zoomPercentage.setVisibility(View.VISIBLE);
+                zoomPercentage.setText((int) (scale * 100) + "%");
+                timer.start();
+            }
+        });
+        zoomLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (zoomLayout.holdTime < 200) {
+                    mapView.deselectAll();
+                    zoomLayout.requestFocus();
+                    View view = getCurrentFocus();
+                    if (view != null) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    closeAllSheets();
+                }
+            }
+
+        });
+
+        rectangleMarker = findViewById(R.id.rectangle);
+        rectangleMarker.setOnTapListener(new RectangleMarker.OnTapListener() {
+            @Override
+            public void OnTap(int[] pos) {
+                mapView.deselectAll();
+                zoomLayout.requestFocus();
+                View view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+                closeAllSheets();
+            }
+        });
+
+        rectangleMarker.setOnSelectListener(new RectangleMarker.OnSelectListener() {
+            @Override
+            public void onSelect(int[] start, int[] end) {
+                mapView.rectangleSelect(start, end);
+            }
+        });
+
+        mapView = findViewById(R.id.map_view);
+        menu = findViewById(R.id.floating_menu);
+        zoomPercentage = findViewById(R.id.zoom_percentage);
+        btnLine = findViewById(R.id.line_customize);
+
+        LinearLayout nodeSheet = findViewById(R.id.node_customizer_sheet);
+        nodeCustomizer = findViewById(R.id.node_customizer);
+        nodeCustomizerBehavior = BottomSheetBehavior.from(nodeSheet);
+        nodeSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                    nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+
+        LinearLayout textSheet = findViewById(R.id.text_customizer_sheet);
+        textCustomizer = findViewById(R.id.text_customizer);
+        textCustomizerBehavior = BottomSheetBehavior.from(textSheet);
+        textSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                    textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+
+        LinearLayout lineSheet = findViewById(R.id.line_customizer_sheet);
+        lineCustomizer = findViewById(R.id.line_customizer);
+        lineCustomizerBehavior = BottomSheetBehavior.from(lineSheet);
+        lineSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                    lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
         findViewById(R.id.new_node).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,95 +281,6 @@ public class MapDrawerActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void initViews() {
-        zoomLayout = findViewById(R.id.zoom);
-        zoomLayout.setOnScaleListener(new ZoomLayout.onScaleListener() {
-            @Override
-            public void onScale(float scale) {
-                zoomPercentage.setAlpha(0.5f);
-                zoomPercentage.setVisibility(View.VISIBLE);
-                zoomPercentage.setText((int) (scale * 100) + "%");
-                timer.start();
-            }
-        });
-        zoomLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (zoomLayout.holdTime < 200) {
-                    mapView.deselectAll();
-                    zoomLayout.requestFocus();
-                    View view = getCurrentFocus();
-                    if (view != null) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    }
-                    closeAllSheets();
-                }
-            }
-
-        });
-
-        rectangleMarker = findViewById(R.id.rectangle);
-        rectangleMarker.setOnTapListener(new RectangleMarker.OnTapListener() {
-            @Override
-            public void OnTap(int[] pos) {
-                mapView.deselectAll();
-                zoomLayout.requestFocus();
-                View view = getCurrentFocus();
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-                closeAllSheets();
-            }
-        });
-
-        rectangleMarker.setOnSelectListener(new RectangleMarker.OnSelectListener() {
-            @Override
-            public void onSelect(int[] start, int[] end) {
-                mapView.rectangleSelect(start, end);
-            }
-        });
-
-        mapView = findViewById(R.id.map_view);
-        menu = findViewById(R.id.floating_menu);
-        zoomPercentage = findViewById(R.id.zoom_percentage);
-        btnLine = findViewById(R.id.line_customize);
-
-        nodeSheet = findViewById(R.id.node_customizer_sheet);
-        nodeCustomizer = findViewById(R.id.node_customizer);
-        nodeCustomizerBehavior = BottomSheetBehavior.from(nodeSheet);
-        nodeSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    nodeCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
-
-        textSheet = findViewById(R.id.text_customizer_sheet);
-        textCustomizer = findViewById(R.id.text_customizer);
-        textCustomizerBehavior = BottomSheetBehavior.from(textSheet);
-        textSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    textCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
-
-        lineSheet = findViewById(R.id.line_customizer_sheet);
-        lineCustomizer = findViewById(R.id.line_customizer);
-        lineCustomizerBehavior = BottomSheetBehavior.from(lineSheet);
-        lineSheet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    lineCustomizerBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
-        });
     }
 
     private void closeAllSheets(){

@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapLoader {
-    public static final int maxNodeAmount=255;
+    public static final int maxNodeAmount = 255;
     Context context;
 
     public MapLoader(Context context) {
@@ -57,7 +57,6 @@ public class MapLoader {
             Toast.makeText(context, "Map saved to \"" + fileName + "\"", Toast.LENGTH_SHORT).show();
             return true;
         } catch (IOException ioException) {
-            Log.i("save", ioException.getMessage());
             Toast.makeText(context, "Error: Cannot save map", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -78,7 +77,7 @@ public class MapLoader {
                 try {
                     if (arr.getJSONObject(i) != null)
                         map[i] = gson.fromJson(String.valueOf(arr.getJSONObject(i)), NodeData.class);
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
         } catch (Exception e) {
@@ -101,7 +100,6 @@ public class MapLoader {
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
         } catch (IOException e) {
             e.printStackTrace();
-            Log.i("thumbnail", e.getMessage());
         }
         bmp.recycle();
     }
@@ -115,8 +113,7 @@ public class MapLoader {
         } else
             f = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + fileName + ".thb");
         if (f.exists()) {
-            Bitmap b = BitmapFactory.decodeFile(f.getAbsolutePath());
-            return b;
+            return BitmapFactory.decodeFile(f.getAbsolutePath());
         }
         return null;
     }
@@ -138,11 +135,9 @@ public class MapLoader {
             tNew = new File(Environment.getDataDirectory() + "/Mindmap/.thumbnail/" + newName + ".thb");
         }
         if (f.exists() && f.renameTo(fNew)) {
-            if (t.exists() && t.renameTo(tNew))
-            {
+            if (t.exists() && t.renameTo(tNew)) {
 
-            }
-            else return false;
+            } else return false;
             return true;
         }
         return false;
@@ -173,7 +168,7 @@ public class MapLoader {
             if (t.exists()) {
                 try {
                     copy(t, tNew);
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
             return true;
@@ -221,12 +216,11 @@ public class MapLoader {
             t.mkdir();
         }
         List<String> list;
-        File files[] = f.listFiles();
+        File[] files = f.listFiles();
         if (files != null) {
             list = new ArrayList<>();
         } else return null;
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
+        for (File file : files) {
             String filePath = file.getPath();
             if (filePath.endsWith(".map")) {
                 String filename = filePath.substring(filePath.lastIndexOf("/") + 1);
@@ -239,7 +233,7 @@ public class MapLoader {
         return a;
     }
 
-//    public String mapDate(String fileName) {
+    //    public String mapDate(String fileName) {
 //        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
 //            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 //        File f;
@@ -251,7 +245,7 @@ public class MapLoader {
 //        if (f.exists()) return dateFormat.format(f.lastModified());
 //        return "";
 //    }
-    public long loadDate(String fileName){
+    public long loadDate(String fileName) {
 //        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
 //            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         File f;
@@ -262,18 +256,21 @@ public class MapLoader {
         if (f.exists()) return f.lastModified();
         return 0;
     }
-    public List<MapData> loadMapList(){
-        String[] names=getSavedMapsName();
-        if (names==null||names.length==0) return null;
-        List<MapData> data= new ArrayList<>();
-        for (int i=0; i<  names.length; i++) {
-            data.add(new MapData(names[i],loadThumbnail(names[i]),loadDate(names[i])));
+
+    public List<MapData> loadMapList() {
+        String[] names = getSavedMapsName();
+        if (names == null || names.length == 0) return null;
+        List<MapData> data = new ArrayList<>();
+        for (String name : names) {
+            data.add(new MapData(name, loadThumbnail(name), loadDate(name)));
         }
         return data;
     }
-    public MapData loadMapData(String fileName){
-        return new MapData(fileName, loadThumbnail(fileName),loadDate(fileName));
+
+    public MapData loadMapData(String fileName) {
+        return new MapData(fileName, loadThumbnail(fileName), loadDate(fileName));
     }
+
     public boolean mapExist(String fileName) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
@@ -282,14 +279,13 @@ public class MapLoader {
             f = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName + ".map");
         } else f = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + fileName + ".map");
 
-        if (f.exists()) return true;
-        return false;
+        return f.exists();
     }
 
     public static String convertStreamToString(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
-        String line = null;
+        String line;
         while ((line = reader.readLine()) != null) {
             sb.append(line).append("\n");
         }
@@ -298,10 +294,7 @@ public class MapLoader {
     }
 
     private boolean isExternalStorageWritable() {
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
     private void copy(File src, File dst) throws IOException {

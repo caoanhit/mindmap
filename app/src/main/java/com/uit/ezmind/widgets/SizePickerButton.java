@@ -16,10 +16,6 @@ public class SizePickerButton extends RelativeLayout {
     private int max,min;
     Button btn;
 
-    public interface OnFinishListener{
-        void onFinish(int value);
-    }
-
     public interface OnSizePickedListener{
         void onSizePicked(int value);
     }
@@ -42,12 +38,6 @@ public class SizePickerButton extends RelativeLayout {
         super(context, attrs, defStyleAttr);
         init();
     }
-
-    public SizePickerButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
     private void init(){
         inflate(getContext(), R.layout.size_picker_button,this);
         btn=findViewById(R.id.size_picker);
@@ -80,15 +70,7 @@ public class SizePickerButton extends RelativeLayout {
 
     public void setValue(int value) {
         this.value = value;
-        btn.setText(value+"");
-    }
-
-    public void setMax(int max){
-        this.max=max;
-    }
-
-    public void setMin(int min) {
-        this.min = min;
+        btn.setText(String.valueOf(value));
     }
     public void setLimit(int min, int max){
         this.min=min;

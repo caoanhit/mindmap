@@ -50,9 +50,9 @@ public class MapView extends RelativeLayout {
                 if (state.data[i] == null) {
                     data[i] = new NodeData(nodes[ids.get(i)].data);
                 } else {
-                    if (nodes[state.ids.get(i)].deleted) {
-
-                    } else data[i] = new NodeData(nodes[state.ids.get(i)].data);
+                    if (!nodes[state.ids.get(i)].deleted) {
+                        data[i] = new NodeData(nodes[state.ids.get(i)].data);
+                    }
                 }
             }
         }
@@ -60,7 +60,7 @@ public class MapView extends RelativeLayout {
 
     //region Listeners
     public interface onChangeListener {
-        public void onChange(boolean undoAvailable, boolean redoAvailable);
+        void onChange(boolean undoAvailable, boolean redoAvailable);
     }
 
     private onChangeListener changeListener;
@@ -83,22 +83,22 @@ public class MapView extends RelativeLayout {
     public MapView(Context context) {
         super(context);
 
-        init(null);
+        init();
     }
 
     public MapView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        init(attrs);
+        init();
     }
 
     public MapView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        init(attrs);
+        init();
     }
 
-    public void init(@Nullable AttributeSet set) {
+    public void init() {
         selectedNodes = new ArrayList<>();
         nodes = new Node[maxNodeAmount];
         paint = new LinePaint();
@@ -177,30 +177,25 @@ public class MapView extends RelativeLayout {
         }
     }
 
-    public boolean undo() {
+    public void undo() {
         if (!undoHistory.isEmpty()) {
             State state = undoHistory.pollLast();
-
 
             redoHistory.add(state);
             redoHistory.add(new State(state));
             setChanged();
             setState(state);
-            Log.i("undo", "Remain " + undoHistory.size());
-            return true;
-        } else return false;
+        }
     }
 
-    public boolean redo() {
+    public void redo() {
         if (!redoHistory.isEmpty()) {
             State state = redoHistory.pollLast();
-
 
             undoHistory.add(redoHistory.pollLast());
             setChanged();
             setState(state);
-            return true;
-        } else return false;
+        }
     }
 
     public void addCommand() {
@@ -279,10 +274,10 @@ public class MapView extends RelativeLayout {
     //region Add
     public int addNode(@Nullable int[] pos) {
         int i = 0;
-        while (nodes[i] != null && !nodes[i].deleted && i < maxNodeAmount-1) {
+        while (nodes[i] != null && !nodes[i].deleted && i < maxNodeAmount - 1) {
             i++;
         }
-        if (i >= maxNodeAmount-1) {
+        if (i >= maxNodeAmount - 1) {
             return -1;
         }
         Node node = new Node(getContext());
@@ -317,10 +312,10 @@ public class MapView extends RelativeLayout {
 
     public int addNode(int parent) {
         int i = 0;
-        while (nodes[i] != null && i < maxNodeAmount-1) {
+        while (nodes[i] != null && i < maxNodeAmount - 1) {
             i++;
         }
-        if (i >= maxNodeAmount-1) {
+        if (i >= maxNodeAmount - 1) {
             return -1;
         }
         Node node = new Node(getContext());
@@ -355,7 +350,7 @@ public class MapView extends RelativeLayout {
                 Toast.makeText(getContext(), "Reach maximum amount of nodes", Toast.LENGTH_SHORT).show();
                 if (newNodes.size() > 0) {
                     for (int j : newNodes) {
-                        selectMultiple(i);
+                        selectMultiple(j);
                     }
                     addCommandAddNode();
                     LayoutInflater li = LayoutInflater.from(getContext());
@@ -410,7 +405,6 @@ public class MapView extends RelativeLayout {
         });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-        Log.i("command", "" + undoHistory.size());
     }
 
     public void loadNode(NodeData data) {
@@ -596,7 +590,7 @@ public class MapView extends RelativeLayout {
                 data[i] = new NodeData(nodes[i].data);
                 for (int a : nodes[i].data.children) {
                     if (nodes[a] == null || nodes[a].deleted)
-                        data[i].children.remove(data[i].children.indexOf(a));
+                        data[i].children.remove((Integer) a);
                 }
             }
         }
@@ -677,10 +671,6 @@ public class MapView extends RelativeLayout {
         saveDialog.show();
     }
 
-    public void setMapName(String mapName) {
-        this.mapName = mapName;
-    }
-
     public void loadMap(@Nullable String mapName) {
         this.mapName = mapName;
         if (mapName == null) setMap(null);
@@ -691,8 +681,7 @@ public class MapView extends RelativeLayout {
                 Node[] nodes = new Node[maxNodeAmount];
                 for (int i = 0; i < maxNodeAmount; i++) {
                     if (data[i] != null) {
-                        nodes[i] = new Node(getContext());
-                        nodes[i].setData(data[i]);
+                        nodes[i] = new Node(getContext(), data[i]);
                     }
                 }
                 setMap(nodes);
@@ -703,49 +692,6 @@ public class MapView extends RelativeLayout {
     //endregion
 
     //regionDimensions
-    private int[] getMapCenter() {
-        int[] a = new int[2];
-        int maxX = nodes[0].data.pos[0];
-        int maxY = nodes[0].data.pos[1];
-        int minX = nodes[0].data.pos[0];
-        int minY = nodes[0].data.pos[1];
-        for (Node node : nodes) {
-            if (node != null && !node.deleted) {
-                if (node.data.pos[0] > maxX) maxX = node.data.pos[0];
-                if (node.data.pos[1] > maxY) maxY = node.data.pos[1];
-                if (node.data.pos[0] < minX) minX = node.data.pos[0];
-                if (node.data.pos[1] < minY) minY = node.data.pos[1];
-            }
-        }
-        a[0] = (maxX + minX) / 2;
-        a[1] = (maxY + minY) / 2;
-        return a;
-    }
-
-    private int getMapWidth() {
-        int max = nodes[0].data.pos[0];
-        int min = nodes[0].data.pos[0];
-        for (Node node : nodes) {
-            if (node != null && !node.deleted) {
-                if (node.data.pos[0] > max) max = node.data.pos[0];
-                if (node.data.pos[0] < min) min = node.data.pos[0];
-            }
-        }
-        return (max + min) / 2;
-    }
-
-    private int getMapHeight() {
-        int max = nodes[0].data.pos[1];
-        int min = nodes[0].data.pos[1];
-        for (Node node : nodes) {
-            if (node != null && !node.deleted) {
-                if (node.data.pos[1] > max) max = node.data.pos[1];
-                if (node.data.pos[1] < min) min = node.data.pos[1];
-            }
-        }
-        return (max + min) / 2;
-    }
-
     private int[] getMapDimensions() {
         int[] a = new int[4];
         int maxX = nodes[0].data.pos[0];
@@ -771,7 +717,6 @@ public class MapView extends RelativeLayout {
     public Bitmap getThumbnail() {
         ((MapDrawerActivity) getContext()).deselect();
         int[] d = getMapDimensions();
-        int[] a = getMapCenter();
         int w = d[2] - d[0];
         int h = d[3] - d[1];
         Bitmap b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);

@@ -108,9 +108,6 @@ public class ZoomLayout extends CoordinatorLayout implements ScaleGestureDetecto
             }
         });
     }
-    public void onClick(){
-
-    }
     // ScaleGestureDetector
 
     @Override

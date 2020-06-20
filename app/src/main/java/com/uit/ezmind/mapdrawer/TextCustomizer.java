@@ -19,7 +19,7 @@ public class TextCustomizer extends CoordinatorLayout {
     private SizePickerButton textSize;
     private ColorPickerButton textColor;
     private MaterialButtonToggleGroup textAlignment, textEffect;
-    boolean isEnable=true;
+    boolean isEnable = true;
 
     public interface OnPreferenceChangeListener {
         void OnChange(TextPreferences data);
@@ -57,69 +57,72 @@ public class TextCustomizer extends CoordinatorLayout {
         textSize.setOnSizePickedListener(new SizePickerButton.OnSizePickedListener() {
             @Override
             public void onSizePicked(int value) {
-                data.size=value;
-                if (onPreferenceChange!=null) onPreferenceChange.OnChange(new TextPreferences(value,-10,-1,-1));
+                data.size = value;
+                if (onPreferenceChange != null)
+                    onPreferenceChange.OnChange(new TextPreferences(value, -10, -1, -1));
             }
         });
         textColor.setOnColorPickedListener(new ColorPickerButton.OnColorPickedListener() {
             @Override
             public void onPick(int color) {
-                data.color=color;
-                if (onPreferenceChange!=null) onPreferenceChange.OnChange(new TextPreferences(-1,color,-1,-1));
+                data.color = color;
+                if (onPreferenceChange != null)
+                    onPreferenceChange.OnChange(new TextPreferences(-1, color, -1, -1));
             }
         });
         textAlignment.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             @Override
             public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-                if (isChecked && isEnable){
-                    switch (checkedId){
+                if (isChecked && isEnable) {
+                    switch (checkedId) {
                         case R.id.text_alignment_left:
-                            data.alignment=0;
+                            data.alignment = 0;
                             break;
                         case R.id.text_alignment_center:
-                            data.alignment=1;
+                            data.alignment = 1;
                             break;
                         case R.id.text_alignment_right:
-                            data.alignment=2;
+                            data.alignment = 2;
                             break;
                     }
-                    if (onPreferenceChange!=null) onPreferenceChange.OnChange(new TextPreferences(-1,-10,data.alignment,-1));
+                    if (onPreferenceChange != null)
+                        onPreferenceChange.OnChange(new TextPreferences(-1, -10, data.alignment, -1));
                 }
             }
         });
         textEffect.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             @Override
             public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-                if(isEnable){
-                    if(isChecked) {
+                if (isEnable) {
+                    if (isChecked) {
                         switch (checkedId) {
                             case R.id.text_effect_bold:
-                                data.effect+=1;
+                                data.effect += 1;
                                 break;
                             case R.id.text_effect_italic:
-                                data.effect+=2;
+                                data.effect += 2;
                                 break;
                             case R.id.text_effect_underline:
-                                data.effect+=4;
+                                data.effect += 4;
                                 break;
                         }
-                        Log.i("text effect", ""+data.effect);
-                    }
-                    else {
+                        Log.i("text effect", "" + data.effect);
+                    } else {
                         switch (checkedId) {
                             case R.id.text_effect_bold:
-                                data.effect-=1;
+                                data.effect -= 1;
                                 break;
                             case R.id.text_effect_italic:
-                                data.effect-=2;
+                                data.effect -= 2;
                                 break;
                             case R.id.text_effect_underline:
-                                data.effect-=4;
+                                data.effect -= 4;
                                 break;
                         }
                     }
-                    Log.i("text effect", ""+data.effect);
-                    if (onPreferenceChange!=null) onPreferenceChange.OnChange(new TextPreferences(-1,-10,-1,data.effect));
+                    Log.i("text effect", "" + data.effect);
+                    if (onPreferenceChange != null)
+                        onPreferenceChange.OnChange(new TextPreferences(-1, -10, -1, data.effect));
                 }
             }
         });
@@ -127,7 +130,7 @@ public class TextCustomizer extends CoordinatorLayout {
     }
 
     public void setPreferences(TextPreferences data) {
-        isEnable=false;
+        isEnable = false;
         this.data = new TextPreferences(data);
         textSize.setValue(data.size);
         textColor.setColor(data.color);
@@ -142,23 +145,19 @@ public class TextCustomizer extends CoordinatorLayout {
                 textAlignment.check(R.id.text_alignment_right);
                 break;
         }
-        int effect=data.effect;
-        if (effect==0) textEffect.clearChecked();
-        if (effect>=4){
+        int effect = data.effect;
+        if (effect == 0) textEffect.clearChecked();
+        if (effect >= 4) {
             textEffect.check(R.id.text_effect_underline);
-            effect-=4;
+            effect -= 4;
         }
-        if (effect>=2){
+        if (effect >= 2) {
             textEffect.check(R.id.text_effect_italic);
-            effect-=2;
+            effect -= 2;
         }
-        if (effect>=1){
+        if (effect >= 1) {
             textEffect.check(R.id.text_effect_bold);
         }
-        isEnable =true;
-    }
-
-    public void applyPreferences(MapView map){
-        map.setTextPreferences(data);
+        isEnable = true;
     }
 }

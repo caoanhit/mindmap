@@ -1,5 +1,6 @@
 package com.uit.ezmind.widgets;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
@@ -42,25 +43,20 @@ public class RectangleMarker extends RelativeLayout {
 
     public RectangleMarker(Context context) {
         super(context);
-        init(null);
+        init();
     }
 
     public RectangleMarker(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs);
+        init();
     }
 
     public RectangleMarker(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs);
+        init();
     }
 
-    public RectangleMarker(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(attrs);
-    }
-
-    private void init(AttributeSet attrs) {
+    private void init() {
         paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(getContext().getResources().getDimension(R.dimen.outline_width));
@@ -70,6 +66,7 @@ public class RectangleMarker extends RelativeLayout {
         startPoint = new int[2];
         endPoint = new int[2];
         setOnTouchListener(new OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {

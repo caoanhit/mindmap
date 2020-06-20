@@ -45,7 +45,7 @@ public class ColorPickerButton extends RelativeLayout {
     public void init(){
         inflate(getContext(),R.layout.color_picker_button,this);
         if (colorList==null) {
-            String colors[] = getResources().getStringArray(R.array.colors);
+            String[] colors = getResources().getStringArray(R.array.colors);
             colorList = new int[colors.length];
             for (int i = 0; i < colors.length; i++) {
                 colorList[i] = Color.parseColor(colors[i]);
