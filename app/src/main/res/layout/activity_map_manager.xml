@@ -1,109 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/tv_empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/empty"
-        app:layout_anchor="@+id/linearLayout2"
-        app:layout_anchorGravity="center" />
+    android:layout_height="match_parent"
+    tools:openDrawer="start">
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/sort_bar"
+        <include
+            layout="@layout/app_bar_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="@dimen/elevation"
-            android:paddingHorizontal="@dimen/padding_base"
-            android:background="?attr/colorSurface">
+            android:layout_height="wrap_content" />
 
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/layout_options"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                app:selectionRequired="true"
-                app:singleSelection="true">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-                <com.google.android.material.button.MaterialButton
-
-                    android:id="@+id/list"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="@dimen/button_width"
-                    android:layout_height="@dimen/button_width"
-                    android:padding="10dp"
-                    app:cornerRadius="@dimen/corner_radius"
-                    app:icon="@drawable/ic_view_list_black_24dp"
-                    app:strokeWidth="2dp"
-                    >
-
-                </com.google.android.material.button.MaterialButton>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/card"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="@dimen/button_width"
-                    android:layout_height="@dimen/button_width"
-                    android:padding="10dp"
-                    app:cornerRadius="@dimen/corner_radius"
-                    app:icon="@drawable/ic_apps_black_24dp"
-                    app:strokeWidth="2dp">
-
-                </com.google.android.material.button.MaterialButton>
-            </com.google.android.material.button.MaterialButtonToggleGroup>
+            <TextView
+                android:id="@+id/tv_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/empty"
+                app:layout_anchor="@+id/linearLayout2"
+                app:layout_anchorGravity="center" />
 
             <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/sort_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorSurface"
+                    android:elevation="@dimen/elevation"
+                    android:paddingHorizontal="@dimen/padding_base">
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/layout_options"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.button.MaterialButton
+
+                            android:id="@+id/list"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="@dimen/button_width"
+                            android:layout_height="@dimen/button_width"
+                            android:padding="10dp"
+                            app:cornerRadius="@dimen/corner_radius"
+                            app:icon="@drawable/ic_view_list_black_24dp"
+                            app:strokeWidth="2dp">
+
+                        </com.google.android.material.button.MaterialButton>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/card"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="@dimen/button_width"
+                            android:layout_height="@dimen/button_width"
+                            android:padding="10dp"
+                            app:cornerRadius="@dimen/corner_radius"
+                            app:icon="@drawable/ic_apps_black_24dp"
+                            app:strokeWidth="2dp">
+
+                        </com.google.android.material.button.MaterialButton>
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/sort" />
+
+                        <Spinner
+                            android:id="@+id/sort_options"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="-5dp"
+                            android:layout_marginRight="-10dp"
+                            android:paddingLeft="5dp"
+                            android:paddingRight="10dp"
+                            android:popupBackground="@drawable/rounded_flat"
+                            android:popupElevation="@dimen/elevation"
+                            android:theme="@android:style/Theme.Holo.Light.DarkActionBar" />
+                    </LinearLayout>
+                </FrameLayout>
+
+                <GridView
+                    android:id="@+id/lv_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:choiceMode="none"
+                    android:clipToPadding="false"
+                    android:horizontalSpacing="@dimen/padding_base"
+                    android:paddingHorizontal="@dimen/padding_base"
+                    android:paddingTop="@dimen/padding_base"
+                    android:paddingBottom="78dp"
+                    android:verticalSpacing="@dimen/padding_base" />
+            </LinearLayout>
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/new_map"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sort" />
-
-                <Spinner
-                    android:id="@+id/sort_options"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="5dp"
-                    android:layout_marginLeft="-5dp"
-                    android:layout_marginRight="-10dp"
-                    android:popupBackground="@drawable/rounded_flat"
-                    android:popupElevation="@dimen/elevation" />
-            </LinearLayout>
+                android:layout_gravity="bottom|end"
+                android:layout_margin="20dp"
+                app:icon="@drawable/ic_add_black_24dp" />
         </FrameLayout>
-
-        <GridView
-            android:id="@+id/lv_map"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:choiceMode="none"
-            android:paddingHorizontal="@dimen/padding_base"
-            android:paddingTop="@dimen/padding_base"
-            android:paddingBottom="78dp"
-            android:clipToPadding="false"
-            android:horizontalSpacing="@dimen/padding_base"
-            android:verticalSpacing="@dimen/padding_base"/>
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/new_map"
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="20dp"
-        app:icon="@drawable/ic_add_black_24dp" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/header_main"
+        app:menu="@menu/navigation_menu" />
+</androidx.drawerlayout.widget.DrawerLayout>

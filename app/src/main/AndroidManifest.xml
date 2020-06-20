@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppDark"
         >
-        <activity android:name="com.uit.ezmind.maploader.MapManagerActivity">
+        <activity android:name="com.uit.ezmind.maploader.MapManagerActivity"
+            android:theme="@style/AppDark.NoActionBar">
 
         </activity>
         <activity android:name="com.uit.ezmind.mapdrawer.MapDrawerActivity"

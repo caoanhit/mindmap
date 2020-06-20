@@ -28,8 +28,16 @@
         <item name="actionBarStyle">@style/AppDark.ActionBar</item>
     </style>
 
+    <style name="AppDark.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
     <style name="AppDark.ActionBar" parent="Widget.MaterialComponents.ActionBar.PrimarySurface">
-        <item name="android:height">45dp</item>
         <item name="height">45dp</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 </resources>

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,19 +20,26 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.navigation.NavigationView;
 import com.uit.ezmind.R;
 import com.uit.ezmind.data.MapData;
 import com.uit.ezmind.mapdrawer.MapDrawerActivity;
+import com.uit.ezmind.utils.LoginActivity;
 import com.uit.ezmind.utils.SettingActivity;
 import com.uit.ezmind.widgets.MapListAdapter;
 
 import java.util.List;
 
-public class MapManagerActivity extends AppCompatActivity {
+public class MapManagerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     GridView gvMap;
     List<MapData> mapList;
     Button bttNewMap;
@@ -40,6 +48,8 @@ public class MapManagerActivity extends AppCompatActivity {
     MapLoader loader;
     Spinner sortOptionSelector;
     int sortOption;
+    private DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
 
     MaterialButtonToggleGroup btnLayoutSelector;
     int layoutOption;
@@ -50,11 +60,46 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.AppDark);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_manager);
 
+        Toolbar toolbar=findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+
+        drawer=findViewById(R.id.drawer_layout);
+
+        toggle= new ActionBarDrawerToggle(this, drawer,toolbar, R.string.nav_drawer_open,R.string.nav_drawer_close);
+        drawer.addDrawerListener(toggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24);
+
+        NavigationView navigationView=findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+        View btnLogin=navigationView.getHeaderView(0).findViewById(R.id.btn_login);
+        View accountInfo=navigationView.getHeaderView(0).findViewById(R.id.account_info);
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MapManagerActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+        if(sharedpreferences.getBoolean("isLoggedIn",false)) {
+            btnLogin.setVisibility(View.GONE);
+            accountInfo.setVisibility(View.VISIBLE);
+        }
+        else {
+            btnLogin.setVisibility(View.VISIBLE);
+            accountInfo.setVisibility(View.GONE);
+        }
+
         applyTheme(sharedpreferences.getInt("theme",0));
         initViews();
         loadMapNames();
@@ -243,6 +288,9 @@ public class MapManagerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else
         finishAffinity();
     }
 
@@ -309,6 +357,26 @@ public class MapManagerActivity extends AppCompatActivity {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 break;
         }
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                return true;
+            case R.id.preferences:
+                Intent intent = new Intent(MapManagerActivity.this,
+                        SettingActivity.class);
+                startActivityForResult(intent, 0);
+                break;
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return false;
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 }
