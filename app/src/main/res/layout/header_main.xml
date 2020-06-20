@@ -3,7 +3,7 @@
     android:id="@+id/nav_header"
     android:layout_width="match_parent"
     android:layout_height="140dp"
-    android:background="@color/colorPrimaryDark"
+    android:background="?attr/colorButtonNormal"
     android:clickable="true"
     android:clipToPadding="false"
     android:focusable="true"
@@ -17,7 +17,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:text="@string/log_in"
-        android:textAllCaps="false"/>
+        android:textAllCaps="false"
+        android:textColor="@color/white"/>
     <LinearLayout
         android:id="@+id/account_info"
         android:layout_width="match_parent"
