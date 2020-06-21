@@ -22,6 +22,6 @@
         android:title="@string/save_as"/>
     <item
         android:id="@+id/preferences"
-        android:title="@string/preferences"
+        android:title="@string/settings"
         android:icon="@drawable/ic_settings_black_24dp" />
 </menu>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,7 +17,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +33,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.uit.ezmind.R;
 import com.uit.ezmind.data.MapData;
 import com.uit.ezmind.mapdrawer.MapDrawerActivity;
@@ -50,6 +55,8 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
     int sortOption;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
+    NavigationView navigationView;
+    private FirebaseAuth mAuth;
 
     MaterialButtonToggleGroup btnLayoutSelector;
     int layoutOption;
@@ -74,7 +81,7 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24);
 
-        NavigationView navigationView=findViewById(R.id.nav_view);
+        navigationView=findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -82,8 +89,6 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         View btnLogin=navigationView.getHeaderView(0).findViewById(R.id.btn_login);
-        View accountInfo=navigationView.getHeaderView(0).findViewById(R.id.account_info);
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,14 +96,8 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
                 startActivity(intent);
             }
         });
-        if(sharedpreferences.getBoolean("isLoggedIn",false)) {
-            btnLogin.setVisibility(View.GONE);
-            accountInfo.setVisibility(View.VISIBLE);
-        }
-        else {
-            btnLogin.setVisibility(View.VISIBLE);
-            accountInfo.setVisibility(View.GONE);
-        }
+
+        mAuth = FirebaseAuth.getInstance();
 
         applyTheme(sharedpreferences.getInt("theme",0));
         initViews();
@@ -122,6 +121,27 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
                     gvMap.setNumColumns(2);
                     break;
             }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        View btnLogin=navigationView.getHeaderView(0).findViewById(R.id.btn_login);
+        View accountInfo=navigationView.getHeaderView(0).findViewById(R.id.account_info);
+        TextView name=navigationView.getHeaderView(0).findViewById(R.id.nav_header_textView);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser!=null){
+            name.setText(currentUser.getDisplayName());
+            btnLogin.setVisibility(View.GONE);
+            accountInfo.setVisibility(View.VISIBLE);
+            navigationView.getMenu().findItem(R.id.logout).setVisible(true);
+        }
+        else {
+            btnLogin.setVisibility(View.VISIBLE);
+            accountInfo.setVisibility(View.GONE);
+            navigationView.getMenu().findItem(R.id.logout).setVisible(false);
         }
     }
 
@@ -370,6 +390,12 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
                         SettingActivity.class);
                 startActivityForResult(intent, 0);
                 break;
+            case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
+                Intent i= new Intent(MapManagerActivity.this,
+                        LoginActivity.class);
+                startActivityForResult(i, 0);
+                break;
         }
         drawer.closeDrawer(GravityCompat.START);
         return false;
@@ -378,5 +404,14 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
+    }
+
+    private void setUserInfo(String name, @Nullable Bitmap bitmap){
+        TextView username= navigationView.getHeaderView(0).findViewById(R.id.nav_header_textView);
+        username.setText(name);
+        if(bitmap!=null){
+            ImageView icon=navigationView.getHeaderView(0).findViewById(R.id.nav_header_imageView);
+            icon.setImageBitmap(bitmap);
+        }
     }
 }

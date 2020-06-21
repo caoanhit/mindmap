@@ -57,12 +57,14 @@
     <string name="export">Export</string>
 
     <string name="welcome">Welcome</string>
-    <string name="username">Username</string>
+    <string name="username">Name</string>
     <string name="username_or_email">Username or Email</string>
     <string name="email">Email address</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="log_in">Log in</string>
+    <string name="login">Login</string>
+    <string name="log_out">Log out</string>
     <string name="log_in_suggestion">Already have an account? Log in</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_up_suggestion">Don\'t have an account? Sign up</string>
@@ -75,4 +77,22 @@
     <string name="nav_drawer_close">Close</string>
     
     <string name="import_map">Import</string>
+
+    <string name="field_required">This field is required</string>
+
+    <string name="password_requirement">Password should be more than 6 characters</string>
+
+    <string name="password_mismatch">Password does not match</string>
+
+    <string name="invalid_email">Email is invalid</string>
+
+    <string name="email_used">Email is already used</string>
+
+    <string name="signing_up">Signing up</string>
+    <string name="logging_in">Logging in</string>
+
+    <string name="please_wait">Please wait</string>
+
+    <string name="invalid_credential">Wrong email or password</string>
+
 </resources>

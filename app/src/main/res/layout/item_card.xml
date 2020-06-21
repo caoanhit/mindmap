@@ -8,7 +8,9 @@
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="@dimen/corner_radius"
     app:cardElevation="3dp"
-    app:cardBackgroundColor="?attr/colorOnPrimary">
+    app:cardBackgroundColor="?attr/colorOnPrimary"
+    android:backgroundTintMode="add"
+    android:backgroundTint="#212121">
 
 
     <LinearLayout

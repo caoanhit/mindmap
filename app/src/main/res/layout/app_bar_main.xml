@@ -17,7 +17,6 @@
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            app:layout_scrollFlags="scroll|enterAlways"
             app:title="@string/app_name"
             app:menu="@menu/mapmanager_action_menu"
             app:titleTextColor="@color/white"
