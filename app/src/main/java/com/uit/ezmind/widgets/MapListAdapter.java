@@ -232,14 +232,14 @@ public class MapListAdapter extends BaseAdapter {
                                 // Grant temporary read permission to the content URI
 
 
-                                intentShareFile.setType("text/plain");
+                                intentShareFile.setType("application/pdf");
                                 intentShareFile.putExtra(Intent.EXTRA_STREAM, uri);
 
                                 intentShareFile.addFlags(
                                         Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                                 intentShareFile.putExtra(Intent.EXTRA_SUBJECT,
-                                        "Sharing Map...");
+                                        data.get(position).name + MapLoader.SAVE_EXTENSION);
 
                                 context.startActivity(Intent.createChooser(intentShareFile, "Share Map"));
                             }

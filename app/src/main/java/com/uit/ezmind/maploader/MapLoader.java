@@ -32,7 +32,7 @@ import java.util.List;
 public class MapLoader {
     public static final String SAVE_PATH = "/EzMind/saves/";
     public static final String THUMBNAIL_PATH = "/EzMind/.thumbnail/";
-    public static final String SAVE_EXTENSION = ".map";
+    public static final String SAVE_EXTENSION = ".ezmind";
     public static final String THUMBNAIL_EXTENSION = ".thb";
     public static final int maxNodeAmount = 255;
     Context context;
@@ -183,7 +183,7 @@ public class MapLoader {
             String filePath = file.getPath();
             if (filePath.endsWith(SAVE_EXTENSION)) {
                 String filename = filePath.substring(filePath.lastIndexOf("/") + 1);
-                filename = filename.substring(0, filename.length() - 4);
+                filename = filename.substring(0, filename.length() - SAVE_EXTENSION.length());
                 list.add(filename);
             }
         }
