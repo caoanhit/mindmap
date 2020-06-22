@@ -86,6 +86,15 @@ public class MapView extends RelativeLayout {
         init();
     }
 
+    public MapView(Context context, NodeData[] data){
+        super(context);
+
+        selectedNodes = new ArrayList<>();
+        nodes = new Node[maxNodeAmount];
+        paint = new LinePaint();
+        paint.setAntiAlias(true);
+    }
+
     public MapView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 

@@ -13,19 +13,46 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppDark">
-        <activity android:name=".utils.StartingActivity"
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.uit.ezmind.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+        <activity
+            android:name=".utils.FileSelectActivity"
+            android:label="File Selector">
+            <intent-filter>
+                <action android:name="android.intent.action.PICK" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.map" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".utils.StartingActivity"
             android:theme="@style/Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".maploader.MapManagerActivity"
-            android:theme="@style/AppDark.NoActionBar"/>
-        <activity android:name=".mapdrawer.MapDrawerActivity"/>
-        <activity android:name=".utils.SettingActivity"/>
-        <activity android:name=".utils.LoginActivity"/>
-        <activity android:name=".utils.SignUpActivity"/>
+            android:theme="@style/AppDark.NoActionBar" />
+        <activity android:name=".mapdrawer.MapDrawerActivity" />
+        <activity android:name=".utils.SettingActivity" />
+        <activity android:name=".utils.LoginActivity" />
+        <activity android:name=".utils.SignUpActivity" />
     </application>
+
 </manifest>
