@@ -7,11 +7,11 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +20,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,11 +31,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.nbsp.materialfilepicker.MaterialFilePicker;
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 import com.uit.ezmind.R;
 import com.uit.ezmind.data.MapData;
 import com.uit.ezmind.mapdrawer.MapDrawerActivity;
@@ -42,7 +44,9 @@ import com.uit.ezmind.utils.LoginActivity;
 import com.uit.ezmind.utils.SettingActivity;
 import com.uit.ezmind.widgets.MapListAdapter;
 
+import java.io.File;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class MapManagerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     GridView gvMap;
@@ -64,42 +68,42 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
     SharedPreferences sharedpreferences;
 
     public static final String MyPREFERENCES = "MyPrefs";
+    private static final int FILE_PICKER_REQUEST_CODE = 3;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_manager);
 
-        Toolbar toolbar=findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        drawer=findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
 
-        toggle= new ActionBarDrawerToggle(this, drawer,toolbar, R.string.nav_drawer_open,R.string.nav_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.nav_drawer_open, R.string.nav_drawer_close);
         drawer.addDrawerListener(toggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24);
 
-        navigationView=findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
-        View btnLogin=navigationView.getHeaderView(0).findViewById(R.id.btn_login);
+        View btnLogin = navigationView.getHeaderView(0).findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(MapManagerActivity.this, LoginActivity.class);
+                Intent intent = new Intent(MapManagerActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
 
         mAuth = FirebaseAuth.getInstance();
 
-        applyTheme(sharedpreferences.getInt("theme",0));
+        applyTheme(sharedpreferences.getInt("theme", 0));
         initViews();
         loadMapNames();
         int orientation = getResources().getConfiguration().orientation;
@@ -128,17 +132,16 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
     protected void onStart() {
         super.onStart();
 
-        View btnLogin=navigationView.getHeaderView(0).findViewById(R.id.btn_login);
-        View accountInfo=navigationView.getHeaderView(0).findViewById(R.id.account_info);
-        TextView name=navigationView.getHeaderView(0).findViewById(R.id.nav_header_textView);
+        View btnLogin = navigationView.getHeaderView(0).findViewById(R.id.btn_login);
+        View accountInfo = navigationView.getHeaderView(0).findViewById(R.id.account_info);
+        TextView name = navigationView.getHeaderView(0).findViewById(R.id.nav_header_textView);
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser!=null){
+        if (currentUser != null) {
             name.setText(currentUser.getDisplayName());
             btnLogin.setVisibility(View.GONE);
             accountInfo.setVisibility(View.VISIBLE);
             navigationView.getMenu().findItem(R.id.logout).setVisible(true);
-        }
-        else {
+        } else {
             btnLogin.setVisibility(View.VISIBLE);
             accountInfo.setVisibility(View.GONE);
             navigationView.getMenu().findItem(R.id.logout).setVisible(false);
@@ -245,8 +248,8 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        for (int g:grantResults) {
-            if (g==PackageManager.PERMISSION_GRANTED) {
+        for (int g : grantResults) {
+            if (g == PackageManager.PERMISSION_GRANTED) {
                 loadMapNames();
                 return;
             }
@@ -272,7 +275,7 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
                 case 1:
                     gvMap.setNumColumns(4);
                     break;
-        }
+            }
         Log.i("configuration", "changed");
         super.onConfigurationChanged(newConfig);
     }
@@ -295,15 +298,45 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                return true;
-            case R.id.preferences:
-                Intent intent = new Intent(MapManagerActivity.this,
-                        SettingActivity.class);
-                startActivityForResult(intent, 0);
+            case R.id.import_map:
+                String externalStorage = Environment.getExternalStorageDirectory().getPath();
+                MaterialFilePicker materialFilePicker = new MaterialFilePicker();
+                materialFilePicker
+                        // Pass a source of context. Can be:
+                        //    .withActivity(Activity activity)
+                        //    .withFragment(Fragment fragment)
+                        //    .withSupportFragment(androidx.fragment.app.Fragment fragment)
+                        .withActivity(this)
+                        // With cross icon on the right side of toolbar for closing picker straight away
+                        .withCloseMenu(true)
+                        // Entry point path (user will start from it)
+                        .withPath(externalStorage)
+                        // Root path (user won't be able to come higher than it)
+                        .withRootPath(externalStorage)
+                        // Showing hidden files
+                        .withHiddenFiles(true)
+                        // Want to choose only jpg images
+                        .withFilter(Pattern.compile(".*\\.map"))
+                        // Don't apply filter to directories names
+                        .withFilterDirectories(false)
+                        .withTitle("Import map")
+                        .withRequestCode(FILE_PICKER_REQUEST_CODE)
+                        .start();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILE_PICKER_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+                MapLoader loader = new MapLoader(this);
+                loader.importMap(filePath);
+            }
+        }
     }
 
     @Override
@@ -311,7 +344,7 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else
-        finishAffinity();
+            finishAffinity();
     }
 
     private void loadMapNames() {
@@ -319,13 +352,12 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
         if (mapList != null && mapList.size() > 0) {
             findViewById(R.id.sort_bar).setVisibility(View.VISIBLE);
             findViewById(R.id.tv_empty).setVisibility(View.INVISIBLE);
-            if (adapter==null) {
+            if (adapter == null) {
                 adapter = new MapListAdapter(this, mapList, layoutOption);
                 adapter.sortlist(sortOption);
                 gvMap.setAdapter(adapter);
-            }
-            else {
-                if( layoutOption != adapter.getLayout())
+            } else {
+                if (layoutOption != adapter.getLayout())
                     setLayout();
                 adapter.setData(mapList);
                 adapter.sortlist(sortOption);
@@ -365,8 +397,9 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
         }
 
     }
-    private void applyTheme(int theme){
-        switch (theme){
+
+    private void applyTheme(int theme) {
+        switch (theme) {
             case 0:
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                 break;
@@ -392,7 +425,7 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
                 break;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
-                Intent i= new Intent(MapManagerActivity.this,
+                Intent i = new Intent(MapManagerActivity.this,
                         LoginActivity.class);
                 startActivityForResult(i, 0);
                 break;
@@ -406,11 +439,11 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
 
     }
 
-    private void setUserInfo(String name, @Nullable Bitmap bitmap){
-        TextView username= navigationView.getHeaderView(0).findViewById(R.id.nav_header_textView);
+    private void setUserInfo(String name, @Nullable Bitmap bitmap) {
+        TextView username = navigationView.getHeaderView(0).findViewById(R.id.nav_header_textView);
         username.setText(name);
-        if(bitmap!=null){
-            ImageView icon=navigationView.getHeaderView(0).findViewById(R.id.nav_header_imageView);
+        if (bitmap != null) {
+            ImageView icon = navigationView.getHeaderView(0).findViewById(R.id.nav_header_imageView);
             icon.setImageBitmap(bitmap);
         }
     }

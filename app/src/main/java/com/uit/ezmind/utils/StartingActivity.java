@@ -2,7 +2,9 @@ package com.uit.ezmind.utils;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.WindowManager;
 
@@ -20,7 +22,7 @@ public class StartingActivity extends AppCompatActivity {
 
         mAuth =FirebaseAuth.getInstance();
         FirebaseUser currentUser =mAuth.getCurrentUser();
-        if (currentUser!=null) skip();
+        if (currentUser!=null||!isNetworkConnected()) skip();
         else toLogin();
     }
 
@@ -39,5 +41,10 @@ public class StartingActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
+    }
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 }

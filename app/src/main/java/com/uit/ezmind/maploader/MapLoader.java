@@ -306,4 +306,25 @@ public class MapLoader {
         inStream.close();
         outStream.close();
     }
+    public boolean importMap(String path){
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        File f, fNew;
+        f = new File(path);
+        String fileName =f.getName();
+        if (isExternalStorageWritable()) {
+            fNew = new File(Environment.getExternalStorageDirectory().getPath() + "/Mindmap/saves/" + fileName);
+        } else {
+            fNew = new File(Environment.getDataDirectory() + "/Mindmap/saves/" + fileName);
+        }
+        if (f.exists()) {
+            try {
+                copy(f, fNew);
+            } catch (Exception e) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
 }

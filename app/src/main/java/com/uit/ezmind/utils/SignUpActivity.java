@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -73,79 +74,80 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this);
-                progressDialog.setCancelable(false);
-                progressDialog.setTitle(R.string.signing_up);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setMessage(getText(R.string.please_wait));
-                progressDialog.show();
-                tlUsername.clearFocus();
-                tlEmail.clearFocus();
-                tlPassword.clearFocus();
-                tlConfirmPassword.clearFocus();
-                String email=etEmail.getText().toString();
-                final String username=etUsername.getText().toString();
-                String password=etPassword.getText().toString();
-                String confirmPassword= etConfirmPassword.getText().toString();
+                if(isNetworkConnected()) {
+                    final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this);
+                    progressDialog.setCancelable(false);
+                    progressDialog.setTitle(R.string.signing_up);
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.setMessage(getText(R.string.please_wait));
+                    progressDialog.show();
+                    tlUsername.clearFocus();
+                    tlEmail.clearFocus();
+                    tlPassword.clearFocus();
+                    tlConfirmPassword.clearFocus();
+                    String email = etEmail.getText().toString();
+                    final String username = etUsername.getText().toString();
+                    String password = etPassword.getText().toString();
+                    String confirmPassword = etConfirmPassword.getText().toString();
 
-                boolean requirementMatched=true;
+                    boolean requirementMatched = true;
 
-                if (username=="") {
-                    tlUsername.setError(getText(R.string.field_required));
-                    requirementMatched=false;
-                }
-                if (email=="") {
-                    tlEmail.setError(getText(R.string.field_required));
-                    requirementMatched=false;
-                }
-                if (!confirmPassword.equals(password)) {
-                    requirementMatched=false;
-                    Log.i("pass", confirmPassword+"  "+password);
-                    tlConfirmPassword.setError(getText(R.string.password_mismatch));
-                }
+                    if (username.isEmpty()) {
+                        tlUsername.setError(getText(R.string.field_required));
+                        requirementMatched = false;
+                    }
+                    if (email.isEmpty()) {
+                        tlEmail.setError(getText(R.string.field_required));
+                        requirementMatched = false;
+                    }
+                    if (!confirmPassword.equals(password)) {
+                        requirementMatched = false;
+                        Log.i("pass", confirmPassword + "  " + password);
+                        tlConfirmPassword.setError(getText(R.string.password_mismatch));
+                    }
 
-                if (requirementMatched)
-                mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(username)
-                                        .build();
+                    if (requirementMatched)
+                        mAuth.createUserWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                .setDisplayName(username)
+                                                .build();
 
-                                if (task.isSuccessful()) {
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if(task.isSuccessful()) {
-                                                Toast.makeText(SignUpActivity.this, "Sign up succesfully", Toast.LENGTH_SHORT).show();
-                                                skip();
-                                            }
-                                            else {
-                                                Toast.makeText(SignUpActivity.this, "Can not update profile", Toast.LENGTH_SHORT).show();
-                                            }
+                                        if (task.isSuccessful()) {
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(SignUpActivity.this, "Sign up succesfully", Toast.LENGTH_SHORT).show();
+                                                        skip();
+                                                    } else {
+                                                        Toast.makeText(SignUpActivity.this, "Can not update profile", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            Toast.makeText(SignUpActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
+                                            progressDialog.dismiss();
                                         }
-                                    });
-                                } else {
-                                    Toast.makeText(SignUpActivity.this, "Sign up failed", Toast.LENGTH_SHORT).show();
-                                    progressDialog.dismiss();
-                                }
-                                try{
-                                    throw  task.getException();
-                                }
-                                catch(FirebaseAuthWeakPasswordException e) {
-                                    tlPassword.setError(getString(R.string.password_requirement));
-                                } catch(FirebaseAuthInvalidCredentialsException e) {
-                                    tlEmail.setError(getString(R.string.invalid_email));
-                                } catch(FirebaseAuthUserCollisionException e) {
-                                    tlEmail.setError(getString(R.string.email_used));
-                                } catch(Exception ignored) {
+                                        try {
+                                            throw task.getException();
+                                        } catch (FirebaseAuthWeakPasswordException e) {
+                                            tlPassword.setError(getString(R.string.password_requirement));
+                                        } catch (FirebaseAuthInvalidCredentialsException e) {
+                                            tlEmail.setError(getString(R.string.invalid_email));
+                                        } catch (FirebaseAuthUserCollisionException e) {
+                                            tlEmail.setError(getString(R.string.email_used));
+                                        } catch (Exception ignored) {
 
-                                }
+                                        }
 
-                            }
-                        });
+                                    }
+                                });
+                }
+                else Toast.makeText(SignUpActivity.this, getText(R.string.no_internet), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -219,5 +221,10 @@ public class SignUpActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         Intent intent=new Intent(SignUpActivity.this, LoginActivity.class);
         startActivity(intent);
+    }
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 }

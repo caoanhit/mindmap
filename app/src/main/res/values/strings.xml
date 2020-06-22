@@ -95,4 +95,8 @@
 
     <string name="invalid_credential">Wrong email or password</string>
 
+    <string name="no_internet">No internet connection</string>
+
+    <string name="file_invalid">File is invalid</string>
+
 </resources>
