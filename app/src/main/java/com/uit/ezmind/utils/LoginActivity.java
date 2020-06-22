@@ -46,9 +46,6 @@ public class LoginActivity extends AppCompatActivity {
         initViews();
 
         mAuth =FirebaseAuth.getInstance();
-        FirebaseUser currentUser =mAuth.getCurrentUser();
-        if (currentUser!=null) skip();
-
     }
 
     private void initViews(){
@@ -111,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.setTitle(R.string.logging_in);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setMessage(getText(R.string.please_wait));
                 progressDialog.show();
 
                 String email=etEmail.getText().toString();

@@ -2,34 +2,30 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.uit.ezmind">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppDark"
-        >
-        <activity android:name="com.uit.ezmind.maploader.MapManagerActivity"
-            android:theme="@style/AppDark.NoActionBar">
-
-        </activity>
-        <activity android:name="com.uit.ezmind.mapdrawer.MapDrawerActivity"
-            android:parentActivityName="com.uit.ezmind.maploader.MapManagerActivity">
-        </activity>
-        <activity android:name="com.uit.ezmind.utils.SettingActivity">
-        </activity>
-        <activity android:name="com.uit.ezmind.utils.LoginActivity">
+        android:theme="@style/AppDark">
+        <activity android:name=".utils.StartingActivity"
+            android:theme="@style/Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.uit.ezmind.utils.SignUpActivity">
-        </activity>
+        <activity
+            android:name=".maploader.MapManagerActivity"
+            android:theme="@style/AppDark.NoActionBar"/>
+        <activity android:name=".mapdrawer.MapDrawerActivity"/>
+        <activity android:name=".utils.SettingActivity"/>
+        <activity android:name=".utils.LoginActivity"/>
+        <activity android:name=".utils.SignUpActivity"/>
     </application>
-
 </manifest>

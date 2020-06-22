@@ -72,10 +72,10 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="or"><strike>--------</strike>   or   <strike>--------</strike></string>
     <string name="skip">Skip</string>
-    
+
     <string name="nav_drawer_open">Open</string>
     <string name="nav_drawer_close">Close</string>
-    
+
     <string name="import_map">Import</string>
 
     <string name="field_required">This field is required</string>

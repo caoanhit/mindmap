@@ -15,14 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:clipChildren="false">
+        android:clipChildren="false"
+        android:layout_marginBottom="10dp">
 
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="top|center_horizontal"
             android:src="@drawable/ic_icon_rounded"
-            android:background="@drawable/rounded_flat"
             android:elevation="2dp"
             android:translationZ="@dimen/elevation" />
 
@@ -96,7 +96,7 @@
                     android:id="@+id/sign_up_suggestion"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginHorizontal="@dimen/margin_base"
                     android:text="@string/sign_up_suggestion"
@@ -106,7 +106,7 @@
                     android:id="@+id/forgot_password"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginHorizontal="@dimen/margin_base"
                     android:text="@string/forgot_password"

@@ -4,7 +4,7 @@
     <dimen name="elevation">5dp</dimen>
     <dimen name="icon_padding">0dp</dimen>
     <dimen name="icon_size">38dp</dimen>
-    <dimen name="padding_base">6dp</dimen>
+    <dimen name="padding_base">8dp</dimen>
     <dimen name="margin_base">11dp</dimen>
     <dimen name="button_margin">0dp</dimen>
     <dimen name="button_width">45dp</dimen>

@@ -3,7 +3,7 @@
     android:id="@+id/nav_header"
     android:layout_width="match_parent"
     android:layout_height="140dp"
-    android:background="?attr/colorButtonNormal"
+    android:background="#3C3C3C"
     android:clickable="true"
     android:clipToPadding="false"
     android:focusable="true"

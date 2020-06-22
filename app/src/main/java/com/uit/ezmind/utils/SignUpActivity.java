@@ -66,8 +66,6 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser =mAuth.getCurrentUser();
-        if (currentUser!=null) skip();
 
         findViews();
 
@@ -79,6 +77,7 @@ public class SignUpActivity extends AppCompatActivity {
                 progressDialog.setCancelable(false);
                 progressDialog.setTitle(R.string.signing_up);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setMessage(getText(R.string.please_wait));
                 progressDialog.show();
                 tlUsername.clearFocus();
                 tlEmail.clearFocus();
