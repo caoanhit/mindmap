@@ -56,9 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         TextView title = bar.getCustomView().findViewById(R.id.tvTitle);
         title.setText(R.string.welcome);
 
-        SharedPreferences sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        applyTheme(sharedpreferences.getInt("theme", 0));
-
         SignInButton signInButton = findViewById(R.id.google_sign_in);
         signInButton.setSize(SignInButton.SIZE_WIDE);
 
@@ -163,21 +160,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         super.onResume();
-    }
-
-    private void applyTheme(int theme) {
-        switch (theme) {
-            case 0:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                break;
-            case 1:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            case 2:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-        }
-
     }
 
     private boolean isNetworkConnected() {
