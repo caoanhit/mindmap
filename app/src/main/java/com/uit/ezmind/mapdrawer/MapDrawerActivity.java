@@ -314,14 +314,6 @@ public class MapDrawerActivity extends AppCompatActivity {
         zoomPercentage.setVisibility(View.GONE);
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        if (resultCode == RESULT_OK)
-//            recreate();
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
-
-
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);

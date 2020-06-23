@@ -99,4 +99,6 @@
 
     <string name="file_invalid">File is invalid</string>
 
+    <string name="generate_thumbnail">Generating thumbnails</string>
+
 </resources>

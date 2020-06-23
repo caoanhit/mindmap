@@ -1,5 +1,6 @@
 package com.uit.ezmind.maploader;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -38,13 +37,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.uit.ezmind.R;
 import com.uit.ezmind.data.MapData;
 import com.uit.ezmind.mapdrawer.MapDrawerActivity;
+import com.uit.ezmind.mapdrawer.MapView;
 import com.uit.ezmind.utils.LoginActivity;
 import com.uit.ezmind.utils.SettingActivity;
 import com.uit.ezmind.widgets.MapListAdapter;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class MapManagerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     GridView gvMap;
@@ -59,6 +58,8 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
     private ActionBarDrawerToggle toggle;
     NavigationView navigationView;
     private FirebaseAuth mAuth;
+    public ProgressDialog progressDialog;
+    MapView mapView;
 
     MaterialButtonToggleGroup btnLayoutSelector;
     int layoutOption;
@@ -67,7 +68,7 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
 
     public static final String MyPREFERENCES = "MyPrefs";
     private static final int FILE_PICKER_REQUEST_CODE = 3;
-    private static final int THUMBNAIL_GENERATE_REQUEST_CODE = 506;
+    public static final int THUMBNAIL_GENERATE_REQUEST_CODE = 506;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,6 +93,7 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
 
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
+        mapView=findViewById(R.id.map_view);
         View btnLogin=navigationView.getHeaderView(0).findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,9 +105,7 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
 
         mAuth = FirebaseAuth.getInstance();
 
-        applyTheme(sharedpreferences.getInt("theme",0));
         initViews();
-        loadMapNames();
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             switch (layoutOption) {
@@ -315,6 +315,10 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
                 }
             }
         }
+        else if(requestCode==THUMBNAIL_GENERATE_REQUEST_CODE){
+            Log.i("activity result", requestCode+"");
+            progressDialog.dismiss();
+        }
     }
 
     @Override
@@ -341,7 +345,30 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
                 adapter.setData(mapList);
                 adapter.sortlist(sortOption);
             }
+            final String[] m=mapsWithoutThumbnail(mapList);
+            if(m.length>0) {
+                progressDialog=new ProgressDialog(this);
+                progressDialog.setCancelable(false);
+                progressDialog.setTitle(R.string.generate_thumbnail);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setMessage(getText(R.string.please_wait));
+                progressDialog.show();
+                mapView.makeThumbnails(m);
+            }
         } else setEmpty();
+    }
+
+    private String[] mapsWithoutThumbnail(List<MapData> data){
+        List<String> l=new ArrayList<>();
+        int count =0;
+        for (MapData d: data) {
+            if (d.thumbnail==null){
+                l.add(d.name);
+                count++;
+            }
+        }
+        String[] arr=new String[count];
+        return l.toArray(arr);
     }
 
     public void setEmpty() {
@@ -376,21 +403,6 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
         }
 
     }
-    private void applyTheme(int theme){
-        switch (theme){
-            case 0:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                break;
-            case 1:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            case 2:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-        }
-
-    }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -424,5 +436,9 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
             ImageView icon=navigationView.getHeaderView(0).findViewById(R.id.nav_header_imageView);
             icon.setImageBitmap(bitmap);
         }
+    }
+    public void endThumbnailLoading(){
+        progressDialog.dismiss();
+        loadMapNames();
     }
 }

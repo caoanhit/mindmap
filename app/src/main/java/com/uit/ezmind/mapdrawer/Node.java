@@ -127,13 +127,12 @@ public class Node extends RelativeLayout {
         });
         mapsize = (int) getResources().getDimension(R.dimen.map_size);
         final ViewTreeObserver observer = getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                setPosition(data.pos);
-            }
-        });
-        applyData();
+    }
+
+    public void applyPosition(){
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        lp.setMargins(data.pos[0] - getWidth() / 2, data.pos[1] - getHeight() / 2, 0, 0);
+        setLayoutParams(lp);
     }
 
     //endregion
@@ -233,7 +232,7 @@ public class Node extends RelativeLayout {
     }
 
     public void applyData() {
-        setPosition(data.pos);
+        applyPosition();
         text.setText(data.text);
         setNodePreferences(data.nodePreferences);
         setTextPreferences(data.textPreferences);

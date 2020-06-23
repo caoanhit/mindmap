@@ -8,11 +8,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
+import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -23,6 +21,7 @@ import com.uit.ezmind.data.NodePreferences;
 import com.uit.ezmind.data.TextPreferences;
 import com.uit.ezmind.maploader.MapLoader;
 import com.uit.ezmind.data.NodeData;
+import com.uit.ezmind.maploader.MapManagerActivity;
 import com.uit.ezmind.widgets.TextDialog;
 
 import java.util.ArrayDeque;
@@ -79,6 +78,8 @@ public class MapView extends RelativeLayout {
     boolean changed = false;
     Deque<State> undoHistory;
     Deque<State> redoHistory;
+    int count;
+    boolean thumbnailAvailable;
 
     //region Constructor
     public MapView(Context context) {
@@ -87,13 +88,9 @@ public class MapView extends RelativeLayout {
         init();
     }
 
-    public MapView(Context context, NodeData[] data){
-        super(context);
-
-        selectedNodes = new ArrayList<>();
-        nodes = new Node[maxNodeAmount];
-        paint = new LinePaint();
-        paint.setAntiAlias(true);
+    public void makeThumbnails(String[] mapName) {
+        count = 0;
+        layoutMap(mapName);
     }
 
     public MapView(Context context, @Nullable AttributeSet attrs) {
@@ -117,12 +114,68 @@ public class MapView extends RelativeLayout {
         redoHistory = new ArrayDeque<>();
     }
 
+    public void layoutMap(final String[] mapName) {
+        final MapLoader loader = new MapLoader(getContext());
+        NodeData[] data = loader.loadMap(mapName[count]);
+        Node n = new Node(getContext());
+        if (data != null) {
+            final Node[] nodes = new Node[maxNodeAmount];
+            for (int i = 0; i < maxNodeAmount; i++) {
+                if (data[i] != null) {
+                    nodes[i] = new Node(getContext(), data[i]);
+                }
+            }
+            this.nodes = nodes;
+            for (final Node node : nodes) {
+                if (node != null) {
+                    n = node;
+                    addView(node);
+//                    node.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                        @Override
+//                        public void onGlobalLayout() {
+//                            node.applyPosition();
+//                        }
+//                    });
+                    node.applyData();
+                }
+            }
+            final ViewTreeObserver observer = n.getViewTreeObserver();
+            final Node finalN = n;
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    Log.i("observer", count + "");
+                    finalN.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    finalN.setPosition(finalN.data.pos);
+                    for (Node node : nodes) {
+                        if (node != null)
+                            node.applyData();
+                    }
+                    finalN.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            finalN.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            if (count < mapName.length) {
+                                generateThumbnail(mapName[count], loader);
+                            }
+                            count++;
+                            if (count < mapName.length) {
+                                layoutMap(mapName);
+                            } else ((MapManagerActivity) getContext()).endThumbnailLoading();
+                        }
+                    });
+
+                }
+            });
+        }
+    }
+
     public void setMap(@Nullable Node[] nodes) {
         if (nodes == null) {
-            addNode(null);
+            addNode(-1);
         } else {
             this.nodes = nodes;
-            for (Node node : nodes) {
+            for (final Node node : nodes) {
                 if (node != null) {
                     addView(node);
                     node.setMap(this);
@@ -131,6 +184,12 @@ public class MapView extends RelativeLayout {
                         public void onClick(View v) {
                             Node n = (Node) v;
                             selectNode(n.data.id);
+                        }
+                    });
+                    node.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            node.applyPosition();
                         }
                     });
                     node.applyData();
@@ -282,24 +341,29 @@ public class MapView extends RelativeLayout {
     //endregion
 
     //region Add
-    public int addNode(@Nullable int[] pos) {
+    public int addNode(int parent) {
         int i = 0;
-        while (nodes[i] != null && !nodes[i].deleted && i < maxNodeAmount - 1) {
+        while (nodes[i] != null && i < maxNodeAmount - 1) {
             i++;
         }
         if (i >= maxNodeAmount - 1) {
             return -1;
         }
-        Node node = new Node(getContext());
+        final Node node = new Node(getContext());
         addView(node);
-        nodes[i] = node;
         node.data.id = i;
-        node.setMap(this);
-        selectNode(i);
-        if (pos != null) {
-            node.setPosition(pos);
+        nodes[i] = node;
+        if (parent >= 0) {
+            node.data.parent = parent;
+            nodes[parent].addChild(i);
+            node.setText("New node");
+
+            int[] pos = new int[2];
+            pos[0] = nodes[parent].data.pos[0];
+            pos[1] = nodes[parent].data.pos[1];
+            pos[0] += 50 + nodes[parent].getWidth();
         } else {
-            pos = new int[2];
+            int[] pos = new int[2];
             pos[0] += getContext().getResources().getDimension(R.dimen.map_size) / 2;
             pos[1] += getContext().getResources().getDimension(R.dimen.map_size) / 2;
             node.setPosition(pos);
@@ -309,6 +373,7 @@ public class MapView extends RelativeLayout {
             node.setTextSize(7);
             node.setTextColor(Color.WHITE);
         }
+        node.setMap(this);
         node.applyData();
         node.setOnClickListener(new OnClickListener() {
             @Override
@@ -317,36 +382,10 @@ public class MapView extends RelativeLayout {
                 selectNode(n.data.id);
             }
         });
-        return i;
-    }
-
-    public int addNode(int parent) {
-        int i = 0;
-        while (nodes[i] != null && i < maxNodeAmount - 1) {
-            i++;
-        }
-        if (i >= maxNodeAmount - 1) {
-            return -1;
-        }
-        Node node = new Node(getContext());
-        addView(node);
-        node.data.parent = parent;
-        node.data.id = i;
-        nodes[i] = node;
-        node.setText("New node");
-        node.setMap(this);
-        node.applyData();
-        nodes[parent].addChild(i);
-        int[] pos = new int[2];
-        pos[0] = nodes[parent].data.pos[0];
-        pos[1] = nodes[parent].data.pos[1];
-        pos[0] += 50 + nodes[parent].getWidth();
-        node.setPosition(pos);
-        node.setOnClickListener(new OnClickListener() {
+        node.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void onClick(View v) {
-                Node n = (Node) v;
-                selectNode(n.data.id);
+            public void onGlobalLayout() {
+                node.applyPosition();
             }
         });
         return i;
@@ -698,6 +737,28 @@ public class MapView extends RelativeLayout {
         Bitmap b1 = Bitmap.createScaledBitmap(x, 400, 300, true);
         x.recycle();
         return b1;
+    }
+
+    public void generateThumbnail(String fileName, MapLoader loader) {
+        int[] d = getMapDimensions();
+        int w = d[2] - d[0];
+        int h = d[3] - d[1];
+        Bitmap b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        c.translate(-d[0], -d[1]);
+        this.layout(0, 0, getWidth(), getHeight());
+        Log.i("Left", "" + d[0]);
+        Log.i("Top", "" + d[1]);
+        Log.i("Right", "" + d[2]);
+        Log.i("Bottom", "" + d[3]);
+        this.draw(c);
+        int width = Math.max(h * 4 / 3, w);
+        int height = Math.max(w * 3 / 4, h);
+        Bitmap x = getCorrectBitmap(b, width, height);
+        Bitmap b1 = Bitmap.createScaledBitmap(x, 400, 300, true);
+        x.recycle();
+        loader.saveThumbnail(fileName, b1);
+        removeAllViews();
     }
 
     public boolean isRootSelected() {

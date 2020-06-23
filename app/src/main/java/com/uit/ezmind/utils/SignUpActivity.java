@@ -50,9 +50,6 @@ public class SignUpActivity extends AppCompatActivity {
         TextView title= bar.getCustomView().findViewById(R.id.tvTitle);
         title.setText(R.string.sign_up);
 
-        SharedPreferences sharedpreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        applyTheme(sharedpreferences.getInt("theme",0));
-
         findViewById(R.id.log_in_suggestion).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -195,20 +192,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    private void applyTheme(int theme){
-        switch (theme){
-            case 0:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                break;
-            case 1:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            case 2:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-        }
-
-    }
     private void skip(){
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

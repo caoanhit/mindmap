@@ -15,7 +15,6 @@ import com.uit.ezmind.R;
 import org.w3c.dom.Text;
 
 public class TextDialog extends AlertDialog.Builder {
-    private View customDialogView;
     private TextView title;
     private EditText etName;
     private AlertDialog alertDialog;
@@ -35,14 +34,9 @@ public class TextDialog extends AlertDialog.Builder {
         init();
     }
 
-    public TextDialog(Context context, int themeResId) {
-        super(context, themeResId);
-        init();
-    }
-
     private void init(){
         LayoutInflater li = LayoutInflater.from(getContext());
-        customDialogView = li.inflate(R.layout.edit_text_dialog, null);
+        View customDialogView = li.inflate(R.layout.edit_text_dialog, null);
         title = customDialogView.findViewById(R.id.tv_dialog);
         etName = customDialogView.findViewById(R.id.name);
         setView(customDialogView);
