@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import java.util.List;
 
 public class MapLoader {
     public static final String SAVE_PATH = "/EzMind/saves/";
+    public static final String CLOUD_PATH = "/EzMind/cloud/";
     public static final String THUMBNAIL_PATH = "/EzMind/.thumbnail/";
     public static final String SAVE_EXTENSION = ".ezmind";
     public static final String THUMBNAIL_EXTENSION = ".thb";
@@ -40,7 +42,6 @@ public class MapLoader {
     public MapLoader(Context context) {
         this.context = context;
     }
-
 
     public boolean saveMap(String fileName, NodeData[] map) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)

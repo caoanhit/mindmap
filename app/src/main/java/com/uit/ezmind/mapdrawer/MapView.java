@@ -23,6 +23,7 @@ import com.uit.ezmind.data.NodePreferences;
 import com.uit.ezmind.data.TextPreferences;
 import com.uit.ezmind.maploader.MapLoader;
 import com.uit.ezmind.data.NodeData;
+import com.uit.ezmind.widgets.TextDialog;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -362,27 +363,17 @@ public class MapView extends RelativeLayout {
                         selectMultiple(j);
                     }
                     addCommandAddNode();
-                    LayoutInflater li = LayoutInflater.from(getContext());
-                    View customDialogView = li.inflate(R.layout.edit_text_dialog, null);
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-                    alertDialogBuilder.setView(customDialogView);
-                    final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
-                    etName.setText(nodes[selectedNodes.get(0)].data.text);
-                    etName.selectAll();
-                    alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            for (int i : selectedNodes) {
-                                nodes[i].setText(etName.getText().toString());
-                            }
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-                    AlertDialog alertDialog = alertDialogBuilder.create();
-                    alertDialog.show();
-                    Log.i("command", "" + undoHistory.size());
+                    TextDialog textDialog = new TextDialog(getContext());
+                    textDialog.setDialogText(nodes[selectedNodes.get(0)].data.text)
+                            .setOnOKClicked(new TextDialog.OnOKClicked() {
+                                @Override
+                                public void OnClick(String text, AlertDialog alertDialog) {
+                                    for (int i : selectedNodes) {
+                                        nodes[i].setText(text);
+                                    }
+                                    alertDialog.dismiss();
+                                }
+                            }).show();
                 }
                 return;
             }
@@ -394,26 +385,17 @@ public class MapView extends RelativeLayout {
             selectMultiple(i);
         }
         addCommandAddNode();
-        LayoutInflater li = LayoutInflater.from(getContext());
-        View customDialogView = li.inflate(R.layout.edit_text_dialog, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-        alertDialogBuilder.setView(customDialogView);
-        final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
-        etName.setText(nodes[selectedNodes.get(0)].data.text);
-        etName.selectAll();
-        alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                for (int i : selectedNodes) {
-                    nodes[i].setText(etName.getText().toString());
-                }
-            }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        TextDialog textDialog = new TextDialog(getContext());
+        textDialog.setDialogText(nodes[selectedNodes.get(0)].data.text)
+                .setOnOKClicked(new TextDialog.OnOKClicked() {
+                    @Override
+                    public void OnClick(String text, AlertDialog alertDialog) {
+                        for (int i : selectedNodes) {
+                            nodes[i].setText(text);
+                        }
+                        alertDialog.dismiss();
+                    }
+                }).show();
     }
 
     public void loadNode(NodeData data) {
@@ -556,28 +538,17 @@ public class MapView extends RelativeLayout {
 
     //region Text
     public void editText() {
-
-        LayoutInflater li = LayoutInflater.from(getContext());
-        View customDialogView = li.inflate(R.layout.edit_text_dialog, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-        alertDialogBuilder.setView(customDialogView);
-        final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
-        etName.setText(nodes[selectedNodes.get(0)].data.text);
-        etName.selectAll();
-        alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                addCommand();
-                for (int i : selectedNodes) {
-                    nodes[i].setText(etName.getText().toString());
-                }
-            }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        TextDialog textDialog = new TextDialog(getContext());
+        textDialog.setDialogText(nodes[selectedNodes.get(0)].data.text)
+                .setOnOKClicked(new TextDialog.OnOKClicked() {
+                    @Override
+                    public void OnClick(String text, AlertDialog alertDialog) {
+                        for (int i : selectedNodes) {
+                            nodes[i].setText(text);
+                        }
+                        alertDialog.dismiss();
+                    }
+                }).show();
     }
 
     public void setText(String text) {
@@ -628,56 +599,40 @@ public class MapView extends RelativeLayout {
     }
 
     public void saveAs() {
-        LayoutInflater li = LayoutInflater.from(getContext());
-        View customDialogView = li.inflate(R.layout.edit_text_dialog, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
-        alertDialogBuilder.setView(customDialogView);
-        final EditText etName = (EditText) customDialogView.findViewById(R.id.name);
-        ((TextView) customDialogView.findViewById(R.id.tv_dialog)).setText(R.string.map_name);
-        etName.setText("New map");
-        etName.selectAll();
-        alertDialogBuilder.setCancelable(false).setPositiveButton("OK", null)
-                .setNegativeButton("Cancel", null);
-        final AlertDialog saveDialog = alertDialogBuilder.create();
-        saveDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(final DialogInterface dialog) {
-                saveDialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new OnClickListener() {
+        TextDialog textDialog = new TextDialog(getContext());
+        textDialog.setDialogTitle(R.string.map_name)
+                .setDialogText(getContext().getText(R.string.new_map).toString())
+                .setOnOKClicked(new TextDialog.OnOKClicked() {
                     @Override
-                    public void onClick(View v) {
+                    public void OnClick(final String text, AlertDialog alertDialog) {
                         final MapLoader loader = new MapLoader(getContext());
-                        if (loader.mapExist(etName.getText().toString())) {
-                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-                            alertDialog.setMessage("Map already exist. Do you want to overwrite?");
-                            alertDialog.setIcon(R.mipmap.ic_launcher);
-                            alertDialog.setPositiveButton(R.string.no, null);
-                            alertDialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        if (loader.mapExist(text)) {
+                            AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                            dialog.setMessage("Map already exist. Do you want to overwrite?");
+                            dialog.setIcon(R.mipmap.ic_launcher);
+                            dialog.setPositiveButton(R.string.no, null);
+                            dialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mapName = etName.getText().toString();
+                                    mapName = text;
                                     if (loader.saveMap(mapName, getData())) {
                                         loader.saveThumbnail(mapName, getThumbnail());
                                         Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
                                         changed = false;
                                     } else
                                         Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
-                                    dialog.cancel();
-                                    saveDialog.dismiss();
                                 }
                             });
-                            alertDialog.show();
+                            dialog.show();
                             return;
                         }
-                        mapName = etName.getText().toString();
+                        mapName = text;
                         if (loader.saveMap(mapName, getData())) {
                             loader.saveThumbnail(mapName, getThumbnail());
                             changed = false;
                         }
-                        dialog.dismiss();
+                        alertDialog.dismiss();
                     }
-                });
-            }
-        });
-        saveDialog.show();
+                }).show();
     }
 
     public void loadMap(@Nullable String mapName) {

@@ -67,6 +67,7 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
 
     public static final String MyPREFERENCES = "MyPrefs";
     private static final int FILE_PICKER_REQUEST_CODE = 3;
+    private static final int THUMBNAIL_GENERATE_REQUEST_CODE = 506;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
