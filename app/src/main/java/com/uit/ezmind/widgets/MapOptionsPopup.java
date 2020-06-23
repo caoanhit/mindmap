@@ -2,6 +2,7 @@ package com.uit.ezmind.widgets;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -88,16 +89,40 @@ public class MapOptionsPopup extends PopupWindow {
         popup.findViewById(R.id.btn_delete_map).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MapOptionsPopup.this.isShowing()) MapOptionsPopup.this.dismiss();
-                if (!loader.deleteMap(adapter.data.get(position).name)) {
-                    Toast.makeText(context, "Error: can not delete map", Toast.LENGTH_SHORT).show();
-                } else {
-                    adapter.data.remove(position);
-                    if (adapter.data.size() == 0) {
-                        Log.i("List", "empty");
-                        ((MapManagerActivity) context).setEmpty();
+                if (context.getSharedPreferences("MyPrefs",Context.MODE_PRIVATE).getBoolean("confirmDelete",true)) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                    dialog.setMessage("Do you want to delete map?");
+                    dialog.setIcon(R.mipmap.ic_launcher);
+                    dialog.setPositiveButton(R.string.no, null);
+                    dialog.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (MapOptionsPopup.this.isShowing()) MapOptionsPopup.this.dismiss();
+                            if (!loader.deleteMap(adapter.data.get(position).name)) {
+                                Toast.makeText(context, "Error: can not delete map", Toast.LENGTH_SHORT).show();
+                            } else {
+                                adapter.data.remove(position);
+                                if (adapter.data.size() == 0) {
+                                    Log.i("List", "empty");
+                                    ((MapManagerActivity) context).setEmpty();
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+                    dialog.show();
+                }
+                else {
+                    if (MapOptionsPopup.this.isShowing()) MapOptionsPopup.this.dismiss();
+                    if (!loader.deleteMap(adapter.data.get(position).name)) {
+                        Toast.makeText(context, "Error: can not delete map", Toast.LENGTH_SHORT).show();
+                    } else {
+                        adapter.data.remove(position);
+                        if (adapter.data.size() == 0) {
+                            Log.i("List", "empty");
+                            ((MapManagerActivity) context).setEmpty();
+                        }
+                        adapter.notifyDataSetChanged();
                     }
-                    adapter.notifyDataSetChanged();
                 }
             }
         });

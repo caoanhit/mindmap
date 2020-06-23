@@ -16,6 +16,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.uit.ezmind.R;
 import com.uit.ezmind.widgets.ColorPickerButton;
 
@@ -26,6 +27,7 @@ public class SettingActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     ColorPickerButton btnBackground;
     Spinner spnTheme;
+    MaterialCheckBox cbConfirmDelete;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,6 +77,8 @@ public class SettingActivity extends AppCompatActivity {
         sharedPreferences= getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         btnBackground=findViewById(R.id.btn_background_color);
         spnTheme=findViewById(R.id.theme_options);
+        cbConfirmDelete=findViewById(R.id.cb_confirm_delete);
+        cbConfirmDelete.setChecked(sharedPreferences.getBoolean("confirmDelete",true));
         ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(this,
                 R.array.theme_options, android.R.layout.simple_spinner_item);
         a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -114,6 +118,7 @@ public class SettingActivity extends AppCompatActivity {
         }
         else setResult(RESULT_CANCELED);
         editor.putInt("background_color", btnBackground.getColor());
+        editor.putBoolean("confirmDelete",cbConfirmDelete.isChecked());
         editor.apply();
     }
     private void applyTheme(int theme){
