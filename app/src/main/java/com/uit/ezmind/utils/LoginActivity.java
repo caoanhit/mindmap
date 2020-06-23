@@ -152,6 +152,10 @@ public class LoginActivity extends AppCompatActivity {
     private void skip() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        SharedPreferences sharedPreferences= getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putBoolean("skip",true);
+        editor.apply();
         Intent intent = new Intent(LoginActivity.this, MapManagerActivity.class);
         startActivity(intent);
     }

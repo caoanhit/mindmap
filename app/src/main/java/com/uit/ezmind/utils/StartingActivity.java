@@ -26,7 +26,7 @@ public class StartingActivity extends AppCompatActivity {
         applyTheme(sharedpreferences.getInt("theme", 0));
         mAuth =FirebaseAuth.getInstance();
         FirebaseUser currentUser =mAuth.getCurrentUser();
-        if (currentUser!=null||!isNetworkConnected()) skip();
+        if (currentUser!=null||!isNetworkConnected()||sharedpreferences.getBoolean("skip",false)) skip();
         else toLogin();
     }
 

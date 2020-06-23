@@ -362,6 +362,7 @@ public class MapView extends RelativeLayout {
             pos[0] = nodes[parent].data.pos[0];
             pos[1] = nodes[parent].data.pos[1];
             pos[0] += 50 + nodes[parent].getWidth();
+            node.setPosition(pos);
         } else {
             int[] pos = new int[2];
             pos[0] += getContext().getResources().getDimension(R.dimen.map_size) / 2;
