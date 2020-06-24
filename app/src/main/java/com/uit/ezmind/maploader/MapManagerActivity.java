@@ -6,8 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +38,8 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.nbsp.materialfilepicker.MaterialFilePicker;
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 import com.uit.ezmind.R;
 import com.uit.ezmind.data.MapData;
 import com.uit.ezmind.mapdrawer.MapDrawerActivity;
@@ -44,6 +50,7 @@ import com.uit.ezmind.widgets.MapListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class MapManagerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     GridView gvMap;
@@ -293,9 +300,29 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.import_map:
-                Intent intent =new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");
-                startActivityForResult(intent, FILE_PICKER_REQUEST_CODE);
+                String externalStorage = Environment.getExternalStorageDirectory().getPath();
+                MaterialFilePicker materialFilePicker=new MaterialFilePicker();
+                materialFilePicker
+                        // Pass a source of context. Can be:
+                        //    .withActivity(Activity activity)
+                        //    .withFragment(Fragment fragment)
+                        //    .withSupportFragment(androidx.fragment.app.Fragment fragment)
+                        .withActivity(this)
+                        // With cross icon on the right side of toolbar for closing picker straight away
+                        .withCloseMenu(true)
+                        // Entry point path (user will start from it)
+                        .withPath(externalStorage)
+                        // Root path (user won't be able to come higher than it)
+                        .withRootPath(externalStorage)
+                        // Showing hidden files
+                        .withHiddenFiles(true)
+                        // Want to choose only jpg images
+                        .withFilter(Pattern.compile(".*\\.ezmind"))
+                        // Don't apply filter to directories names
+                        .withFilterDirectories(false)
+                        .withTitle("Sample title")
+                        .withRequestCode(FILE_PICKER_REQUEST_CODE)
+                        .start();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -306,12 +333,31 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==FILE_PICKER_REQUEST_CODE){
             if (resultCode== RESULT_OK){
-                String path = data.getData().getPath();
-                String extension = path.substring(path.lastIndexOf("."));
-                if(extension.equals(MapLoader.SAVE_EXTENSION)) Toast.makeText(this,R.string.file_invalid,Toast.LENGTH_SHORT).show();
-                else{
-                    MapLoader loader=new MapLoader(this);
-                    loader.importMap(path);
+//                Uri selectedImage = data.getData();
+//                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//
+//                Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+//                cursor.moveToFirst();
+//
+//                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//                String path = cursor.getString(columnIndex);
+//
+//                cursor.close();
+                String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+                Log.i("path", path);
+                if (path.lastIndexOf(".")>=0) {
+                    String extension = path.substring(path.lastIndexOf("."));
+                    Log.i("extension", MapLoader.SAVE_EXTENSION+extension+path.lastIndexOf("."));
+                    if (!extension.equals(MapLoader.SAVE_EXTENSION))
+                        Toast.makeText(this, R.string.file_invalid, Toast.LENGTH_SHORT).show();
+                    else {
+                        MapLoader loader = new MapLoader(this);
+                        if(loader.importMap(path)) Toast.makeText(this, "Import successfully", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    Toast.makeText(this, R.string.file_invalid, Toast.LENGTH_SHORT).show();
+                    Log.i("index", "wrong");
                 }
             }
         }
@@ -441,4 +487,5 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
         progressDialog.dismiss();
         loadMapNames();
     }
+
 }
