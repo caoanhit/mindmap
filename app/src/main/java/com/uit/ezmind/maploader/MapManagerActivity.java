@@ -320,7 +320,7 @@ public class MapManagerActivity extends AppCompatActivity implements NavigationV
                         .withFilter(Pattern.compile(".*\\.ezmind"))
                         // Don't apply filter to directories names
                         .withFilterDirectories(false)
-                        .withTitle("Sample title")
+                        .withTitle(getText(R.string.import_map))
                         .withRequestCode(FILE_PICKER_REQUEST_CODE)
                         .start();
                 break;

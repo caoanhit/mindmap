@@ -58,7 +58,6 @@ public class MapDrawerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_black_24dp);
 
@@ -71,6 +70,8 @@ public class MapDrawerActivity extends AppCompatActivity {
         if (extra != null) {
             mapName = extra.getString("mapName");
         }
+        if(mapName!=null) getSupportActionBar().setTitle(mapName);
+        else getSupportActionBar().setTitle("New Map");
         mapView.loadMap(mapName);
         mapView.setNodeCustomizer(nodeCustomizer);
         mapView.setOnChangeListener(new MapView.onChangeListener() {

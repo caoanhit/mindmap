@@ -1,5 +1,6 @@
 package com.uit.ezmind.mapdrawer;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.uit.ezmind.R;
 import com.uit.ezmind.data.LinePreferences;
@@ -658,6 +660,8 @@ public class MapView extends RelativeLayout {
                                         loader.saveThumbnail(mapName, getThumbnail());
                                         Toast.makeText(getContext(), "Map saved to \"" + mapName + "\"", Toast.LENGTH_SHORT).show();
                                         changed = false;
+                                        ((AppCompatActivity)getContext()).getSupportActionBar().setTitle(mapName);
+                                        alertDialog.dismiss();
                                     } else
                                         Toast.makeText(getContext(), "Error: Cannot save map", Toast.LENGTH_SHORT).show();
                                 }
@@ -668,6 +672,7 @@ public class MapView extends RelativeLayout {
                         mapName = text;
                         if (loader.saveMap(mapName, getData())) {
                             loader.saveThumbnail(mapName, getThumbnail());
+                            ((AppCompatActivity)getContext()).getSupportActionBar().setTitle(mapName);
                             changed = false;
                         }
                         alertDialog.dismiss();
